@@ -128,6 +128,18 @@
             background: #5649c0 !important;
         }
 
+        /* guest nav buttons: outlined instead of filled */
+        .nav-auth-actions .btn-nav {
+            background: transparent;
+            border: 1px solid rgba(107, 88, 225, .85);
+            color: var(--cream) !important;
+        }
+
+        .nav-auth-actions .btn-nav:hover {
+            background: rgba(107, 88, 225, .18) !important;
+            border-color: rgba(107, 88, 225, 1);
+        }
+
         .btn-nav-square {
             border-radius: 8px;
             padding: 8px 16px;
@@ -1896,11 +1908,14 @@
             </a>
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
+                <!--
                 <li><a href="#dates">Key Dates</a></li>
                 <li><a href="#speakers">Speakers</a></li>
                 <li><a href="#program">Program</a></li>
-                <li><a href="#submission">Submission</a></li>
+                -->
                 <li><a href="#venue">Venue</a></li>
+                <li><a href="#contact">Contact</a></li>
+                
                 <li>
                     @auth
                         <a href="{{ route('dashboard') }}" class="btn-nav btn-nav-square">Dashboard</a>
@@ -1997,34 +2012,34 @@
             <h2 class="section-heading">Research areas we cover</h2>
             <div class="themes-grid">
                 <div class="theme-card">
-                    <div class="theme-icon">T01</div>
+                  
                     <h4>Mechanical Design</h4>
-                    <p>Computational simulations, models and solid mechanics</p>
+                    
                 </div>
                 <div class="theme-card">
-                    <div class="theme-icon">T02</div>
+                    
                     <h4>Fluid Mechanics</h4>
-                    <p>Aerodynamics, flow dynamics and computational fluid dynamics</p>
+                    
                 </div>
                 <div class="theme-card">
-                    <div class="theme-icon">T03</div>
+                    
                     <h4>Mechatronics</h4>
-                    <p>Integration of mechanical, electrical and computing systems</p>
+               
                 </div>
                 <div class="theme-card">
-                    <div class="theme-icon">T04</div>
+                    
                     <h4>Materials Science</h4>
-                    <p>Materials design, testing and advanced manufacturing processes</p>
+                    
                 </div>
                 <div class="theme-card">
-                    <div class="theme-icon">T05</div>
+                  
                     <h4>Energy Systems</h4>
-                    <p>Energy, renewable energy and engine and fuel technology</p>
+                    
                 </div>
                 <div class="theme-card">
-                    <div class="theme-icon">T06</div>
+                    
                     <h4>Operations Research</h4>
-                    <p>Lean manufacturing, industrial processes and optimisation</p>
+                    
                 </div>
             </div>
         </div>
@@ -2320,9 +2335,9 @@
                     </div>
                 </div>
                 <div class="cta-right">
-                    <div class="cta-right-label">Full Paper (EPJ)</div>
+                    <div class="cta-right-label">Abstract Submission</div>
                     <div class="cta-right-from">from</div>
-                    <div class="cta-right-price">ZAR 1500</div>
+                    <div class="cta-right-price">6 Jan</div>
                     
                 </div>
             </div>

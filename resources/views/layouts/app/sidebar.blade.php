@@ -15,6 +15,27 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="document-plus" :href="route('submit')" :current="request()->routeIs('submit')" wire:navigate>
+                        {{ __('Submit') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="document-text" :href="route('abstracts')" :current="request()->routeIs('abstracts')" wire:navigate>
+                        {{ __('Abstracts') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="squares-2x2" :href="route('tracks')" :current="request()->routeIs('tracks')" wire:navigate>
+                        {{ __('Tracks') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="book-open" :href="route('instructions')" :current="request()->routeIs('instructions')" wire:navigate>
+                        {{ __('Instructions') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="chat-bubble-left-right" :href="route('rebuttals')" :current="request()->routeIs('rebuttals')" wire:navigate>
+                        {{ __('Rebuttals') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="bell" :href="route('notifications')" :current="request()->routeIs('notifications')" wire:navigate>
+                        {{ __('Notifications') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="arrow-down-tray" :href="route('downloads')" :current="request()->routeIs('downloads')" wire:navigate>
+                        {{ __('Downloads') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
