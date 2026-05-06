@@ -22,7 +22,7 @@
         <a href="{{ route('downloads') }}" class="cp-nav-item {{ request()->routeIs('downloads') ? 'active' : '' }}">Downloads</a>
     </div>
     <div class="cp-topbar-right">
-        <a href="{{ route('settings.profile') }}" class="cp-top-btn">Settings</a>
+       
         <div class="cp-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'AU', 0, 2)) }}</div>
     </div>
 </div>
