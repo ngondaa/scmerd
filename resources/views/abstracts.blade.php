@@ -1,78 +1,113 @@
 <x-layouts::app :title="__('Abstracts')">
-    <div class="mx-auto w-full max-w-5xl space-y-6">
-        <div>
-            <h1 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Abstract Review</h1>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
-                Track each abstract's review process and reviewer comments.
-            </p>
+<style>
+    .cp-shell { background: #f0f0f5; border-radius: 20px; padding: 16px; font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif); max-width: 1000px; margin: 0 auto; }
+    .cp-hero { margin-bottom: 24px; padding: 0 4px; }
+    .cp-hello { font-size: 28px; font-weight: 500; color: #1a1a2e; letter-spacing: -0.02em; line-height: 1.15; }
+    .cp-hello-sub { font-size: 13px; color: #888; margin-top: 4px; }
+    .cp-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    .cp-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .cp-sub-title { font-size: 18px; font-weight: 500; color: #1a1a2e; }
+    .cp-sub-meta { font-size: 13px; color: #888; margin-top: 4px; }
+    .cp-badge { font-size: 11px; padding: 4px 10px; border-radius: 99px; white-space: nowrap; letter-spacing: 0.03em; font-weight: 500; }
+    .cp-badge-review { background: #EEEDFE; color: #3C3489; }
+    .cp-badge-rebuttal { background: #E6F1FB; color: #0C447C; }
+    .cp-badge-accepted { background: #EAF3DE; color: #27500A; }
+    .cp-badge-pending { background: #e0e0ee; color: #555; }
+    .cp-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 12px; }
+    .cp-lifecycle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+    @media (max-width: 600px) { .cp-lifecycle { grid-template-columns: 1fr 1fr; } }
+    .cp-step { background: #f5f5fb; border: 1px solid #e0e0ee; border-radius: 8px; padding: 8px; font-size: 11px; text-align: center; color: #555; }
+    .cp-text { font-size: 13px; color: #1a1a2e; line-height: 1.5; margin-bottom: 20px; white-space: pre-wrap; }
+    .cp-list { font-size: 13px; color: #1a1a2e; line-height: 1.5; margin-bottom: 20px; padding-left: 20px; }
+    .cp-list li { margin-bottom: 4px; }
+    .cp-meta-text { font-size: 11px; color: #aaa; margin-top: -12px; margin-bottom: 20px; }
+    .cp-actions { display: flex; gap: 16px; }
+    .cp-btn-link { font-size: 13px; font-weight: 500; color: #4b3fa0; text-decoration: none; transition: color 0.15s; }
+    .cp-btn-link:hover { color: #2e2e52; }
+    .cp-empty { text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px dashed #c8c8de; }
+    .cp-empty-text { font-size: 13px; color: #888; margin-bottom: 12px; }
+    .cp-status-alert { background: #EAF3DE; color: #27500A; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid #d4e8c1; }
+</style>
+
+<div class="cp-shell">
+    @include('partials.topbar')
+    <div class="cp-hero">
+        <h1 class="cp-hello">Abstract Review</h1>
+        <p class="cp-hello-sub">Track each abstract's review process and reviewer comments.</p>
+    </div>
+
+    @if (session('status'))
+        <div class="cp-status-alert">
+            {{ session('status') }}
         </div>
+    @endif
 
-        @if (session('status'))
-            <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-700/60 dark:bg-emerald-900/20 dark:text-emerald-300">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        @if (count($submissions) === 0)
-            <div class="rounded-xl border border-dashed border-zinc-300 p-8 text-center dark:border-zinc-700">
-                <p class="text-sm text-zinc-600 dark:text-zinc-300">No abstracts submitted yet.</p>
-                <a href="{{ route('submit') }}" class="mt-3 inline-block text-sm font-medium text-blue-600 hover:text-blue-500">
-                    Submit your first abstract
-                </a>
-            </div>
-        @else
-            <div class="space-y-4">
-                @foreach ($submissions as $submission)
-                    <div class="rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <h2 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{{ $submission['title'] }}</h2>
-                                <p class="text-sm text-zinc-600 dark:text-zinc-300">Author: {{ $submission['author'] }} | Track: {{ $submission['track'] }}</p>
-                            </div>
-                            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-                                {{ $submission['status'] }}
-                            </span>
+    @if (count($submissions) === 0)
+        <div class="cp-empty">
+            <p class="cp-empty-text">No abstracts submitted yet.</p>
+            <a href="{{ route('submit') }}" class="cp-btn-link">Submit your first abstract →</a>
+        </div>
+    @else
+        <div>
+            @foreach ($submissions as $submission)
+                @php
+                    $badgeClass = match(strtolower($submission['status'] ?? '')) {
+                        'under review'  => 'cp-badge-review',
+                        'rebuttal open' => 'cp-badge-rebuttal',
+                        'accepted'      => 'cp-badge-accepted',
+                        default         => 'cp-badge-pending',
+                    };
+                @endphp
+                <div class="cp-card">
+                    <div class="cp-card-head">
+                        <div>
+                            <h2 class="cp-sub-title">{{ $submission['title'] }}</h2>
+                            <p class="cp-sub-meta">Author: {{ $submission['author'] }} | Track: {{ $submission['track'] }}</p>
                         </div>
+                        <span class="cp-badge {{ $badgeClass }}">
+                            {{ $submission['status'] }}
+                        </span>
+                    </div>
 
-                        <div class="mt-4">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-zinc-700 dark:text-zinc-300">Submission Lifecycle</h3>
-                            <div class="mt-2 grid gap-2 md:grid-cols-4">
-                                @foreach (['Abstract Submitted', 'Under Review', 'Rebuttal', 'Decision'] as $step)
-                                    <div class="rounded-md border border-zinc-200 px-2 py-1 text-xs dark:border-zinc-700">
-                                        {{ $step }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-zinc-700 dark:text-zinc-300">Abstract</h3>
-                            <p class="mt-2 whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-200">{{ $submission['abstract'] }}</p>
-                        </div>
-
-                        <div class="mt-5">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-zinc-700 dark:text-zinc-300">Review Process & Comments</h3>
-                            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-zinc-700 dark:text-zinc-200">
-                                @foreach ($submission['comments'] as $comment)
-                                    <li>{{ $comment }}</li>
-                                @endforeach
-                            </ul>
-                            <p class="mt-3 text-xs text-zinc-500 dark:text-zinc-400">Submitted: {{ $submission['submitted_at'] }}</p>
-                        </div>
-
-                        <div class="mt-5 flex flex-wrap gap-3">
-                            @if (!empty($submission['attachment_path']))
-                                <a href="{{ route('downloads.attachment', $submission['id']) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">
-                                    Download Attachment
-                                </a>
-                            @endif
-                            <a href="{{ route('rebuttals') }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">
-                                Open Rebuttal
-                            </a>
+                    <div>
+                        <h3 class="cp-section-title">Submission Lifecycle</h3>
+                        <div class="cp-lifecycle">
+                            @foreach (['Abstract Submitted', 'Under Review', 'Rebuttal', 'Decision'] as $step)
+                                <div class="cp-step">
+                                    {{ $step }}
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
+
+                    <div>
+                        <h3 class="cp-section-title">Abstract</h3>
+                        <p class="cp-text">{{ $submission['abstract'] }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="cp-section-title">Review Process & Comments</h3>
+                        <ul class="cp-list">
+                            @foreach ($submission['comments'] as $comment)
+                                <li>{{ $comment }}</li>
+                            @endforeach
+                        </ul>
+                        <p class="cp-meta-text">Submitted: {{ $submission['submitted_at'] }}</p>
+                    </div>
+
+                    <div class="cp-actions">
+                        @if (!empty($submission['attachment_path']))
+                            <a href="{{ route('downloads.attachment', $submission['id']) }}" class="cp-btn-link">
+                                Download Attachment ↗
+                            </a>
+                        @endif
+                        <a href="{{ route('rebuttals') }}" class="cp-btn-link">
+                            Open Rebuttal →
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 </x-layouts::app>

@@ -1,23 +1,35 @@
 <x-layouts::app :title="__('Notifications')">
-    <div class="mx-auto w-full max-w-4xl space-y-6">
-        <div>
-            <h1 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Author Notifications</h1>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">Recent updates on your submissions and actions.</p>
-        </div>
+<style>
+    .cp-shell { background: #f0f0f5; border-radius: 20px; padding: 16px; font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif); max-width: 1000px; margin: 0 auto; }
+    .cp-hero { margin-bottom: 24px; padding: 0 4px; }
+    .cp-hello { font-size: 28px; font-weight: 500; color: #1a1a2e; letter-spacing: -0.02em; line-height: 1.15; }
+    .cp-hello-sub { font-size: 13px; color: #888; margin-top: 4px; }
+    .cp-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e0e0ee; }
+    .cp-item-title { font-size: 14px; color: #1a1a2e; }
+    .cp-item-meta { font-size: 12px; color: #888; margin-top: 4px; }
+    .cp-empty { text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px dashed #c8c8de; font-size: 13px; color: #888; }
+</style>
 
-        @if (count($notifications) === 0)
-            <div class="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
-                No notifications yet.
-            </div>
-        @else
-            <div class="space-y-3">
-                @foreach ($notifications as $notification)
-                    <div class="rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
-                        <p class="text-sm text-zinc-800 dark:text-zinc-100">{{ $notification['message'] }}</p>
-                        <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{{ $notification['at'] }}</p>
-                    </div>
-                @endforeach
-            </div>
-        @endif
+<div class="cp-shell">
+    @include('partials.topbar')
+    <div class="cp-hero">
+        <h1 class="cp-hello">Author Notifications</h1>
+        <p class="cp-hello-sub">Recent updates on your submissions and actions.</p>
     </div>
+
+    @if (count($notifications) === 0)
+        <div class="cp-empty">
+            No notifications yet.
+        </div>
+    @else
+        <div>
+            @foreach ($notifications as $notification)
+                <div class="cp-card">
+                    <p class="cp-item-title">{{ $notification['message'] }}</p>
+                    <p class="cp-item-meta">{{ $notification['at'] }}</p>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 </x-layouts::app>

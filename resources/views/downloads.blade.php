@@ -1,35 +1,51 @@
 <x-layouts::app :title="__('Downloads')">
-    <div class="mx-auto w-full max-w-5xl space-y-6">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-                <h1 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Downloads and Export</h1>
-                <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">Download uploaded files or export all submission records.</p>
-            </div>
-            <a href="{{ route('exports.submissions') }}" class="inline-flex items-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300">
-                Export CSV
-            </a>
-        </div>
+<style>
+    .cp-shell { background: #f0f0f5; border-radius: 20px; padding: 16px; font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif); max-width: 1000px; margin: 0 auto; }
+    .cp-hero { margin-bottom: 24px; padding: 0 4px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .cp-hello { font-size: 28px; font-weight: 500; color: #1a1a2e; letter-spacing: -0.02em; line-height: 1.15; }
+    .cp-hello-sub { font-size: 13px; color: #888; margin-top: 4px; }
+    .cp-btn-primary { background: #1a1a2e; color: #e8e8f5; border: none; border-radius: 12px; padding: 10px 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; display: inline-flex; align-items: center; text-decoration: none; }
+    .cp-btn-primary:hover { background: #2e2e52; }
+    .cp-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e0e0ee; }
+    .cp-item-title { font-size: 14px; font-weight: 500; color: #1a1a2e; }
+    .cp-item-meta { font-size: 12px; color: #888; margin-top: 4px; margin-bottom: 12px; }
+    .cp-btn-link { font-size: 13px; font-weight: 500; color: #4b3fa0; text-decoration: none; transition: color 0.15s; }
+    .cp-btn-link:hover { color: #2e2e52; }
+    .cp-empty { text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px dashed #c8c8de; font-size: 13px; color: #888; }
+</style>
 
-        @if (count($submissions) === 0)
-            <div class="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
-                No files available yet.
-            </div>
-        @else
-            <div class="space-y-3">
-                @foreach ($submissions as $submission)
-                    <div class="rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-700">
-                        <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ $submission['title'] }}</p>
-                        <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{{ $submission['track'] }} | {{ $submission['stage'] }}</p>
-                        @if (!empty($submission['attachment_path']))
-                            <a href="{{ route('downloads.attachment', $submission['id']) }}" class="mt-2 inline-block text-sm font-medium text-blue-600 hover:text-blue-500">
-                                Download {{ $submission['attachment_name'] ?? 'attachment' }}
-                            </a>
-                        @else
-                            <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">No attachment uploaded.</p>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        @endif
+<div class="cp-shell">
+    @include('partials.topbar')
+    <div class="cp-hero">
+        <div>
+            <h1 class="cp-hello">Downloads and Export</h1>
+            <p class="cp-hello-sub">Download uploaded files or export all submission records.</p>
+        </div>
+        <a href="{{ route('exports.submissions') }}" class="cp-btn-primary">
+            Export CSV
+        </a>
     </div>
+
+    @if (count($submissions) === 0)
+        <div class="cp-empty">
+            No files available yet.
+        </div>
+    @else
+        <div>
+            @foreach ($submissions as $submission)
+                <div class="cp-card">
+                    <p class="cp-item-title">{{ $submission['title'] }}</p>
+                    <p class="cp-item-meta">{{ $submission['track'] }} | {{ $submission['stage'] }}</p>
+                    @if (!empty($submission['attachment_path']))
+                        <a href="{{ route('downloads.attachment', $submission['id']) }}" class="cp-btn-link">
+                            Download {{ $submission['attachment_name'] ?? 'attachment' }} ↗
+                        </a>
+                    @else
+                        <p class="cp-item-meta" style="margin-bottom: 0;">No attachment uploaded.</p>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 </x-layouts::app>
