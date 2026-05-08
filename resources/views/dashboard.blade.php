@@ -4,10 +4,15 @@
 .cp-shell{background:#f0f0f5;border-radius:20px;padding:16px;font-family:ui-sans-serif,system-ui,sans-serif}
 .cp-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .cp-brand{background:#1a1a2e;color:#e8e8f5;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:500;text-decoration:none}
-.cp-nav{display:flex;align-items:center;gap:2px;background:#e0e0ee;border-radius:20px;padding:3px}
+.cp-nav{display:flex;align-items:center;gap:2px;background:#e0e0ee;border-radius:20px;padding:3px;flex-wrap:wrap}
 .cp-nav-item{padding:5px 13px;border-radius:16px;font-size:12px;color:#666;text-decoration:none}
 .cp-nav-item:hover{background:#d0d0e8;color:#1a1a2e}
 .cp-nav-item.active{background:#1a1a2e;color:#e8e8f5}
+
+@media(max-width:768px){
+.cp-nav{flex-direction:column;gap:0;padding:6px}
+.cp-nav-item{display:block;width:100%;text-align:center;padding:8px 13px;margin-bottom:2px}
+}
 .cp-topbar-right{display:flex;align-items:center;gap:8px}
 .cp-top-btn{background:#e0e0ee;border-radius:20px;padding:6px 14px;font-size:12px;color:#555;text-decoration:none}
 .cp-avatar{width:30px;height:30px;border-radius:50%;background:#4b3fa0;color:#e8e8f5;display:flex;align-items:center;justify-content:center;font-size:11px}

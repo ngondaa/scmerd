@@ -11,6 +11,13 @@
     .cp-avatar { width: 30px; height: 30px; border-radius: 50%; background: #4b3fa0; color: #e8e8f5; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
 </style>
 
+<style>
+@media(max-width:768px){
+.cp-nav{flex-direction:column;gap:0;padding:6px}
+.cp-nav-item{display:block;width:100%;text-align:center;padding:8px 13px;margin-bottom:2px}
+}
+</style>
+
 <div class="cp-topbar">
     <span class="cp-brand">ConfPortal</span>
     <div class="cp-nav">
