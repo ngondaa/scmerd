@@ -551,19 +551,19 @@
                 <div class="hero-meta">
                     <div class="hero-meta-item">
                         <div class="hero-meta-label">Date</div>
-                        <div class="hero-meta-value">TBC · 2026</div>
+                        <div class="hero-meta-value">9 October 2026</div>
                     </div>
                     <div class="hero-meta-item">
                         <div class="hero-meta-label">Location</div>
                         <div class="hero-meta-value">East Campus · Johannesburg</div>
                     </div>
                     <div class="hero-meta-item">
-                        <div class="hero-meta-label">Submissions open</div>
-                        <div class="hero-meta-value">6 January 2026</div>
+                        <div class="hero-meta-label">Submissions close</div>
+                        <div class="hero-meta-value">25 September 2026</div>
                     </div>
                 </div>
                 <div class="hero-cta-group">
-                    <a class="btn-hero-primary" href="https://cmt3.research.microsoft.com/SCMERD2025" target="_blank">Submit Paper</a>
+                    <a class="btn-hero-primary" href="{{ route('login') }}" target="_blank">Submit Abstract</a>
                     <a class="btn-hero-ghost" href="#about">Learn More</a>
                 </div>
             </div>
@@ -615,11 +615,7 @@
                     <p class="about-body-para">
                         Hosted at the University of the Witwatersrand's East Campus, the conference provides a rigorous peer-reviewed forum for emerging engineers to present cutting-edge research, receive critical feedback from leading academics, and forge connections with industry partners driving South Africa's engineering future.
                     </p>
-                    <blockquote class="about-quote">
-                        <span class="about-quote-mark">&ldquo;</span>
-                        <p>Innovation in engineering begins with rigorous inquiry and the courage to challenge the conventional.</p>
-                        <cite>Dr Tiyamike Ngonda &mdash; Conference Chair, Wits University</cite>
-                    </blockquote>
+                  
                 </div>
 
                 <div class="about-body-right">
@@ -628,29 +624,16 @@
                             <span class="about-stat-num">8+</span>
                             <div class="about-stat-desc">
                                 <strong>Partner Universities</strong>
-                                Including Wits, UJ, UP, UNISA, TUT, VUT, DUT, and NWU
+                                Including Wits, UJ, UP, UNISA, TUT, VUT and NWU
                             </div>
                         </li>
                        
+                      
                         <li class="about-stat-row">
-                            <span class="about-stat-num">DHET</span>
-                            <div class="about-stat-desc">
-                                <strong>Accredited Publication</strong>
-                                Double-blind peer review process
-                            </div>
-                        </li>
-                        <li class="about-stat-row">
-                            <span class="about-stat-num">6</span>
-                            <div class="about-stat-desc">
-                                <strong>Research Tracks</strong>
-                                Mechanical Design, Fluid Mechanics, Mechatronics, Materials, Energy, Operations
-                            </div>
-                        </li>
-                        <li class="about-stat-row">
-                            <span class="about-stat-num">Oct 8</span>
+                            <span class="about-stat-num">June 2026</span>
                             <div class="about-stat-desc">
                                 <strong>Submission Deadline</strong>
-                                Abstracts open from 6 January 2026
+                                Abstracts close on 25 September 2026
                             </div>
                         </li>
                     </ul>
@@ -680,18 +663,13 @@
     <div class="marquee-wrap marquee-teal">
         <div class="marquee-track">
             <div class="marquee-item">
-                <span>Submission Deadline: 8 October 2026</span><span class="marquee-sep">|</span>
-                <span>Camera-Ready: 23 October 2026</span><span class="marquee-sep">|</span>
-              
-                <span>DHET Accredited</span><span class="marquee-sep">|</span>
-                <span>Blind Peer Review</span><span class="marquee-sep">|</span>
+                <span>Submission Deadline: 25 September 2026</span><span class="marquee-sep">|</span>
+                
             </div>
             <div class="marquee-item" aria-hidden="true">
-                <span>Submission Deadline: 8 October 2026</span><span class="marquee-sep">|</span>
-                <span>Camera-Ready: 23 October 2026</span><span class="marquee-sep">|</span>
+                <span>Submission Deadline: 25 September 2026</span><span class="marquee-sep">|</span>
               
-                <span>DHET Accredited</span><span class="marquee-sep">|</span>
-                <span>Blind Peer Review</span><span class="marquee-sep">|</span>
+               
             </div>
         </div>
     </div>
@@ -765,9 +743,9 @@
                 <h2>Get your name on the delegate list now</h2>
             </div>
             <div class="cta-right-wrap">
-                <div class="cta-date-label">Abstract Submission Opens</div>
-                <div class="cta-date-value">6 Jan 2026</div>
-                <a class="btn-cta-white" href="https://cmt3.research.microsoft.com/SCMERD2025" target="_blank">Submit Your Paper</a>
+                <div class="cta-date-label">Abstract Submission Closes</div>
+                <div class="cta-date-value">25 September 2026</div>
+                <a class="btn-cta-white" href="{{ route('login') }}" target="_blank">Submit Your Abstract</a>
             </div>
         </div>
     </section>
@@ -824,10 +802,7 @@
                     <img class="partner-logo-image" src="/unilogos/Vaal-University-of-Technology.webp" alt="Vaal University of Technology logo">
                     <span class="partner-logo-name">Vaal University of Technology</span>
                 </a>
-                <a class="partner-logo-card" href="https://www.dut.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/dut.jpg" alt="Durban University of Technology logo">
-                    <span class="partner-logo-name">Durban University of Technology</span>
-                </a>
+                
                 <a class="partner-logo-card" href="https://www.nwu.ac.za/" target="_blank">
                     <img class="partner-logo-image" src="/unilogos/nwu.jpg" alt="North-West University logo">
                     <span class="partner-logo-name">North-West University</span>
@@ -886,7 +861,7 @@
                 <div class="footer-links-col">
                     <h4>Authors</h4>
                     <ul>
-                        <li><a href="https://cmt3.research.microsoft.com/SCMERD2025" target="_blank">Submit Paper</a></li>
+                        <li><a href="{{ route('login') }}" target="_blank">Submit Abstract</a></li>
                         <li><a href="/SAIMechE conference flyer 2025.pdf" target="_blank">2026 Flyer</a></li>
                     </ul>
                 </div>
