@@ -67,15 +67,22 @@ header.site{
 }
 .nav-links a:hover,.nav-links a.active{opacity:1;}
 .nav-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
+.nav-auth{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .nav-cta{
   display:inline-flex;align-items:center;gap:6px;
   background:var(--ink);color:#fff;
   text-decoration:none;padding:9px 18px;
   font-size:14px;font-weight:500;
   border-radius:999px;white-space:nowrap;
-  transition:background .15s;
+  transition:background .15s, border-color .15s, color .15s;
+  border:1px solid var(--ink);
 }
 .nav-cta:hover{background:#333;color:#fff;}
+.nav-cta-light{
+  background:transparent;color:var(--ink);
+  border-color:var(--line);
+}
+.nav-cta-light:hover{background:var(--paper-deep);color:var(--ink);}
 .nav-toggle{
   display:none;background:none;border:none;
   width:40px;height:40px;padding:0;cursor:pointer;

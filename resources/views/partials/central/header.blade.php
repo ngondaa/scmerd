@@ -21,11 +21,14 @@
           @auth
             <a href="{{ route('dashboard') }}" class="nav-cta">Dashboard</a>
           @else
-            @if (Route::has('register'))
-              <a href="{{ route('register') }}" class="nav-cta">Register</a>
-            @elseif (Route::has('login'))
-              <a href="{{ route('login') }}" class="nav-cta">Login</a>
-            @endif
+            <div class="nav-auth">
+              @if (Route::has('login'))
+                <a href="{{ route('login') }}" class="nav-cta nav-cta-light">Log in</a>
+              @endif
+              @if (Route::has('register'))
+                <a href="{{ route('register') }}" class="nav-cta">Register</a>
+              @endif
+            </div>
           @endauth
           <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false">
             <span></span><span></span>
