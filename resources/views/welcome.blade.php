@@ -1,885 +1,285 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.central')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>2026 SAIMechE Central Branch Postgraduate Conference</title>
-    <meta name="description"
-        content="2026 SAIMechE Central Branch Postgraduate Conference on Mechanical Engineering and Related Disciplines. University of the Witwatersrand, Johannesburg.">
+@section('title', '2026 Postgraduate Conference & Prize Awards — SAIMechE Central Branch')
+@section('description', 'SAIMechE Central Branch Postgraduate Conference on Mechanical Engineering and Related Disciplines. University of the Witwatersrand, Johannesburg.')
 
-    <link rel="preconnect" href="https://api.fontshare.com">
-    <link href="https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+@section('content')
 
-    <style>
-        :root {
-            --navy:    #001A2D;
-            --navy-2:  #05192b;
-            --teal:    #70ABAF;
-            --orange:  #F86624;
-            --purple:  #6B58E1;
-            --cream:   #FFF3E3;
-            --cream-2: #FFF9F1;
-            --white:   #ffffff;
-            /* i-lab inspired accent — a crisp near-white rule colour */
-            --rule:    rgba(112,171,175,.18);
-        }
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            background: var(--navy-2);
-            color: var(--cream);
-            font-family: 'Satoshi', sans-serif;
-            font-size: 18px;
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-
-        /* ── NAV ── */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(5,25,43,.96);
-            border-bottom: 1px solid var(--rule);
-        }
-        .nav-inner {
-            max-width: 1200px; margin: 0 auto;
-            padding: 14px 40px;
-            display: flex; align-items: center; justify-content: space-between; gap: 24px;
-        }
-        .nav-brand { text-decoration: none; display: flex; flex-direction: column; line-height: 1.2; }
-        .nav-brand-name { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--cream); letter-spacing: -.5px; }
-        .nav-brand-sub  { font-size: .72rem; color: var(--teal); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
-        .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-        .nav-links a { color: rgba(255,243,227,.7); text-decoration: none; font-size: .85rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; transition: color .2s; }
-        .nav-links a:hover { color: var(--cream); }
-        .btn-nav {
-            background: transparent;
-            border: 1px solid rgba(107,88,225,.7);
-            color: var(--cream) !important;
-            padding: 7px 20px;
-            border-radius: 4px;
-            font-weight: 700 !important;
-            font-size: .78rem !important;
-            letter-spacing: .06em;
-            text-transform: uppercase;
-            transition: background .2s, border-color .2s !important;
-        }
-        .btn-nav:hover { background: rgba(107,88,225,.2) !important; border-color: var(--purple) !important; }
-        .nav-auth-actions { display: flex; gap: 8px; align-items: center; }
-
-        /* ── HERO ── */
-        #hero {
-            min-height: 100vh;
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 0 0 80px;
-            position: relative; overflow: hidden;
-            background: var(--navy);
-        }
-        /* Large typographic background number — i-lab style */
-        .hero-bg-num {
-            position: absolute;
-            right: -40px; bottom: -80px;
-            font-family: 'Clash Display', sans-serif;
-            font-size: clamp(260px, 30vw, 420px);
-            font-weight: 700;
-            color: rgba(112,171,175,.04);
-            line-height: 1;
-            user-select: none; pointer-events: none;
-            letter-spacing: -10px;
-        }
-        .hero-grid {
-            position: relative; z-index: 1;
-            max-width: 1200px; margin: 0 auto; width: 100%;
-            padding: 0 40px;
-        }
-        .hero-eyebrow {
-            font-size: .78rem; font-weight: 700; letter-spacing: .16em;
-            text-transform: uppercase; color: var(--teal);
-            margin-bottom: 28px; display: block;
-        }
-        .hero-title {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
-            font-size: clamp(2.8rem, 6vw, 5.2rem);
-            line-height: 1.0;
-            color: var(--cream);
-            letter-spacing: -.02em;
-            max-width: 900px;
-            margin-bottom: 36px;
-        }
-        /* Horizontal rule divider — i-lab signature */
-        .hero-rule {
-            width: 100%;
-            border: none;
-            border-top: 1px solid var(--rule);
-            margin: 40px 0;
-        }
-        .hero-bottom-row {
-            display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
-        }
-        .hero-meta {
-            display: flex; gap: 48px;
-        }
-        .hero-meta-item {}
-        .hero-meta-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,243,227,.4); margin-bottom: 4px; }
-        .hero-meta-value { font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 600; color: var(--cream); }
-        .hero-cta-group { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
-        .btn-hero-primary {
-            display: inline-block;
-            background: var(--orange);
-            color: var(--navy);
-            font-family: 'Satoshi', sans-serif; font-weight: 700;
-            font-size: .85rem; letter-spacing: .06em; text-transform: uppercase;
-            padding: 14px 32px; border-radius: 4px;
-            text-decoration: none; transition: background .2s;
-        }
-        .btn-hero-primary:hover { background: #e55a1a; color: var(--navy); }
-        .btn-hero-ghost {
-            display: inline-block;
-            background: transparent;
-            border: 1px solid rgba(255,243,227,.25);
-            color: var(--cream);
-            font-family: 'Satoshi', sans-serif; font-weight: 700;
-            font-size: .85rem; letter-spacing: .06em; text-transform: uppercase;
-            padding: 14px 32px; border-radius: 4px;
-            text-decoration: none; transition: border-color .2s, background .2s;
-        }
-        .btn-hero-ghost:hover { border-color: rgba(255,243,227,.55); background: rgba(255,243,227,.05); }
-
-        /* ── MARQUEE ── */
-        .marquee-wrap { overflow: hidden; }
-        .marquee-track { display: flex; width: max-content; animation: marquee-slide 35s linear infinite; }
-        .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
-        .marquee-item {
-            display: flex; align-items: center; gap: 64px;
-            padding: 18px 64px 18px;
-            white-space: nowrap;
-            font-family: 'Clash Display', sans-serif; font-weight: 500; font-size: 1rem;
-        }
-        .marquee-sep { opacity: .4; }
-        .marquee-purple { background: var(--purple); }
-        .marquee-teal   { background: var(--teal); color: var(--navy); }
-        .marquee-orange { background: var(--orange); color: #fff; }
-        @keyframes marquee-slide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* ── SECTION COMMONS ── */
-        section { padding: 100px 40px; }
-        .section-inner { max-width: 1200px; margin: 0 auto; }
-
-        /* ── ABOUT — i-lab style: full-text, no image, bold type, stark layout ── */
-        #about { background: var(--navy); padding: 120px 40px; }
-
-        .about-top {
-            display: flex; align-items: baseline; justify-content: space-between;
-            gap: 40px;
-            padding-bottom: 48px;
-            border-bottom: 1px solid var(--rule);
-            margin-bottom: 72px;
-        }
-        .about-eyebrow {
-            font-size: .72rem; font-weight: 700; letter-spacing: .16em;
-            text-transform: uppercase; color: var(--teal);
-        }
-        .about-year {
-            font-family: 'Clash Display', sans-serif;
-            font-size: .85rem; font-weight: 600;
-            color: rgba(255,243,227,.3);
-            letter-spacing: .06em;
-        }
-
-        /* Giant statement heading — i-lab signature move */
-        .about-statement {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
-            font-size: clamp(2.2rem, 4.5vw, 4rem);
-            line-height: 1.08;
-            letter-spacing: -.02em;
-            color: var(--cream);
-            max-width: 900px;
-            margin-bottom: 72px;
-        }
-        .about-statement em {
-            font-style: normal;
-            color: var(--teal);
-        }
-
-        /* Two-column body grid */
-        .about-body-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            padding-top: 0;
-            border-top: none;
-        }
-
-        .about-body-left {}
-
-        .about-body-para {
-            font-size: 1rem;
-            line-height: 1.85;
-            color: rgba(255,243,227,.68);
-            margin-bottom: 24px;
-        }
-
-        /* i-lab style blockquote: flush left, giant leading mark */
-        .about-quote {
-            margin-top: 8px;
-        }
-        .about-quote-mark {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 4rem;
-            line-height: .6;
-            color: var(--orange);
-            margin-bottom: 16px;
-            display: block;
-        }
-        .about-quote p {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--cream);
-            line-height: 1.45;
-            margin-bottom: 16px;
-        }
-        .about-quote cite {
-            font-size: .75rem; color: var(--teal); font-style: normal;
-            font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-        }
-
-        /* Right column: stat pillars — i-lab style vertical list */
-        .about-body-right {}
-
-        .about-stats-list {
-            list-style: none;
-            display: flex; flex-direction: column;
-        }
-        .about-stat-row {
-            display: flex; align-items: baseline; gap: 20px;
-            padding: 28px 0;
-            border-bottom: 1px solid var(--rule);
-        }
-        .about-stat-row:first-child { border-top: 1px solid var(--rule); }
-        .about-stat-num {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 2.4rem; font-weight: 700;
-            color: var(--cream); line-height: 1;
-            min-width: 110px; flex-shrink: 0;
-        }
-        .about-stat-desc {
-            font-size: .88rem; color: rgba(255,243,227,.55);
-            line-height: 1.5;
-        }
-        .about-stat-desc strong { color: var(--cream); font-weight: 600; display: block; margin-bottom: 2px; }
-
-        /* ── THEMES ── */
-        #themes { background: var(--cream); padding: 100px 40px; }
-        #themes .section-tag { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #2c5b5f; margin-bottom: 48px; display: block; }
-        #themes .section-heading { color: var(--navy); font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: clamp(1.6rem,3vw,2.6rem); margin-bottom: 48px; }
-
-        .themes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(0,26,45,.12); border: 1px solid rgba(0,26,45,.12); border-radius: 12px; overflow: hidden; }
-        .theme-card {
-            background: var(--cream-2);
-            padding: 36px 28px;
-            transition: background .2s;
-        }
-        .theme-card:hover { background: #fff; }
-        .theme-num { font-family: 'Clash Display', sans-serif; font-size: .75rem; font-weight: 700; color: rgba(0,26,45,.2); letter-spacing: .1em; margin-bottom: 20px; }
-        .theme-card h4 { font-family: 'Clash Display', sans-serif; font-weight: 600; font-size: 1.05rem; color: var(--navy); margin-bottom: 0; }
-
-        /* ── GALLERY — i-lab editorial grid ── */
-        #gallery { background: var(--navy-2); padding: 120px 40px; }
-
-        .gallery-header {
-            display: flex; align-items: flex-end; justify-content: space-between;
-            gap: 40px; margin-bottom: 64px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid var(--rule);
-        }
-        .gallery-header-left {}
-        .gallery-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; display: block; }
-        .gallery-title {
-            font-family: 'Clash Display', sans-serif; font-weight: 700;
-            font-size: clamp(2rem,4vw,3.2rem); line-height: 1.05;
-            letter-spacing: -.02em; color: var(--cream);
-        }
-        .gallery-count {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 5rem; font-weight: 700;
-            color: rgba(255,243,227,.08);
-            line-height: 1; flex-shrink: 0;
-        }
-
-        /* i-lab inspired grid: 1 large + 2 stacked + 2 stacked */
-        .photo-editorial {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 8px;
-            height: 580px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pe-item {
-            position: relative; overflow: hidden;
-            background: rgba(112,171,175,.06);
-            cursor: pointer;
-        }
-        .pe-item:first-child { grid-row: span 2; border-radius: 8px 0 0 8px; }
-        .pe-item:nth-child(2) { border-radius: 0 8px 0 0; }
-        .pe-item:nth-child(3) { border-radius: 0 0 8px 0; }
-        .pe-item:nth-child(4) { border-radius: 0; }
-        .pe-item:nth-child(5) { border-radius: 0; }
-
-        .pe-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
-        .pe-item:hover img { transform: scale(1.05); }
-
-        /* Hover overlay — i-lab minimal */
-        .pe-overlay {
-            position: absolute; inset: 0;
-            background: rgba(0,26,45,.0);
-            transition: background .3s;
-            display: flex; align-items: flex-end; padding: 20px;
-        }
-        .pe-item:hover .pe-overlay { background: rgba(0,26,45,.55); }
-        .pe-overlay-label {
-            font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-            text-transform: uppercase; color: var(--cream);
-            opacity: 0; transform: translateY(6px);
-            transition: opacity .3s, transform .3s;
-        }
-        .pe-item:hover .pe-overlay-label { opacity: 1; transform: translateY(0); }
-
-        /* Placeholder for missing images */
-        .pe-placeholder {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(112,171,175,.06);
-        }
-        .pe-placeholder span {
-            font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-            text-transform: uppercase; color: rgba(255,243,227,.18);
-        }
-
-        /* Gallery footer */
-        .gallery-footer {
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 32px; margin-top: 40px; padding-top: 32px;
-            border-top: 1px solid var(--rule);
-            max-width: 1200px; margin-left: auto; margin-right: auto;
-        }
-        .gallery-footer-text { font-size: .88rem; color: rgba(255,243,227,.5); line-height: 1.6; max-width: 520px; }
-        .gallery-footer-text a { color: var(--teal); font-weight: 600; text-decoration: none; }
-        .gallery-footer-text a:hover { text-decoration: underline; }
-
-        /* ── CTA ── */
-        #cta { background: var(--orange); padding: 80px 40px; }
-        .cta-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 48px; }
-        .cta-left h2 {
-            font-family: 'Clash Display', sans-serif; font-weight: 700;
-            font-size: clamp(1.8rem,3.5vw,3rem); color: #fff;
-            line-height: 1.1; letter-spacing: -.02em;
-        }
-        .cta-right-wrap { flex-shrink: 0; text-align: right; }
-        .cta-date-label { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 4px; }
-        .cta-date-value { font-family: 'Clash Display', sans-serif; font-size: 2.4rem; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 20px; }
-        .btn-cta-white {
-            display: inline-block;
-            background: #fff; color: var(--orange);
-            font-family: 'Satoshi', sans-serif; font-weight: 700;
-            font-size: .85rem; letter-spacing: .06em; text-transform: uppercase;
-            padding: 14px 36px; border-radius: 4px;
-            text-decoration: none; transition: background .2s;
-        }
-        .btn-cta-white:hover { background: rgba(255,255,255,.88); color: var(--orange); }
-
-        /* ── VENUE ── */
-        #venue { background: var(--navy-2); }
-        .venue-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-top: 48px; }
-        .venue-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; display: block; }
-        .venue-heading { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: clamp(1.6rem,3vw,2.4rem); color: var(--cream); margin-bottom: 8px; line-height: 1.1; letter-spacing: -.01em; }
-        .venue-sub { color: var(--teal); font-weight: 500; font-size: .9rem; margin-bottom: 24px; letter-spacing: .02em; }
-        .venue-address { font-size: .92rem; color: rgba(255,243,227,.55); line-height: 2; margin-bottom: 0; }
-        .venue-map { border-radius: 10px; overflow: hidden; border: 1px solid var(--rule); padding: 8px; }
-        .venue-map iframe { width: 100%; height: 340px; border: none; border-radius: 6px; }
-
-        /* ── PARTNERS ── */
-        #partners { background: var(--navy); }
-        .partners-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; display: block; text-align: center; }
-        .partners-heading { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: clamp(1.6rem,3vw,2.4rem); color: var(--cream); margin-bottom: 12px; text-align: center; }
-        .partners-sub { text-align: center; color: rgba(255,243,227,.5); max-width: 600px; margin: 0 auto 52px; font-size: .9rem; line-height: 1.7; }
-        .partners-logo-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
-        .partner-logo-card {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-            min-height: 120px; padding: 16px 14px; border-radius: 8px;
-            background: #fff; border: 1px solid rgba(255,255,255,.15);
-            text-decoration: none; transition: transform .2s;
-        }
-        .partner-logo-card:hover { transform: translateY(-2px); }
-        .partner-logo-image { width: 100%; height: 52px; object-fit: contain; object-position: center; display: block; }
-        .partner-logo-name { color: #304250; font-size: .72rem; text-align: center; line-height: 1.3; font-weight: 600; }
-
-        /* ── CONTACT ── */
-        #contact { background: var(--cream); }
-        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 64px; }
-        .contact-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #2f536b; margin-bottom: 12px; display: block; }
-        .contact-heading { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: clamp(1.8rem,3vw,2.8rem); color: var(--navy); margin-bottom: 24px; line-height: 1.1; letter-spacing: -.02em; }
-        .contact-info p { color: rgba(0,26,45,.65); font-size: .95rem; line-height: 1.8; margin-bottom: 32px; }
-        .contact-email {
-            display: inline-flex; align-items: center; gap: 12px;
-            background: transparent; border: 1px solid rgba(0,26,45,.2);
-            border-radius: 4px; padding: 16px 24px;
-            text-decoration: none; color: var(--navy); font-weight: 700; font-size: .95rem;
-            transition: border-color .2s, background .2s;
-        }
-        .contact-email:hover { border-color: var(--teal); background: rgba(112,171,175,.1); color: var(--navy); }
-        .contact-details { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(0,26,45,.12); border-radius: 8px; overflow: hidden; }
-        .contact-card { padding: 24px 28px; border-bottom: 1px solid rgba(0,26,45,.1); background: var(--cream-2); }
-        .contact-card:last-child { border-bottom: none; }
-        .contact-card strong { display: block; color: var(--teal); font-size: .72rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
-        .contact-card p { font-size: .9rem; color: rgba(0,26,45,.68); line-height: 1.7; }
-
-        /* ── FOOTER ── */
-        footer {
-            background: var(--navy);
-            border-top: 1px solid var(--rule);
-            padding: 56px 40px 32px;
-        }
-        .footer-inner { max-width: 1200px; margin: 0 auto; }
-        .footer-top {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            gap: 48px; margin-bottom: 48px; padding-bottom: 48px;
-            border-bottom: 1px solid var(--rule);
-        }
-        .footer-brand-name { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--cream); margin-bottom: 4px; }
-        .footer-brand-sub  { font-size: .72rem; color: var(--teal); margin-bottom: 14px; text-transform: uppercase; letter-spacing: .08em; }
-        .footer-contact    { font-size: .85rem; color: rgba(255,243,227,.45); }
-        .footer-contact a  { color: var(--teal); text-decoration: none; }
-        .footer-links-col h4 { font-size: .65rem; text-transform: uppercase; letter-spacing: .14em; color: rgba(255,243,227,.3); margin-bottom: 16px; font-weight: 700; }
-        .footer-links-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .footer-links-col a { font-size: .85rem; color: rgba(255,243,227,.55); text-decoration: none; transition: color .2s; }
-        .footer-links-col a:hover { color: var(--cream); }
-        .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .75rem; color: rgba(255,243,227,.25); }
-        .footer-badge { background: rgba(107,88,225,.25); border: 1px solid rgba(107,88,225,.4); color: rgba(255,243,227,.6); font-size: .68rem; font-weight: 700; padding: 4px 12px; border-radius: 4px; letter-spacing: .06em; text-transform: uppercase; }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 1024px) {
-            section { padding: 80px 32px; }
-            #hero   { padding: 0 0 64px; }
-            #about  { padding: 80px 32px; }
-            #gallery { padding: 80px 32px; }
-            #cta    { padding: 64px 32px; }
-            .hero-grid, .about-body-grid, .venue-grid, .contact-grid { gap: 40px; }
-            .about-body-grid { grid-template-columns: 1fr; }
-            .venue-grid, .contact-grid { grid-template-columns: 1fr; }
-            .photo-editorial { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; height: auto; }
-            .pe-item:first-child { grid-row: span 1; border-radius: 8px 8px 0 0; }
-            .pe-item:first-child, .pe-item:nth-child(2), .pe-item:nth-child(3), .pe-item:nth-child(4), .pe-item:nth-child(5) { border-radius: 0; }
-            .photo-editorial .pe-item { height: 220px; }
-            .themes-grid { grid-template-columns: 1fr 1fr; }
-            .partners-logo-grid { grid-template-columns: repeat(2, 1fr); }
-            .cta-inner { flex-direction: column; text-align: center; }
-            .cta-right-wrap { text-align: center; }
-            footer { padding: 48px 32px 28px; }
-            .footer-top { flex-direction: column; gap: 32px; }
-            .nav-inner { padding: 14px 24px; }
-        }
-
-        @media (max-width: 768px) {
-            section { padding: 60px 20px; }
-            #about  { padding: 60px 20px; }
-            #gallery { padding: 60px 20px; }
-            #cta    { padding: 56px 20px; }
-            .hero-grid { padding: 0 20px; }
-            .hero-bottom-row { flex-direction: column; align-items: flex-start; gap: 24px; }
-            .about-top { flex-direction: column; gap: 8px; }
-            .gallery-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .gallery-count { display: none; }
-            .photo-editorial { grid-template-columns: 1fr; height: auto; }
-            .photo-editorial .pe-item { height: 240px; border-radius: 8px !important; }
-            .nav-links { display: none; }
-            .themes-grid { grid-template-columns: 1fr; }
-            footer { padding: 40px 20px 24px; }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- NAV -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <a class="nav-brand" href="#">
-                <span class="nav-brand-name">SAIMechE 2026</span>
-                <span class="nav-brand-sub">Johannesburg · South Africa</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#venue">Venue</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li>
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="btn-nav">Dashboard</a>
-                    @else
-                        <div class="nav-auth-actions">
-                            @if (Route::has('login'))
-                                <a href="{{ route('login') }}" class="btn-nav">Login</a>
-                            @endif
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-nav">Register</a>
-                            @endif
-                        </div>
-                    @endauth
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- ═══ HERO ═══ -->
-    <section id="hero">
-        <div class="hero-bg-num" aria-hidden="true">2026</div>
-        <div class="hero-grid">
-            <span class="hero-eyebrow">University of the Witwatersrand · SAIMechE Central Branch</span>
-            <h1 class="hero-title">Postgraduate Conference on Mechanical Engineering &amp; Related Disciplines</h1>
-            <hr class="hero-rule">
-            <div class="hero-bottom-row">
-                <div class="hero-meta">
-                    <div class="hero-meta-item">
-                        <div class="hero-meta-label">Date</div>
-                        <div class="hero-meta-value">9 October 2026</div>
-                    </div>
-                    <div class="hero-meta-item">
-                        <div class="hero-meta-label">Location</div>
-                        <div class="hero-meta-value">East Campus · Johannesburg</div>
-                    </div>
-                    <div class="hero-meta-item">
-                        <div class="hero-meta-label">Submissions close</div>
-                        <div class="hero-meta-value">25 September 2026</div>
-                    </div>
-                </div>
-                <div class="hero-cta-group">
-                    <a class="btn-hero-primary" href="{{ route('login') }}" target="_blank">Submit Abstract</a>
-                    <a class="btn-hero-ghost" href="#about">Learn More</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MARQUEE -->
-    <div class="marquee-wrap marquee-purple">
-        <div class="marquee-track">
-            <div class="marquee-item">
-                <span>Design It. Build It.</span><span class="marquee-sep">|</span>
-                <span>2026 Postgraduate Conference</span><span class="marquee-sep">|</span>
-                <span>Mechanical Engineering</span><span class="marquee-sep">|</span>
-                <span>Industrial Engineering</span><span class="marquee-sep">|</span>
-                <span>Aeronautical Engineering</span><span class="marquee-sep">|</span>
-                <span>Wits University · East Campus</span><span class="marquee-sep">|</span>
-            </div>
-            <div class="marquee-item" aria-hidden="true">
-                <span>Design It. Build It.</span><span class="marquee-sep">|</span>
-                <span>2026 Postgraduate Conference</span><span class="marquee-sep">|</span>
-                <span>Mechanical Engineering</span><span class="marquee-sep">|</span>
-                <span>Industrial Engineering</span><span class="marquee-sep">|</span>
-                <span>Aeronautical Engineering</span><span class="marquee-sep">|</span>
-                <span>Wits University · East Campus</span><span class="marquee-sep">|</span>
-            </div>
-        </div>
+<section class="hero">
+  <div class="wrap">
+    <h1>SAIMechE Central Branch Postgraduate Conference</h1>
+    <p class="lede">The Central Branch brings together postgraduate engineers from universities across Gauteng for a day of oral and poster presentations, critical academic exchange, and prize awards at the gala dinner — advancing South Africa's mechanical engineering research community.</p>
+  </div>
+  @if (Route::has('register'))
+  <a href="{{ route('register') }}" class="cta-banner">
+    <div class="wrap cta-row">
+      <span><span class="label">Register to attend</span><span class="sub">Free for postgraduate students — day session and gala dinner</span></span>
+      <span class="chev">&rsaquo;</span>
     </div>
-
-    <!-- ═══ ABOUT ═══ -->
-    <section id="about">
-        <div class="section-inner">
-
-            <div class="about-top">
-                <span class="about-eyebrow">About the Conference</span>
-                <span class="about-year">Est. SAIMechE Central Branch · Wits</span>
-            </div>
-
-            <!-- Giant statement — i-lab signature -->
-            <p class="about-statement">
-                A platform where <em>rigorous inquiry</em> meets industry ambition — bringing South Africa's finest postgraduate engineers together to present, debate, and publish original work.
-            </p>
-
-            <!-- Two-column: prose left, stat pillars right -->
-            <div class="about-body-grid">
-                <div class="about-body-left">
-                    <p class="about-body-para">
-                        The SAIMechE Central Branch Postgraduate Conference is the premier annual gathering for postgraduate students, researchers, and industry practitioners across mechanical, industrial, and aeronautical engineering disciplines in South Africa.
-                    </p>
-                    <p class="about-body-para">
-                        Hosted at the University of the Witwatersrand's East Campus, the conference provides a rigorous peer-reviewed forum for emerging engineers to present cutting-edge research, receive critical feedback from leading academics, and forge connections with industry partners driving South Africa's engineering future.
-                    </p>
-                  
-                </div>
-
-                <div class="about-body-right">
-                    <ul class="about-stats-list">
-                        <li class="about-stat-row">
-                            <span class="about-stat-num">8+</span>
-                            <div class="about-stat-desc">
-                                <strong>Partner Universities</strong>
-                                Including Wits, UJ, UP, UNISA, TUT, VUT and NWU
-                            </div>
-                        </li>
-                       
-                      
-                        <li class="about-stat-row">
-                            <span class="about-stat-num">June 2026</span>
-                            <div class="about-stat-desc">
-                                <strong>Submission Deadline</strong>
-                                Abstracts close on 25 September 2026
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- THEMES -->
-    <section id="themes">
-        <div class="section-inner">
-            <span class="section-tag">Conference Themes</span>
-            <h2 class="section-heading">Research areas we cover</h2>
-            <div class="themes-grid">
-                <div class="theme-card"><div class="theme-num">01</div><h4>Mechanical Design</h4></div>
-                <div class="theme-card"><div class="theme-num">02</div><h4>Fluid Mechanics</h4></div>
-                <div class="theme-card"><div class="theme-num">03</div><h4>Mechatronics</h4></div>
-                <div class="theme-card"><div class="theme-num">04</div><h4>Materials Science</h4></div>
-                <div class="theme-card"><div class="theme-num">05</div><h4>Energy Systems</h4></div>
-                <div class="theme-card"><div class="theme-num">06</div><h4>Operations Research</h4></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MARQUEE 2 -->
-    <div class="marquee-wrap marquee-teal">
-        <div class="marquee-track">
-            <div class="marquee-item">
-                <span>Submission Deadline: 25 September 2026</span><span class="marquee-sep">|</span>
-                
-            </div>
-            <div class="marquee-item" aria-hidden="true">
-                <span>Submission Deadline: 25 September 2026</span><span class="marquee-sep">|</span>
-              
-               
-            </div>
-        </div>
+  </a>
+  @endif
+  <a href="{{ auth()->check() ? route('submit') : (Route::has('login') ? route('login') : '#contact') }}" class="cta-banner">
+    <div class="wrap cta-row">
+      <span><span class="label">Submit an abstract</span><span class="sub">Closes 25 September 2026 — oral or poster format</span></span>
+      <span class="chev">&rsaquo;</span>
     </div>
+  </a>
+</section>
 
-    <!-- ═══ GALLERY ═══ -->
-    <section id="gallery">
-        <div class="section-inner">
+<section id="details">
+  <div class="wrap">
+    <span class="section-head kicker">At a glance</span>
+    <div class="spec-panel">
+      <div class="spec-title">EVENT DETAILS</div>
+      <div class="spec-row"><div class="spec-label mono">DATE</div><div class="spec-value"><strong>Friday, 09 October 2026</strong> — starts 09h00</div></div>
+      <div class="spec-row"><div class="spec-label mono">VENUE</div><div class="spec-value">Southwest Engineering Building (SWEB), West Campus, University of the Witwatersrand, Braamfontein, Johannesburg</div></div>
+      <div class="spec-row"><div class="spec-label mono">EVENING</div><div class="spec-value">Gala dinner &amp; prize awards, 18h00 — venue to be confirmed</div></div>
+      <div class="spec-row"><div class="spec-label mono">CPD</div><div class="spec-value">ECSA recognised — 1 CPD credit (validation SAIMechE-1852-10/26)</div></div>
+      <div class="spec-row"><div class="spec-label mono">ABSTRACTS</div><div class="spec-value">Close <strong>25 September 2026</strong></div></div>
+    </div>
+  </div>
+</section>
 
-            <div class="gallery-header">
-                <div class="gallery-header-left">
-                    <span class="gallery-eyebrow">Conference Moments</span>
-                    <h2 class="gallery-title">Scenes from past sessions,<br>labs &amp; keynotes</h2>
-                </div>
-                <div class="gallery-count" aria-hidden="true">8+</div>
-            </div>
+<section id="about">
+  <div class="wrap two-col">
+    <div class="prose">
+      <span class="section-head kicker">About the conference</span>
+      <h2>A platform for South Africa's next generation of engineers</h2>
+      <p>The SAIMechE Central Branch Postgraduate Conference is the premier annual gathering for postgraduate students, researchers, and industry practitioners across mechanical, industrial, and aeronautical engineering disciplines in South Africa.</p>
+      <p>Hosted at the University of the Witwatersrand, the conference provides a rigorous peer-reviewed forum for emerging engineers to present cutting-edge research, receive critical feedback from leading academics, and forge connections with industry partners driving South Africa's engineering future.</p>
+      <p>The day runs as a full programme of oral and poster presentations, closing with a gala dinner where the branch's postgraduate prize awards are presented.</p>
+    </div>
+    <div>
+      <span class="section-head kicker">Why attend</span>
+      <ul class="disc-list" style="columns:1;">
+        <li>Engage directly with leading academics and researchers in your field</li>
+        <li>Connect with practising engineers and industry partners</li>
+        <li>See emerging technologies and innovation from postgraduate labs across Gauteng</li>
+        <li>Meet postgraduate students from every participating university</li>
+      </ul>
+      <div class="organiser-card" style="margin-top:32px;">
+        <img src="{{ asset('unilogos/schoolofMech.png') }}" alt="School of Mechanical, Industrial and Aeronautical Engineering">
+        <p style="margin:0;font-size:14px;color:var(--ink-soft);">Organised by the SAIMechE Central Branch and the School of Mechanical, Industrial &amp; Aeronautical Engineering, University of the Witwatersrand.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <!-- i-lab editorial grid: 1 large left, 2×2 right -->
-            <div class="photo-editorial">
+<section id="disciplines">
+  <div class="wrap">
+    <span class="section-head kicker">Conference disciplines</span>
+    <h2 style="margin-bottom:28px;">Submissions are welcomed across eight disciplines</h2>
+    <ul class="disc-list">
+      <li>Mechanical Engineering</li>
+      <li>Electro-Mechanical Engineering</li>
+      <li>Industrial Engineering</li>
+      <li>Biomedical Engineering</li>
+      <li>Aeronautical Engineering</li>
+      <li>Manufacturing &amp; Materials Engineering</li>
+      <li>Mechatronic Engineering</li>
+      <li>Energy &amp; Sustainability Technologies</li>
+    </ul>
+  </div>
+</section>
 
-                <div class="pe-item">
-                    <img src="/images/3.jpeg" alt="Keynote presentation"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="pe-placeholder" style="display:none"><span>Keynote</span></div>
-                    <div class="pe-overlay"><span class="pe-overlay-label">Keynote Presentation</span></div>
-                </div>
+<section id="dates">
+  <div class="wrap">
+    <span class="section-head kicker">Key dates</span>
+    <h2 style="margin-bottom:8px;">Four dates to plan around</h2>
+    <p class="prose" style="color:var(--ink-soft);margin-bottom:30px;">Registration is open now. Abstracts are reviewed after the submission deadline, so submit early where possible.</p>
+    <ol class="timeline">
+      <li><div class="num">01</div><div><div class="t-title">Abstract submissions open</div><div class="t-date">Now</div><div class="t-desc">Use the abstract form — one submission per presenting author.</div></div></li>
+      <li><div class="num">02</div><div><div class="t-title">Abstract submission deadline</div><div class="t-date">25 September 2026</div><div class="t-desc">Final date for abstracts to be considered for the programme.</div></div></li>
+      <li><div class="num">03</div><div><div class="t-title">Conference day</div><div class="t-date">Friday, 09 October 2026 · 09h00</div><div class="t-desc">SWEB, West Campus, University of the Witwatersrand.</div></div></li>
+      <li><div class="num">04</div><div><div class="t-title">Gala dinner &amp; prize awards</div><div class="t-date">09 October 2026 · 18h00</div><div class="t-desc">Evening venue to be confirmed closer to the date.</div></div></li>
+    </ol>
+  </div>
+</section>
 
-                <div class="pe-item">
-                    <img src="/images/4.jpeg" alt="Research presentations"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="pe-placeholder" style="display:none"><span>Research</span></div>
-                    <div class="pe-overlay"><span class="pe-overlay-label">Research Presentations</span></div>
-                </div>
+<section id="awards">
+  <div class="wrap two-col">
+    <div>
+      <span class="section-head kicker">Postgraduate prize awards</span>
+      <h2>Recognising excellence</h2>
+      <p class="prose" style="color:var(--ink-soft);">Awards are judged on the day and presented at the gala dinner. Additional categories may be approved by the organising committee.</p>
+    </div>
+    <ul class="award-list">
+      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4zM5 6H3v2a4 4 0 0 0 4 4M19 6h2v2a4 4 0 0 1-4 4"/></svg></div><div><h3>Outstanding Research Presentation</h3><p>For the strongest overall presentation on the day.</p></div></li>
+      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 4v5h5"/></svg></div><div><h3>Best Student Paper</h3><p>Awarded for the highest quality written submission.</p></div></li>
+      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2a5 5 0 0 1 5 5c0 2.5-2 4-2 6h-6c0-2-2-3.5-2-6a5 5 0 0 1 5-5zM10 17h4M9 20h6"/></svg></div><div><h3>Innovation Excellence Award</h3><p>For work with the clearest path to real-world engineering impact.</p></div></li>
+      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div><h3>Emerging Researcher Recognition</h3><p>For a first-time presenter showing strong future potential.</p></div></li>
+    </ul>
+  </div>
+</section>
 
-                <div class="pe-item">
-                    <img src="/images/5.jpeg" alt="Wits East Campus"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="pe-placeholder" style="display:none"><span>Campus</span></div>
-                    <div class="pe-overlay"><span class="pe-overlay-label">Wits East Campus</span></div>
-                </div>
+<section id="gallery">
+  <div class="wrap">
+    <span class="section-head kicker">Conference moments</span>
+    <h2 style="margin-bottom:28px;">Scenes from past sessions, labs &amp; keynotes</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="{{ asset('images/3.jpeg') }}" alt="Keynote presentation">
+        <span class="gallery-label">Keynote presentation</span>
+      </div>
+      <div class="gallery-item">
+        <img src="{{ asset('images/4.jpeg') }}" alt="Research presentations">
+        <span class="gallery-label">Research presentations</span>
+      </div>
+      <div class="gallery-item">
+        <img src="{{ asset('images/5.jpeg') }}" alt="Wits campus">
+        <span class="gallery-label">Wits campus</span>
+      </div>
+      <div class="gallery-item">
+        <img src="{{ asset('images/6.jpeg') }}" alt="Award ceremony">
+        <span class="gallery-label">Award ceremony</span>
+      </div>
+      <div class="gallery-item">
+        <img src="{{ asset('images/7.jpeg') }}" alt="Panel discussion">
+        <span class="gallery-label">Panel discussion</span>
+      </div>
+    </div>
+    <p class="uni-note" style="margin-top:24px;">Moments from previous SAIMechE Central Branch postgraduate conferences at Wits University.</p>
+  </div>
+</section>
 
-                <div class="pe-item">
-                    <img src="/images/6.jpeg" alt="Award ceremony"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="pe-placeholder" style="display:none"><span>Awards</span></div>
-                    <div class="pe-overlay"><span class="pe-overlay-label">Award Ceremony</span></div>
-                </div>
+<section id="universities">
+  <div class="wrap">
+    <span class="section-head kicker">Partner universities</span>
+    <h2 style="margin-bottom:24px;">Drawing postgraduates from across Gauteng</h2>
+    <div class="uni-grid">
+      <a class="uni-card" href="https://www.uj.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/uj.png') }}" alt="University of Johannesburg" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.up.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/up.png') }}" alt="University of Pretoria" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.unisa.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/unisa.png') }}" alt="UNISA — University of South Africa" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.tut.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/TUT.png') }}" alt="Tshwane University of Technology" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://vut.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/Vaal-University-of-Technology.png') }}" alt="Vaal University of Technology" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.dut.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/dut.png') }}" alt="Durban University of Technology" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.nwu.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/nwu.png') }}" alt="North-West University" loading="lazy">
+      </a>
+      <a class="uni-card" href="https://www.wits.ac.za/" target="_blank" rel="noopener">
+        <img src="{{ asset('unilogos/wits-logo.png') }}" alt="University of the Witwatersrand" loading="lazy">
+      </a>
+    </div>
+    <p class="uni-note">…and other academic and research institutions.</p>
+  </div>
+</section>
 
-                <div class="pe-item">
-                    <img src="/images/7.jpeg" alt="Panel discussion"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="pe-placeholder" style="display:none"><span>Panel</span></div>
-                    <div class="pe-overlay"><span class="pe-overlay-label">Panel Discussion</span></div>
-                </div>
+<section id="venue">
+  <div class="wrap venue-grid">
+    <div>
+      <span class="section-head kicker">Venue</span>
+      <h2>Getting there</h2>
+      <ul class="venue-list">
+        <li><div class="k mono">BUILDING</div><div>Southwest Engineering Building (SWEB)</div></li>
+        <li><div class="k mono">CAMPUS</div><div>West Campus, University of the Witwatersrand</div></li>
+        <li><div class="k mono">ADDRESS</div><div>1 Jan Smuts Avenue, Braamfontein, Johannesburg, 2000</div></li>
+        <li><div class="k mono">START</div><div>09h00, Friday 09 October 2026</div></li>
+        <li><div class="k mono">EVENING</div><div>Gala dinner venue to be confirmed</div></li>
+      </ul>
+    </div>
+    <div>
+      <span class="section-head kicker">Location</span>
+      <div class="venue-map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3580.1522852615117!2d28.029332999999998!3d-26.191723999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDExJzMwLjIiUyAyOMKwMDEnNDUuNiJF!5e0!3m2!1sen!2smw!4v1747369293879!5m2!1sen!2smw"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Southwest Engineering Building, Wits University">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
 
-            </div>
+@endsection
 
-            <div class="gallery-footer">
-                <p class="gallery-footer-text">
-                    Moments from previous SAIMechE Central Branch postgraduate conferences at Wits University — where ideas become impact.<br>
-                    <a href="#contact">Share your conference photos &rarr;</a>
-                </p>
-            </div>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script>
+<script>
+(function(){
+  var hasAnime = typeof anime !== 'undefined';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!hasAnime || reduceMotion) return;
 
-        </div>
-    </section>
+  var animate = anime.animate;
+  var stagger = anime.stagger;
+  var onScroll = anime.onScroll;
+  var splitText = anime.splitText;
+  var createTimeline = anime.createTimeline;
+  var utils = anime.utils;
 
-    <!-- CTA -->
-    <section id="cta" style="padding: 80px 40px;">
-        <div class="cta-inner">
-            <div class="cta-left">
-                <h2>Get your name on the delegate list now</h2>
-            </div>
-            <div class="cta-right-wrap">
-                <div class="cta-date-label">Abstract Submission Closes</div>
-                <div class="cta-date-value">25 September 2026</div>
-                <a class="btn-cta-white" href="{{ route('login') }}" target="_blank">Submit Your Abstract</a>
-            </div>
-        </div>
-    </section>
+  utils.$('.nav-cta').forEach(function(btn){
+    btn.addEventListener('mouseenter', function(){ animate(btn, { scale: 1.05, duration: 200, ease: 'outQuad' }); });
+    btn.addEventListener('mouseleave', function(){ animate(btn, { scale: 1, duration: 200, ease: 'outQuad' }); });
+  });
 
-    <!-- VENUE -->
-    <section id="venue">
-        <div class="section-inner">
-            <span class="venue-eyebrow">Conference Venue</span>
-            <div class="venue-grid" style="margin-top:32px;">
-                <div class="venue-info">
-                    <h2 class="venue-heading">South West Engineering Building</h2>
-                    <div class="venue-sub">University of the Witwatersrand · East Campus</div>
-                    <div class="venue-address">
-                        1 Jan Smuts Avenue<br>
-                        Braamfontein<br>
-                        Johannesburg, 2000<br>
-                        South Africa
-                    </div>
-                </div>
-                <div class="venue-map">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3580.1522852615117!2d28.029332999999998!3d-26.191723999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDExJzMwLjIiUyAyOMKwMDEnNDUuNiJF!5e0!3m2!1sen!2smw!4v1747369293879!5m2!1sen!2smw"
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </section>
+  animate('.announce .dot', {
+    scale: [1, 1.7], opacity: [1, 0.35],
+    duration: 1400, loop: true, alternate: true, ease: 'inOutSine'
+  });
 
-    <!-- PARTNERS -->
-    <section id="partners">
-        <div class="section-inner">
-            <span class="partners-eyebrow">Partner Universities</span>
-            <h2 class="partners-heading">Partner Universities</h2>
-            <p class="partners-sub">A collaboration of leading South African universities and engineering schools supporting postgraduate innovation.</p>
-            <div class="partners-logo-grid">
-                <a class="partner-logo-card" href="https://www.uj.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/uj.jpg" alt="University of Johannesburg logo">
-                    <span class="partner-logo-name">University of Johannesburg</span>
-                </a>
-                <a class="partner-logo-card" href="https://www.up.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/up.png" alt="University of Pretoria logo">
-                    <span class="partner-logo-name">University of Pretoria</span>
-                </a>
-                <a class="partner-logo-card" href="https://www.unisa.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/unisa.png" alt="University of South Africa logo">
-                    <span class="partner-logo-name">University of South Africa</span>
-                </a>
-                <a class="partner-logo-card" href="https://www.tut.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/TUT.jpg" alt="Tshwane University of Technology logo">
-                    <span class="partner-logo-name">Tshwane University of Technology</span>
-                </a>
-                <a class="partner-logo-card" href="https://vut.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/Vaal-University-of-Technology.webp" alt="Vaal University of Technology logo">
-                    <span class="partner-logo-name">Vaal University of Technology</span>
-                </a>
-                
-                <a class="partner-logo-card" href="https://www.nwu.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/nwu.jpg" alt="North-West University logo">
-                    <span class="partner-logo-name">North-West University</span>
-                </a>
-                <a class="partner-logo-card" href="https://www.wits.ac.za/" target="_blank">
-                    <img class="partner-logo-image" src="/unilogos/wits-logo.jpg" alt="University of the Witwatersrand logo">
-                    <span class="partner-logo-name">University of the Witwatersrand (Host)</span>
-                </a>
-            </div>
-        </div>
-    </section>
+  var heroH1 = utils.$('.hero h1')[0];
+  var heroTimeline = createTimeline({ defaults: { ease: 'outQuart' } });
+  if (heroH1) {
+    var split = splitText(heroH1, { words: true, chars: false });
+    heroTimeline.add(split.words, {
+      opacity: [0, 1], translateY: [26, 0], duration: 700, delay: stagger(22)
+    }, 0);
+  }
+  heroTimeline
+    .add('.hero .lede', { opacity: [0, 1], translateY: [16, 0], duration: 650 }, 300)
+    .add('.cta-banner', { opacity: [0, 1], translateX: [-18, 0], duration: 550, delay: stagger(120) }, 500);
 
-    <!-- CONTACT -->
-    <section id="contact">
-        <div class="section-inner">
-            <span class="contact-eyebrow">Get in Touch</span>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h2 class="contact-heading">Contact us</h2>
-                    <p>For queries about submissions, registration, speaker invitations, or any other conference-related matters — we are here to help.</p>
-                    <a class="contact-email" href="mailto:info@scmerd.org">
-                        <span>@</span> info@scmerd.org
-                    </a>
-                </div>
-                <div class="contact-details">
-                    <div class="contact-card">
-                        <strong>Organised by</strong>
-                        <p>SAIMechE Central Branch<br>School of Mechanical, Industrial &amp; Aeronautical Engineering<br>University of the Witwatersrand</p>
-                    </div>
-                    <div class="contact-card">
-                        <strong>Conference Chair</strong>
-                        <p>Dr Tiyamike Ngonda<br>University of the Witwatersrand, Johannesburg</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  function reveal(selector, overrides, staggerMs){
+    utils.$(selector).forEach(function(el, i){
+      animate(el, Object.assign({
+        opacity: [0, 1], translateY: [26, 0], duration: 650, ease: 'outQuart',
+        delay: staggerMs ? i * staggerMs : 0,
+        autoplay: onScroll({ target: el, enter: 'bottom-=8% top', repeat: false })
+      }, overrides || {}));
+    });
+  }
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-top">
-                <div>
-                    <div class="footer-brand-name">SAIMechE PGC 2026</div>
-                    <div class="footer-brand-sub">2026 · Johannesburg, South Africa</div>
-                    <div class="footer-contact"><a href="mailto:info@scmerd.org">info@scmerd.org</a></div>
-                </div>
-                <div class="footer-links-col">
-                    <h4>Conference</h4>
-                    <ul>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#gallery">Gallery</a></li>
-                        <li><a href="#themes">Themes</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-col">
-                    <h4>Authors</h4>
-                    <ul>
-                        <li><a href="{{ route('login') }}" target="_blank">Submit Abstract</a></li>
-                        <li><a href="/SAIMechE conference flyer 2025.pdf" target="_blank">2026 Flyer</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-col">
-                    <h4>Venue</h4>
-                    <ul>
-                        <li><a href="#venue">Location</a></li>
-                        <li><a href="#partners">Partners</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>&copy; 2026 SAIMechE Central Branch. All rights reserved.</span>
-                <span class="footer-badge">SAIMechE PGC 2026</span>
-            </div>
-        </div>
-    </footer>
+  reveal('.spec-panel', { translateY: [34, 0] });
+  reveal('.spec-row', {}, 70);
+  reveal('#about .prose', { translateX: [-24, 0], translateY: [0, 0] });
+  reveal('#about > .wrap > div:last-child', { translateX: [24, 0], translateY: [0, 0] });
+  reveal('.disc-list li', { translateY: [18, 0], scale: [0.96, 1] }, 60);
+  reveal('.timeline li', { translateX: [-26, 0], translateY: [0, 0] }, 90);
+  reveal('.award-list li', { translateY: [22, 0], scale: [0.94, 1] }, 100);
+  reveal('.gallery-item', { translateY: [14, 0], scale: [0.94, 1] }, 80);
+  reveal('.uni-card', { translateY: [14, 0], scale: [0.9, 1] }, 60);
+  reveal('.venue-list li', { translateX: [-16, 0], translateY: [0, 0] }, 60);
+  reveal('footer .foot-grid > div', {}, 90);
 
-</body>
-</html>
+  var awardPaths = utils.$('.award-mark svg path');
+  awardPaths.forEach(function(path){
+    var len = Math.ceil(path.getTotalLength());
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+  });
+  if (awardPaths.length) {
+    animate(awardPaths, {
+      strokeDashoffset: 0, duration: 900, delay: stagger(120), ease: 'inOutQuad',
+      autoplay: onScroll({ target: '#awards', enter: 'bottom-=8% top', repeat: false })
+    });
+  }
+
+  animate('.timeline .num', {
+    scale: [1.4, 1], duration: 500, delay: stagger(90), ease: 'outBack',
+    autoplay: onScroll({ target: '.timeline', enter: 'bottom-=8% top', repeat: false })
+  });
+})();
+</script>
+@endpush
