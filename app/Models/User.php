@@ -12,7 +12,19 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'registration_package',
+    'certificate_name',
+    'ecsa_accredited',
+    'ecsa_number',
+    'student_id',
+    'stripe_checkout_session_id',
+    'registration_paid_at',
+    'is_reviewer',
+])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,6 +41,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'ecsa_accredited' => 'boolean',
+            'registration_paid_at' => 'datetime',
+            'is_reviewer' => 'boolean',
         ];
     }
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class AuthorPortalController extends Controller
@@ -26,13 +28,46 @@ class AuthorPortalController extends Controller
         ]);
     }
 
+    public function updatePackage(Request $request)
+    {
+        $validated = $request->validate([
+            'package' => ['required', 'string', 'in:student,standard,premium,presenter'],
+        ]);
+
+        $user = $request->user();
+        
+        // Store package in session if user model doesn't have registration_package yet
+        session(['registration_package' => $validated['package']]);
+        
+        // Try to save to database if column exists
+        try {
+            if (Schema::hasColumn('users', 'registration_package')) {
+                $user->update(['registration_package' => $validated['package']]);
+            }
+        } catch (\Exception $e) {
+            // Column doesn't exist yet, fall back to session storage
+        }
+
+        return redirect()->route('dashboard')->with('status', 'Registration package selected successfully.');
+    }
+
     public function showSubmit()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('submit', ['tracks' => $this->availableTracks()]);
     }
 
     public function storeSubmit(Request $request)
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
@@ -73,6 +108,22 @@ class AuthorPortalController extends Controller
         array_unshift($submissions, $submission);
         session(['submissions' => $submissions]);
 
+        Submission::create([
+            'user_id' => auth()->id(),
+            'title' => $submission['title'],
+            'author' => $submission['author'],
+            'track' => $submission['track'],
+            'stage' => $submission['stage'],
+            'keywords' => $submission['keywords'],
+            'abstract' => $submission['abstract'],
+            'status' => $submission['status'],
+            'submitted_at' => $submission['submitted_at'],
+            'attachment_path' => $submission['attachment_path'],
+            'attachment_name' => $submission['attachment_name'],
+            'comments' => $submission['comments'],
+            'rebuttal' => $submission['rebuttal'],
+        ]);
+
         $this->notify("Submission '{$submission['title']}' was received.");
 
         return redirect()->route('abstracts')->with('status', 'Abstract submitted successfully.');
@@ -80,6 +131,11 @@ class AuthorPortalController extends Controller
 
     public function abstracts()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('abstracts', [
             'submissions' => $this->submissions(),
         ]);
@@ -87,6 +143,11 @@ class AuthorPortalController extends Controller
 
     public function tracks()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('tracks', [
             'tracks' => $this->availableTracks(),
             'submissions' => $this->submissions(),
@@ -95,11 +156,21 @@ class AuthorPortalController extends Controller
 
     public function instructions()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('instructions');
     }
 
     public function rebuttals()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('rebuttals', [
             'submissions' => $this->submissions(),
         ]);
@@ -107,6 +178,11 @@ class AuthorPortalController extends Controller
 
     public function storeRebuttal(Request $request, string $id)
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         $validated = $request->validate([
             'rebuttal' => ['required', 'string', 'max:3000'],
         ]);
@@ -132,6 +208,11 @@ class AuthorPortalController extends Controller
 
     public function notifications()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('notifications', [
             'notifications' => session('notifications', []),
         ]);
@@ -139,6 +220,11 @@ class AuthorPortalController extends Controller
 
     public function downloads()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         return view('downloads', [
             'submissions' => $this->submissions(),
         ]);
@@ -146,6 +232,11 @@ class AuthorPortalController extends Controller
 
     public function downloadAttachment(string $id)
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         $submission = collect($this->submissions())->firstWhere('id', $id);
         if (! $submission || empty($submission['attachment_path'])) {
             abort(404);
@@ -164,6 +255,11 @@ class AuthorPortalController extends Controller
 
     public function exportCsv()
     {
+        $guard = $this->requirePaidRegistration();
+        if ($guard) {
+            return $guard;
+        }
+
         $submissions = $this->submissions();
 
         $headers = [
@@ -199,7 +295,43 @@ class AuthorPortalController extends Controller
 
     private function submissions(): array
     {
+        if (auth()->check()) {
+            $userSubmissions = Submission::query()
+                ->where('user_id', auth()->id())
+                ->orderByDesc('submitted_at')
+                ->get()
+                ->map(fn (Submission $submission) => [
+                    'id' => (string) $submission->id,
+                    'title' => $submission->title,
+                    'author' => $submission->author,
+                    'track' => $submission->track,
+                    'stage' => $submission->stage,
+                    'keywords' => $submission->keywords,
+                    'abstract' => $submission->abstract,
+                    'status' => $submission->status,
+                    'submitted_at' => $submission->submitted_at?->toDateTimeString(),
+                    'attachment_path' => $submission->attachment_path,
+                    'attachment_name' => $submission->attachment_name,
+                    'comments' => $submission->comments ?? [],
+                    'rebuttal' => $submission->rebuttal,
+                ])
+                ->all();
+
+            if (! empty($userSubmissions)) {
+                return $userSubmissions;
+            }
+        }
+
         return session('submissions', []);
+    }
+
+    private function requirePaidRegistration()
+    {
+        if (! auth()->check() || ! auth()->user()->registration_paid_at) {
+            return redirect()->route('dashboard')->with('error', 'Complete your registration payment to access abstract submission tools.');
+        }
+
+        return null;
     }
 
     private function notify(string $message): void

@@ -5,141 +5,201 @@
 
 @section('content')
 
-<section class="hero">
-  <div class="wrap">
-    <h1>SAIMechE Central Branch Postgraduate Conference</h1>
-    <p class="lede">The Central Branch brings together postgraduate engineers from universities across Gauteng for a day of oral and poster presentations, critical academic exchange, and prize awards at the gala dinner — advancing South Africa's mechanical engineering research community.</p>
-  </div>
-  @if (Route::has('register'))
-  <a href="{{ route('register') }}" class="cta-banner">
-    <div class="wrap cta-row">
-      <span><span class="label">Register to attend</span><span class="sub">Free for postgraduate students — day session and gala dinner</span></span>
-      <span class="chev">&rsaquo;</span>
-    </div>
-  </a>
-  @endif
-  <a href="{{ auth()->check() ? route('submit') : (Route::has('login') ? route('login') : '#contact') }}" class="cta-banner">
-    <div class="wrap cta-row">
-      <span><span class="label">Submit an abstract</span><span class="sub">Closes 25 September 2026 — oral or poster format</span></span>
-      <span class="chev">&rsaquo;</span>
-    </div>
-  </a>
-</section>
+<!-- Reverted hero: simpler announcement + hero layout -->
+<style>
+/* Scoped hero overrides for this page (announcement uses global .announce styles) */
+.welcome-hero{padding:64px 0 0;}
+.welcome-hero .wrap{position:relative;}
+.welcome-hero h1{font-family:'Archivo',sans-serif;font-size:clamp(40px,6.4vw,64px);margin:0 0 .6em 0;line-height:.96;}
+.welcome-hero .lede{font-size:18px;color:var(--ink-soft);max-width:52ch;margin-top:12px}
+.welcome-cta-banners{margin-top:40px;}
 
-<section id="details">
-  <div class="wrap">
-    <span class="section-head kicker">At a glance</span>
-    <div class="spec-panel">
-      <div class="spec-title">EVENT DETAILS</div>
-      <div class="spec-row"><div class="spec-label mono">DATE</div><div class="spec-value"><strong>Friday, 09 October 2026</strong> — starts 09h00</div></div>
-      <div class="spec-row"><div class="spec-label mono">VENUE</div><div class="spec-value">Southwest Engineering Building (SWEB), West Campus, University of the Witwatersrand, Braamfontein, Johannesburg</div></div>
-      <div class="spec-row"><div class="spec-label mono">EVENING</div><div class="spec-value">Gala dinner &amp; prize awards, 18h00 — venue to be confirmed</div></div>
-      <div class="spec-row"><div class="spec-label mono">CPD</div><div class="spec-value">ECSA recognised — 1 CPD credit (validation SAIMechE-1852-10/26)</div></div>
-      <div class="spec-row"><div class="spec-label mono">ABSTRACTS</div><div class="spec-value">Close <strong>25 September 2026</strong></div></div>
-    </div>
-  </div>
-</section>
+@media (max-width: 640px){
+  .welcome-hero{padding-top:32px;}
+  .welcome-hero h1{
+    font-size:clamp(34px, 12vw, 52px);
+    line-height:0.92;
+    max-width:10ch;
+    letter-spacing:-0.04em;
+  }
+  .welcome-hero .lede{
+    font-size:16px;
+    line-height:1.6;
+    margin-top:16px;
+  }
+  .welcome-cta-banners{margin-top:24px;}
+  .cta-row{padding:18px 16px;}
+}
+</style>
 
-<section id="about">
-  <div class="wrap two-col">
-    <div class="prose">
-      <span class="section-head kicker">About the conference</span>
-      <h2>A platform for South Africa's next generation of engineers</h2>
-      <p>The SAIMechE Central Branch Postgraduate Conference is the premier annual gathering for postgraduate students, researchers, and industry practitioners across mechanical, industrial, and aeronautical engineering disciplines in South Africa.</p>
-      <p>Hosted at the University of the Witwatersrand, the conference provides a rigorous peer-reviewed forum for emerging engineers to present cutting-edge research, receive critical feedback from leading academics, and forge connections with industry partners driving South Africa's engineering future.</p>
-      <p>The day runs as a full programme of oral and poster presentations, closing with a gala dinner where the branch's postgraduate prize awards are presented.</p>
-    </div>
+@section('announce')
+<div class="announce">
+  <div class="wrap announce-inner">
+    <span class="dot"></span>
     <div>
-      <span class="section-head kicker">Why attend</span>
-      <ul class="disc-list" style="columns:1;">
-        <li>Engage directly with leading academics and researchers in your field</li>
-        <li>Connect with practising engineers and industry partners</li>
-        <li>See emerging technologies and innovation from postgraduate labs across Gauteng</li>
-        <li>Meet postgraduate students from every participating university</li>
-      </ul>
-      <div class="organiser-card" style="margin-top:32px;">
-        <img src="{{ asset('unilogos/schoolofMech.png') }}" alt="School of Mechanical, Industrial and Aeronautical Engineering">
-        <p style="margin:0;font-size:14px;color:var(--ink-soft);">Organised by the SAIMechE Central Branch and the School of Mechanical, Industrial &amp; Aeronautical Engineering, University of the Witwatersrand.</p>
+      <h2>Abstracts open now</h2>
+      <p>Submit by 25 September 2026</p>
+    </div>
+  </div>
+</div>
+@endsection
+
+<section class="hero welcome-hero">
+  <div class="wrap">
+    <h1>Welcome to the SAIMechE Central Branch Postgraduate Conference</h1>
+    <p class="lede">This year's conference brings together postgraduate engineers from eight universities across Gauteng, presenting original research in mechanical, industrial and aeronautical engineering before a night of prizes at the gala dinner. Here's what you need to know.</p>
+  </div>
+  <div class="welcome-cta-banners">
+    @if (Route::has('register'))
+      <a href="{{ route('register') }}" class="cta-banner cta-banner--register">
+        <div class="cta-row">
+          <div>
+            <span class="label">Register to attend</span>
+             </div>
+          <span class="chev" aria-hidden="true">›</span>
+        </div>
+      </a>
+    @endif
+    <a href="{{ auth()->check() && auth()->user()?->registration_paid_at ? route('submit') : (Route::has('login') ? route('login') : '#contact') }}" class="cta-banner cta-banner--abstract">
+      <div class="cta-row">
+        <div>
+          <span class="label">Submit an abstract</span>
+          </div>
+        <span class="chev" aria-hidden="true">›</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+
+
+
+
+<section id="disciplines" class="section-light">
+  <div class="wrap">
+    <h2>Conference disciplines</h2>
+    <p class="section-intro">Submissions welcomed across eight engineering disciplines</p>
+    <div class="disciplines-grid">
+      <div class="discipline-card">Mechanical Engineering</div>
+      <div class="discipline-card">Electro-Mechanical Engineering</div>
+      <div class="discipline-card">Industrial Engineering</div>
+      <div class="discipline-card">Biomedical Engineering</div>
+      <div class="discipline-card">Aeronautical Engineering</div>
+      <div class="discipline-card">Manufacturing & Materials</div>
+      <div class="discipline-card">Mechatronic Engineering</div>
+      <div class="discipline-card">Energy & Sustainability</div>
+    </div>
+  </div>
+</section>
+
+<section id="dates" class="section-dark">
+  <div class="wrap">
+    <h2>Important dates</h2>
+    <p class="section-intro">Key milestones to plan around</p>
+    <div class="timeline">
+      <div class="timeline-year">This year — 2026</div>
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">Now</div>
+          <div class="timeline-title">Abstract submissions open</div>
+          <div class="timeline-desc">Use the submission form — one per presenting author</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">25 September 2026</div>
+          <div class="timeline-title">Abstract submission deadline</div>
+          <div class="timeline-desc">Final date for abstracts to be considered for the programme</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">09 October 2026 · 09h00</div>
+          <div class="timeline-title">Conference day</div>
+          <div class="timeline-desc">SWEB, West Campus, University of the Witwatersrand</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">09 October 2026 · 18h00</div>
+          <div class="timeline-title">Gala dinner & prize awards</div>
+          <div class="timeline-desc">Evening venue to be confirmed closer to the date</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="disciplines">
+<section id="awards" class="section-light">
   <div class="wrap">
-    <span class="section-head kicker">Conference disciplines</span>
-    <h2 style="margin-bottom:28px;">Submissions are welcomed across eight disciplines</h2>
-    <ul class="disc-list">
-      <li>Mechanical Engineering</li>
-      <li>Electro-Mechanical Engineering</li>
-      <li>Industrial Engineering</li>
-      <li>Biomedical Engineering</li>
-      <li>Aeronautical Engineering</li>
-      <li>Manufacturing &amp; Materials Engineering</li>
-      <li>Mechatronic Engineering</li>
-      <li>Energy &amp; Sustainability Technologies</li>
-    </ul>
-  </div>
-</section>
-
-<section id="dates">
-  <div class="wrap">
-    <span class="section-head kicker">Key dates</span>
-    <h2 style="margin-bottom:8px;">Four dates to plan around</h2>
-    <p class="prose" style="color:var(--ink-soft);margin-bottom:30px;">Registration is open now. Abstracts are reviewed after the submission deadline, so submit early where possible.</p>
-    <ol class="timeline">
-      <li><div class="num">01</div><div><div class="t-title">Abstract submissions open</div><div class="t-date">Now</div><div class="t-desc">Use the abstract form — one submission per presenting author.</div></div></li>
-      <li><div class="num">02</div><div><div class="t-title">Abstract submission deadline</div><div class="t-date">25 September 2026</div><div class="t-desc">Final date for abstracts to be considered for the programme.</div></div></li>
-      <li><div class="num">03</div><div><div class="t-title">Conference day</div><div class="t-date">Friday, 09 October 2026 · 09h00</div><div class="t-desc">SWEB, West Campus, University of the Witwatersrand.</div></div></li>
-      <li><div class="num">04</div><div><div class="t-title">Gala dinner &amp; prize awards</div><div class="t-date">09 October 2026 · 18h00</div><div class="t-desc">Evening venue to be confirmed closer to the date.</div></div></li>
-    </ol>
-  </div>
-</section>
-
-<section id="awards">
-  <div class="wrap two-col">
-    <div>
-      <span class="section-head kicker">Postgraduate prize awards</span>
-      <h2>Recognising excellence</h2>
-      <p class="prose" style="color:var(--ink-soft);">Awards are judged on the day and presented at the gala dinner. Additional categories may be approved by the organising committee.</p>
-    </div>
-    <ul class="award-list">
-      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4zM5 6H3v2a4 4 0 0 0 4 4M19 6h2v2a4 4 0 0 1-4 4"/></svg></div><div><h3>Outstanding Research Presentation</h3><p>For the strongest overall presentation on the day.</p></div></li>
-      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 4v5h5"/></svg></div><div><h3>Best Student Paper</h3><p>Awarded for the highest quality written submission.</p></div></li>
-      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2a5 5 0 0 1 5 5c0 2.5-2 4-2 6h-6c0-2-2-3.5-2-6a5 5 0 0 1 5-5zM10 17h4M9 20h6"/></svg></div><div><h3>Innovation Excellence Award</h3><p>For work with the clearest path to real-world engineering impact.</p></div></li>
-      <li><div class="award-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div><h3>Emerging Researcher Recognition</h3><p>For a first-time presenter showing strong future potential.</p></div></li>
-    </ul>
-  </div>
+    <h2>Prize awards</h2>
+    <p class="section-intro">Recognising excellence across multiple categories</p>
+    <div class="awards-grid">
+      <div class="award-item">
+        <h3>Outstanding Research Presentation</h3>
+        <p>For the strongest overall presentation on the day</p>
+      </div>
+      <div class="award-item">
+        <h3>Best Student Paper</h3>
+        <p>Awarded for the highest quality written submission</p>
+      </div>
+      <div class="award-item">
+        <h3>Innovation Excellence Award</h3>
+        <p>For work with the clearest path to real-world impact</p>
+      </div>
+      <div class="award-item">
+        <h3>Emerging Researcher Recognition</h3>
+        <p>For first-time presenters showing strong future potential</p>
+      </div>
+    
 </section>
 
 <section id="gallery">
   <div class="wrap">
     <span class="section-head kicker">Conference moments</span>
     <h2 style="margin-bottom:28px;">Scenes from past sessions, labs &amp; keynotes</h2>
-    <div class="gallery-grid">
-      <div class="gallery-item">
-        <img src="{{ asset('images/3.jpeg') }}" alt="Keynote presentation">
-        <span class="gallery-label">Keynote presentation</span>
+    <div class="gallery-slider">
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="{{ asset('images/3.jpeg') }}" alt="Keynote presentation">
+          <span class="gallery-label">Keynote presentation</span>
+        </div>
+        <div class="gallery-item">
+          <img src="{{ asset('images/4.jpeg') }}" alt="Research presentations">
+          <span class="gallery-label">Research presentations</span>
+        </div>
+        <div class="gallery-item">
+          <img src="{{ asset('images/5.jpeg') }}" alt="Wits campus">
+          <span class="gallery-label">Wits campus</span>
+        </div>
+        <div class="gallery-item">
+          <img src="{{ asset('images/6.jpeg') }}" alt="Award ceremony">
+          <span class="gallery-label">Award ceremony</span>
+        </div>
+        <div class="gallery-item">
+          <img src="{{ asset('images/7.jpeg') }}" alt="Panel discussion">
+          <span class="gallery-label">Panel discussion</span>
+        </div>
       </div>
-      <div class="gallery-item">
-        <img src="{{ asset('images/4.jpeg') }}" alt="Research presentations">
-        <span class="gallery-label">Research presentations</span>
+      <div class="slider-controls" aria-hidden="true">
+        <button class="slider-control prev" aria-label="Previous">‹</button>
+        <button class="slider-control next" aria-label="Next">›</button>
       </div>
-      <div class="gallery-item">
-        <img src="{{ asset('images/5.jpeg') }}" alt="Wits campus">
-        <span class="gallery-label">Wits campus</span>
-      </div>
-      <div class="gallery-item">
-        <img src="{{ asset('images/6.jpeg') }}" alt="Award ceremony">
-        <span class="gallery-label">Award ceremony</span>
-      </div>
-      <div class="gallery-item">
-        <img src="{{ asset('images/7.jpeg') }}" alt="Panel discussion">
-        <span class="gallery-label">Panel discussion</span>
-      </div>
+      <div class="slider-dots" aria-hidden="false"></div>
     </div>
-    <p class="uni-note" style="margin-top:24px;">Moments from previous SAIMechE Central Branch postgraduate conferences at Wits University.</p>
-  </div>
+    </div>
 </section>
 
 <section id="universities">
@@ -150,24 +210,12 @@
       <a class="uni-card" href="https://www.uj.ac.za/" target="_blank" rel="noopener">
         <img src="{{ asset('unilogos/uj.png') }}" alt="University of Johannesburg" loading="lazy">
       </a>
-      <a class="uni-card" href="https://www.up.ac.za/" target="_blank" rel="noopener">
-        <img src="{{ asset('unilogos/up.png') }}" alt="University of Pretoria" loading="lazy">
-      </a>
+     
       <a class="uni-card" href="https://www.unisa.ac.za/" target="_blank" rel="noopener">
         <img src="{{ asset('unilogos/unisa.png') }}" alt="UNISA — University of South Africa" loading="lazy">
       </a>
-      <a class="uni-card" href="https://www.tut.ac.za/" target="_blank" rel="noopener">
-        <img src="{{ asset('unilogos/TUT.png') }}" alt="Tshwane University of Technology" loading="lazy">
-      </a>
-      <a class="uni-card" href="https://vut.ac.za/" target="_blank" rel="noopener">
-        <img src="{{ asset('unilogos/Vaal-University-of-Technology.png') }}" alt="Vaal University of Technology" loading="lazy">
-      </a>
-      <a class="uni-card" href="https://www.dut.ac.za/" target="_blank" rel="noopener">
-        <img src="{{ asset('unilogos/dut.png') }}" alt="Durban University of Technology" loading="lazy">
-      </a>
-      <a class="uni-card" href="https://www.nwu.ac.za/" target="_blank" rel="noopener">
-        <img src="{{ asset('unilogos/nwu.png') }}" alt="North-West University" loading="lazy">
-      </a>
+      
+      
       <a class="uni-card" href="https://www.wits.ac.za/" target="_blank" rel="noopener">
         <img src="{{ asset('unilogos/wits-logo.png') }}" alt="University of the Witwatersrand" loading="lazy">
       </a>
@@ -205,81 +253,187 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 <script>
 (function(){
-  var hasAnime = typeof anime !== 'undefined';
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!hasAnime || reduceMotion) return;
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var animate = anime.animate;
-  var stagger = anime.stagger;
-  var onScroll = anime.onScroll;
-  var splitText = anime.splitText;
-  var createTimeline = anime.createTimeline;
-  var utils = anime.utils;
-
-  utils.$('.nav-cta').forEach(function(btn){
-    btn.addEventListener('mouseenter', function(){ animate(btn, { scale: 1.05, duration: 200, ease: 'outQuad' }); });
-    btn.addEventListener('mouseleave', function(){ animate(btn, { scale: 1, duration: 200, ease: 'outQuad' }); });
-  });
-
-  animate('.announce .dot', {
-    scale: [1, 1.7], opacity: [1, 0.35],
-    duration: 1400, loop: true, alternate: true, ease: 'inOutSine'
-  });
-
-  var heroH1 = utils.$('.hero h1')[0];
-  var heroTimeline = createTimeline({ defaults: { ease: 'outQuart' } });
-  if (heroH1) {
-    var split = splitText(heroH1, { words: true, chars: false });
-    heroTimeline.add(split.words, {
-      opacity: [0, 1], translateY: [26, 0], duration: 700, delay: stagger(22)
-    }, 0);
-  }
-  heroTimeline
-    .add('.hero .lede', { opacity: [0, 1], translateY: [16, 0], duration: 650 }, 300)
-    .add('.cta-banner', { opacity: [0, 1], translateX: [-18, 0], duration: 550, delay: stagger(120) }, 500);
-
-  function reveal(selector, overrides, staggerMs){
-    utils.$(selector).forEach(function(el, i){
-      animate(el, Object.assign({
-        opacity: [0, 1], translateY: [26, 0], duration: 650, ease: 'outQuart',
-        delay: staggerMs ? i * staggerMs : 0,
-        autoplay: onScroll({ target: el, enter: 'bottom-=8% top', repeat: false })
-      }, overrides || {}));
-    });
+  /* ---------- Nav: condense on scroll ---------- */
+  var header = document.querySelector('header.site');
+  if (header) {
+    var onScroll = function(){
+      header.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  reveal('.spec-panel', { translateY: [34, 0] });
-  reveal('.spec-row', {}, 70);
-  reveal('#about .prose', { translateX: [-24, 0], translateY: [0, 0] });
-  reveal('#about > .wrap > div:last-child', { translateX: [24, 0], translateY: [0, 0] });
-  reveal('.disc-list li', { translateY: [18, 0], scale: [0.96, 1] }, 60);
-  reveal('.timeline li', { translateX: [-26, 0], translateY: [0, 0] }, 90);
-  reveal('.award-list li', { translateY: [22, 0], scale: [0.94, 1] }, 100);
-  reveal('.gallery-item', { translateY: [14, 0], scale: [0.94, 1] }, 80);
-  reveal('.uni-card', { translateY: [14, 0], scale: [0.9, 1] }, 60);
-  reveal('.venue-list li', { translateX: [-16, 0], translateY: [0, 0] }, 60);
-  reveal('footer .foot-grid > div', {}, 90);
-
-  var awardPaths = utils.$('.award-mark svg path');
-  awardPaths.forEach(function(path){
-    var len = Math.ceil(path.getTotalLength());
-    path.style.strokeDasharray = len;
-    path.style.strokeDashoffset = len;
-  });
-  if (awardPaths.length) {
-    animate(awardPaths, {
-      strokeDashoffset: 0, duration: 900, delay: stagger(120), ease: 'inOutQuad',
-      autoplay: onScroll({ target: '#awards', enter: 'bottom-=8% top', repeat: false })
-    });
+  /* ---------- Hero: split headline into words for entrance ---------- */
+  var heroH1 = document.querySelector('.welcome-hero h1');
+  if (heroH1 && !prefersReduced) {
+    var words = heroH1.textContent.trim().split(/\s+/);
+    heroH1.innerHTML = words.map(function (w) { return '<span class="word">' + w + '</span>'; }).join(' ');
   }
 
-  animate('.timeline .num', {
-    scale: [1.4, 1], duration: 500, delay: stagger(90), ease: 'outBack',
-    autoplay: onScroll({ target: '.timeline', enter: 'bottom-=8% top', repeat: false })
+  /* ---------- Reduced motion / no anime.js: just reveal everything ---------- */
+  var tm = document.querySelector('.timeline');
+  if (prefersReduced || typeof anime === 'undefined') {
+    document.querySelectorAll('.reveal-init').forEach(function (e) { e.style.opacity = 1; e.style.transform = 'none'; });
+    if (tm) tm.classList.add('revealed');
+    return;
+  }
+
+  /* ---------- Hero entrance ---------- */
+  anime({
+    targets: '.welcome-hero h1 .word',
+    translateY: [26, 0],
+    opacity: [0, 1],
+    easing: 'easeOutExpo',
+    duration: 900,
+    delay: anime.stagger(55)
   });
+  anime({
+    targets: '.welcome-hero .lede, .welcome-hero .welcome-cta-banners',
+    translateY: [16, 0],
+    opacity: [0, 1],
+    easing: 'easeOutExpo',
+    duration: 800,
+    delay: anime.stagger(120, { start: 350 })
+  });
+
+  /* ---------- Scroll-triggered reveals, grouped by parent for stagger ---------- */
+  var revealSelectors = [
+    '.section-head', '.disciplines-grid .discipline-card', '.gallery-item',
+    '.timeline-item', '.awards-grid .award-item', '.uni-card', '.spec-grid .spec-item'
+  ].join(',');
+  var els = Array.prototype.slice.call(document.querySelectorAll(revealSelectors))
+    .filter(function (e) { return !e.closest('.gallery-slider'); });
+  if (els.length) {
+    els.forEach(function (e) { e.style.opacity = 0; });
+
+    var animated = new WeakSet();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (ent) {
+        if (!ent.isIntersecting || animated.has(ent.target)) return;
+
+        var parent = ent.target.parentElement;
+        var group = parent
+          ? els.filter(function (e) { return e.parentElement === parent; })
+          : [ent.target];
+
+        group.forEach(function (e) { animated.add(e); });
+
+        anime({
+          targets: group,
+          translateY: [22, 0],
+          opacity: [0, 1],
+          easing: 'easeOutExpo',
+          duration: 700,
+          delay: anime.stagger(70)
+        });
+
+        io.unobserve(ent.target);
+      });
+    }, { threshold: 0.15 });
+
+    els.forEach(function (e) { io.observe(e); });
+  }
+
+  /* ---------- Timeline: draw line, pop dots in sequence ---------- */
+  if (tm) {
+    var first = tm.querySelector('.timeline-item');
+    if (first) {
+      var ioLine = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          tm.classList.add('revealed');
+          anime({
+            targets: tm.querySelectorAll('.timeline-dot'),
+            scale: [0, 1],
+            easing: 'easeOutBack',
+            duration: 500,
+            delay: anime.stagger(140)
+          });
+          ioLine.disconnect();
+        });
+      }, { threshold: 0.08 });
+      ioLine.observe(first);
+    }
+  }
+
+  /* ---------- Gallery touch affordance ---------- */
+  document.querySelectorAll('.gallery-item img').forEach(function (img) {
+    img.addEventListener('touchstart', function () { img.style.transform = 'scale(1.02)'; }, { passive: true });
+    img.addEventListener('touchend', function () { img.style.transform = ''; }, { passive: true });
+  });
+
+  /* ---------- Gallery slider: autoplay fade with controls ---------- */
+  (function(){
+    var slider = document.querySelector('.gallery-slider');
+    if (!slider) return;
+    var slides = Array.prototype.slice.call(slider.querySelectorAll('.gallery-item'));
+    if (!slides.length) return;
+    // init
+    slides.forEach(function(s,i){ s.classList.remove('active'); });
+    slides[0].classList.add('active');
+
+    var dots = slider.querySelector('.slider-dots');
+    slides.forEach(function(_,i){ var b = document.createElement('button'); if(i===0) b.classList.add('active'); b.addEventListener('click', function(){ goTo(i); }); dots.appendChild(b); });
+
+    var prev = slider.querySelector('.slider-control.prev');
+    var next = slider.querySelector('.slider-control.next');
+    var current = 0;
+
+    var mm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var autoplay = !mm;
+    var interval = 4500, timer = null;
+
+    function startTimer(){ if (mm) return; clearTimer(); timer = setInterval(function(){ if (autoplay) goTo(current+1); }, interval); }
+    function clearTimer(){ if (timer) { clearInterval(timer); timer = null; } }
+    function resetTimer(){ autoplay = true; clearTimer(); startTimer(); }
+
+    function goTo(idx){ var to = (idx + slides.length) % slides.length; if (to === current) return; slides[current].classList.remove('active'); if (dots && dots.children[current]) dots.children[current].classList.remove('active'); slides[to].classList.add('active'); if (dots && dots.children[to]) dots.children[to].classList.add('active'); current = to; }
+
+    prev && prev.addEventListener('click', function(){ goTo(current-1); resetTimer(); });
+    next && next.addEventListener('click', function(){ goTo(current+1); resetTimer(); });
+
+    // pause on hover for pointer devices
+    slider.addEventListener('mouseenter', function(){ if (!mm) autoplay = false; });
+    slider.addEventListener('mouseleave', function(){ if (!mm) autoplay = true; });
+
+    // touch / swipe support
+    (function(){
+      var startX = 0, startY = 0, deltaX = 0, tracking = false, moved = false;
+      var threshold = 40; // px required to trigger swipe
+
+      slider.addEventListener('touchstart', function(e){
+        if (!e.touches || e.touches.length > 1) return;
+        startX = e.touches[0].clientX; startY = e.touches[0].clientY; deltaX = 0; tracking = true; moved = false; autoplay = false;
+      }, { passive: true });
+
+      slider.addEventListener('touchmove', function(e){
+        if (!tracking || !e.touches || e.touches.length > 1) return;
+        var x = e.touches[0].clientX, y = e.touches[0].clientY;
+        deltaX = x - startX; var deltaY = y - startY;
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+          // horizontal intent, prevent vertical scroll only when moving noticeably horizontally
+          e.preventDefault(); moved = true;
+        }
+      }, { passive: false });
+
+      slider.addEventListener('touchend', function(e){
+        tracking = false; if (!moved) { autoplay = true; resetTimer(); return; }
+        if (Math.abs(deltaX) > threshold) {
+          if (deltaX < 0) goTo(current+1); else goTo(current-1);
+        }
+        // restore autoplay after a short delay
+        setTimeout(function(){ autoplay = true; resetTimer(); }, 350);
+      });
+    })();
+
+    // start autoplay timer if allowed
+    startTimer();
+  })();
 })();
 </script>
 @endpush

@@ -3,7 +3,7 @@
 <head>
     @include('partials.central.head')
 </head>
-<body>
+<body class="pattern-waves">
     @hasSection('announce')
         @yield('announce')
     @else

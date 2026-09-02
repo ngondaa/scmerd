@@ -1,14 +1,13 @@
 <header class="site">
   <div class="wrap">
     <nav class="site-nav">
-      <a href="{{ route('home') }}" class="site-nav-logo">
-        <img class="site-nav-logo-img" src="{{ asset('images/logo.png') }}" alt="">
-        <span class="site-nav-wordmark">SAIMechE Central</span>
+      <a href="{{ route('home') }}" class="site-nav-logo" aria-label="Home">
+        <img class="site-nav-logo-img" src="{{ asset('images/logo.png') }}" alt="SAIMechE">
       </a>
 
       <div class="site-nav-cluster">
         <ul class="nav-links" id="navLinks">
-          <li><a href="{{ route('home') }}#about">About</a></li>
+          
           <li><a href="{{ route('home') }}#disciplines">Disciplines</a></li>
           <li><a href="{{ route('home') }}#dates">Key dates</a></li>
           <li><a href="{{ route('home') }}#awards">Prize awards</a></li>
