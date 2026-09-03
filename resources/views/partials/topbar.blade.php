@@ -21,10 +21,9 @@
             </nav>
 
             <div class="cp-nav-actions">
-               
-                <form method="POST" action="{{ route('logout') }}" style="display:inline-flex; margin:0;">
+                <form method="POST" action="{{ route('logout') }}" class="cp-nav-logout">
                     @csrf
-                    <button type="submit" class="cp-nav-secondary" style="cursor:pointer;">Log out</button>
+                    <button type="submit" class="cp-nav-secondary cp-nav-logout-button">Log out</button>
                 </form>
                 <button class="cp-nav-toggle" id="cpNavToggle" type="button" aria-label="Toggle menu" aria-expanded="false">
                     <span></span><span></span>

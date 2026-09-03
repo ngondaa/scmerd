@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | SAIMechE Conference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span class="dot"></span>
+        <div>
+          <h2>Registration open</h2>
+          <p>Secure your place at this year's postgraduate conference.</p>
+        </div>
+      </div>
+    </div>
+
+    <header class="site">
+      <div class="wrap site-nav">
+        <a href="index.html" class="site-nav-logo" aria-label="Home">
+          <img src="images/logo.png" alt="SAIMechE" class="site-nav-logo-img" />
+        </a>
+        <div class="site-nav-cluster">
+          <nav class="nav-links" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="index.html#disciplines">Disciplines</a>
+            <a href="index.html#dates">Dates</a>
+            <a href="index.html#awards">Awards</a>
+            <a href="venue.html">Venue</a>
+          </nav>
+          <div class="nav-auth">
+            <a href="register.html" class="nav-cta primary">Register</a>
+            <a href="submit.html" class="nav-cta">Submit</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="page-head">
+        <span class="kicker">Register to attend</span>
+        <h1>Reserve your place for the 2026 conference</h1>
+        <p>Join postgraduate researchers, academics and industry professionals for a day of presentations, networking and awards.</p>
+      </section>
+
+      <section class="card-grid">
+        <aside class="info-card">
+          <h3>Conference summary</h3>
+          <ul class="info-list">
+            <li><strong>Date:</strong> Friday, 09 October 2026</li>
+            <li><strong>Venue:</strong> SWEB, Wits West Campus</li>
+            <li><strong>Format:</strong> Technical presentations, keynote session and gala dinner</li>
+            <li><strong>Audience:</strong> Students, academics, researchers and industry guests</li>
+          </ul>
+        </aside>
+
+        <div class="form-card">
+          <h3>Registration form</h3>
+          <form id="registration-form">
+            <div class="form-grid">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" type="text" placeholder="As to appear on certificate" />
+              </div>
+              <div>
+                <label for="email">Email address</label>
+                <input id="email" type="email" placeholder="name@saimeche.org.za" />
+              </div>
+              <div>
+                <label for="uni">University</label>
+                <input id="uni" type="text" placeholder="Institution" />
+              </div>
+              <div>
+                <label for="discipline">Discipline</label>
+                <select id="discipline">
+                  <option>Mechanical Engineering</option>
+                  <option>Industrial Engineering</option>
+                  <option>Aeronautical Engineering</option>
+                  <option>Biomedical Engineering</option>
+                  <option>Mechatronic Engineering</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="package-picker" style="margin-top:24px;">
+              <label>Conference package</label>
+              <div class="package-summary" aria-live="polite">
+                <span id="selected-package-name">Standard registration</span>
+                <button type="button" class="btn secondary" data-open-package-modal>Choose package</button>
+              </div>
+              <input type="hidden" name="package" id="selected-package" value="standard" />
+            </div>
+
+            <div class="package-option-grid" style="margin-top:18px;">
+              <button type="button" class="package-choice is-selected" data-package="standard" data-name="Standard registration" data-desc="Full conference access, presentations, networking and the gala dinner." data-price="R2 750" data-open-package-modal>
+                <span>Standard</span>
+                <strong>R2 750</strong>
+              </button>
+              <button type="button" class="package-choice" data-package="student" data-name="Student registration" data-desc="Reduced-rate attendance for postgraduate and student delegates." data-price="R1 650" data-open-package-modal>
+                <span>Student</span>
+                <strong>R1 650</strong>
+              </button>
+              <button type="button" class="package-choice" data-package="industry" data-name="Industry registration" data-desc="For academic and industry professionals attending the full conference programme." data-price="R3 950" data-open-package-modal>
+                <span>Industry</span>
+                <strong>R3 950</strong>
+              </button>
+            </div>
+
+            <div class="payment-box" style="margin-top:20px;">
+              <button type="button" class="payment-toggle" aria-expanded="false">
+                <span>Payment instructions</span>
+                <span class="payment-toggle-icon">＋</span>
+              </button>
+              <div class="payment-panel" hidden>
+                <p>Pay by EFT for your registration. Please include your name and package in the payment reference.</p>
+                <div class="bank-copy">
+                  <p><strong>Bank:</strong> Standard Bank</p>
+                  <p><strong>Account name:</strong> SAIMECHE</p>
+                  <p><strong>Account number:</strong> 002080974</p>
+                  <p><strong>Branch:</strong> Eastgate</p>
+                  <p><strong>Branch code:</strong> 018505</p>
+                  <p><strong>Electronic payments:</strong> 051001</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn" type="submit">Complete registration</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="package-modal" class="package-modal" aria-hidden="true" style="display:none;">
+          <div class="package-modal-overlay" data-close role="button" tabindex="0" aria-label="Close"></div>
+          <div class="package-modal-panel cp-card" role="dialog" aria-modal="true" aria-labelledby="package-modal-title">
+            <button class="modal-close" data-close aria-label="Close" type="button">✕</button>
+            <h3 id="package-modal-title">Package</h3>
+            <div class="package-modal-body">
+              <p class="package-modal-desc"></p>
+              <p class="package-modal-price" style="font-weight:700;margin-top:8px;"></p>
+
+              <form id="package-modal-form" method="POST" action="#">
+                <input type="hidden" name="package" value="" id="modal-package-input" />
+
+                <label style="display:block;margin-top:12px;">Name for certificate <small style="color:#666">(as it should appear)</small>
+                  <input name="certificate_name" type="text" required class="form-control" style="width:100%;margin-top:6px;" />
+                </label>
+
+                <div id="ecsa-block" style="margin-top:12px;">
+                  <label><input type="checkbox" name="ecsa_accredited" id="ecsa-accredited"> I am ECSA accredited</label>
+                  <div id="ecsa-number-wrap" style="margin-top:8px;display:none;">
+                    <label>ECSA number
+                      <input type="text" name="ecsa_number" id="ecsa-number" class="form-control" style="width:100%;margin-top:6px;" />
+                    </label>
+                  </div>
+                </div>
+
+                <div id="student-block" style="margin-top:12px;display:none;">
+                  <label>
+                    Student website ID
+                    <span class="field-hint">If you're a SAIMechE member, enter your member website ID here. Not a member? Leave this blank.</span>
+                    <input type="text" name="student_id" id="student-id" class="form-control" style="width:100%;margin-top:6px;" />
+                  </label>
+                </div>
+
+                <div id="invoice-block" style="margin-top:18px;">
+                  <label><input type="checkbox" name="needs_invoice" id="needs-invoice"> I need an invoice for payment</label>
+                  <div id="invoice-fields" style="margin-top:10px;display:none;">
+                    <label>Invoice to
+                      <input type="text" name="invoice_name" class="form-control" style="width:100%;margin-top:6px;" placeholder="Company or individual name" />
+                    </label>
+                    <label style="margin-top:10px;">Billing address
+                      <textarea name="invoice_address" class="form-control" style="width:100%;margin-top:6px;" placeholder="Street address, city, postal code"></textarea>
+                    </label>
+                    <label style="margin-top:10px;">VAT / registration number
+                      <input type="text" name="invoice_vat" class="form-control" style="width:100%;margin-top:6px;" placeholder="Optional" />
+                    </label>
+                  </div>
+                </div>
+
+                <div class="bank-letter" style="margin-top:18px; padding-top:8px;">
+                  <p style="margin:0 0 10px; font-weight:700;">Invoice payment details</p>
+                  <p style="margin:0 0 8px;">This letter serves to confirm that the below mentioned customer holds the below Standard Bank account.</p>
+                  <p style="margin:0 0 8px;"><strong>Legal entity name:</strong> SAIMECHE</p>
+                  <p style="margin:0 0 8px;"><strong>Name of account holder:</strong> SAIMECHE</p>
+                  <p style="margin:0 0 8px;"><strong>Registration/Identity/Passport number:</strong> UNKNOWN</p>
+                  <p style="margin:0 0 8px;"><strong>Account number:</strong> 002080974</p>
+                  <p style="margin:0 0 8px;"><strong>Account type:</strong> BUSINESS CURRENT ACCOUNT</p>
+                  <p style="margin:0 0 8px;"><strong>Branch:</strong> EASTGATE</p>
+                  <p style="margin:0 0 8px;"><strong>Branch code:</strong> 018505</p>
+                  <p style="margin:0 0 8px;"><strong>Branch code (electronic payments):</strong> 051001</p>
+                  <p style="margin:0 0 8px;"><strong>SWIFT address:</strong> SBZA ZA JJ</p>
+                  <p style="margin:0 0 8px;"><strong>Date account opened:</strong> 02 August 1996</p>
+                  <p style="margin:0 0 0;">This letter or your reliance on same does not give rise to any obligations or liability on the part of the Bank and/or its officials.</p>
+                </div>
+
+                <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <button type="submit" class="btn btn-primary">Proceed to checkout</button>
+                  <button type="button" class="btn secondary" data-close>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <h4>SAIMechE Central Branch</h4>
+            <p>Advancing engineering excellence across Gauteng.</p>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <p><a href="mailto:carey@saimeche.org.za">carey@saimeche.org.za</a></p>
+          </div>
+          <div>
+            <h4>Quick links</h4>
+            <p><a href="submit.html">Submit abstract</a></p>
+          </div>
+        </div>
+        <div class="foot-bottom">&copy; 2026 SAIMechE Central Branch</div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const revealEls = document.querySelectorAll('.page-head, .info-card, .form-card');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealEls.forEach((el) => {
+          el.classList.add('reveal');
+          observer.observe(el);
+        });
+
+        const modal = document.getElementById('package-modal');
+        const modalDesc = document.querySelector('.package-modal-desc');
+        const modalPrice = document.querySelector('.package-modal-price');
+        const modalInput = document.getElementById('modal-package-input');
+        const selectedPackageName = document.getElementById('selected-package-name');
+        const selectedPackageInput = document.getElementById('selected-package');
+        const studentBlock = document.getElementById('student-block');
+        const ecssaCheckbox = document.getElementById('ecsa-accredited');
+        const ecssaNumberWrap = document.getElementById('ecsa-number-wrap');
+        const packageChoices = document.querySelectorAll('.package-choice');
+
+        function setPackageState(packageKey, packageName, packageDescription, packagePrice) {
+          modalInput.value = packageKey;
+          modalDesc.textContent = packageDescription;
+          modalPrice.textContent = packagePrice;
+          selectedPackageInput.value = packageKey;
+          selectedPackageName.textContent = packageName;
+          packageChoices.forEach((choice) => {
+            const isSelected = choice.dataset.package === packageKey;
+            choice.classList.toggle('is-selected', isSelected);
+          });
+
+          if (packageKey === 'student') {
+            studentBlock.style.display = 'block';
+          } else {
+            studentBlock.style.display = 'none';
+            const studentId = document.getElementById('student-id');
+            if (studentId) studentId.value = '';
+          }
+        }
+
+        function openPackageModal() {
+          modal.style.display = 'flex';
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closePackageModal() {
+          modal.style.display = 'none';
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('[data-open-package-modal]').forEach((trigger) => {
+          trigger.addEventListener('click', function () {
+            const packageKey = this.dataset.package || selectedPackageInput.value;
+            const packageName = this.dataset.name || selectedPackageName.textContent;
+            const packageDescription = this.dataset.desc || 'Full conference access throughout the day.';
+            const packagePrice = this.dataset.price || 'R2 750';
+            setPackageState(packageKey, packageName, packageDescription, packagePrice);
+            openPackageModal();
+          });
+        });
+
+        document.querySelectorAll('[data-close]').forEach((control) => {
+          control.addEventListener('click', closePackageModal);
+          control.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              closePackageModal();
+            }
+          });
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+            closePackageModal();
+          }
+        });
+
+        const needsInvoiceCheckbox = document.getElementById('needs-invoice');
+        const invoiceFields = document.getElementById('invoice-fields');
+
+        ecssaCheckbox.addEventListener('change', function () {
+          ecssaNumberWrap.style.display = this.checked ? 'block' : 'none';
+          if (!this.checked) document.getElementById('ecsa-number').value = '';
+        });
+
+        if (needsInvoiceCheckbox) {
+          needsInvoiceCheckbox.addEventListener('change', function () {
+            invoiceFields.style.display = this.checked ? 'block' : 'none';
+          });
+        }
+
+        const paymentToggle = document.querySelector('.payment-toggle');
+        const paymentPanel = document.querySelector('.payment-panel');
+
+        if (paymentToggle && paymentPanel) {
+          paymentToggle.addEventListener('click', function () {
+            const isExpanded = paymentToggle.getAttribute('aria-expanded') === 'true';
+            paymentToggle.setAttribute('aria-expanded', String(!isExpanded));
+            paymentPanel.hidden = isExpanded;
+            paymentToggle.querySelector('.payment-toggle-icon').textContent = isExpanded ? '＋' : '−';
+          });
+        }
+
+        document.getElementById('package-modal-form').addEventListener('submit', function (event) {
+          event.preventDefault();
+          const chosenPackage = modalInput.value || selectedPackageInput.value;
+          const chosenName = document.querySelector('[data-package="' + chosenPackage + '"]')?.dataset.name || selectedPackageName.textContent;
+          selectedPackageInput.value = chosenPackage;
+          selectedPackageName.textContent = chosenName;
+          closePackageModal();
+        });
+
+        const defaultChoice = document.querySelector('.package-choice.is-selected') || document.querySelector('.package-choice');
+        if (defaultChoice) {
+          setPackageState(
+            defaultChoice.dataset.package,
+            defaultChoice.dataset.name,
+            defaultChoice.dataset.desc,
+            defaultChoice.dataset.price
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

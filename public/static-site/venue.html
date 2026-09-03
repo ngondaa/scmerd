@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Venue & Travel | SAIMechE Conference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span class="dot"></span>
+        <div>
+          <h2>Conference venue</h2>
+          <p>Southwest Engineering Building, Wits West Campus.</p>
+        </div>
+      </div>
+    </div>
+
+    <header class="site">
+      <div class="wrap site-nav">
+        <a href="index.html" class="site-nav-logo" aria-label="Home">
+          <img src="images/logo.png" alt="SAIMechE" class="site-nav-logo-img" />
+        </a>
+        <div class="site-nav-cluster">
+          <nav class="nav-links" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="index.html#disciplines">Disciplines</a>
+            <a href="index.html#dates">Dates</a>
+            <a href="index.html#awards">Awards</a>
+            <a href="venue.html" class="active">Venue</a>
+          </nav>
+          <div class="nav-auth">
+            <a href="register.html" class="nav-cta">Register</a>
+            <a href="submit.html" class="nav-cta primary">Submit</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="page-head">
+        <span class="kicker">Getting there</span>
+        <h1>Plan your arrival to the 2026 conference</h1>
+        <p>The event will take place at the University of the Witwatersrand's West Campus in Johannesburg, with the main conference day starting at 09h00.</p>
+      </section>
+
+      <section class="card-grid">
+        <div class="info-card">
+          <h3>Venue details</h3>
+          <ul class="info-list">
+            <li><strong>Building:</strong> Southwest Engineering Building (SWEB)</li>
+            <li><strong>Campus:</strong> West Campus, University of the Witwatersrand</li>
+            <li><strong>Address:</strong> 1 Jan Smuts Avenue, Braamfontein, Johannesburg, 2000</li>
+            <li><strong>Conference start:</strong> 09h00, Friday 09 October 2026</li>
+          </ul>
+        </div>
+
+        <div class="form-card">
+          <h3>Travel note</h3>
+          <p>Use main access routes to West Campus and allow extra time for parking and check-in on arrival. The gala dinner venue will be communicated closer to the conference date.</p>
+          <div class="form-actions">
+            <a href="index.html#venue" class="btn secondary">Back to overview</a>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 36px;">
+        <div class="venue-map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3580.1522852615117!2d28.029332999999998!3d-26.191723999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDExJzMwLjIiUyAyOMKwMDEnNDUuNiJF!5e0!3m2!1sen!2smw!4v1747369293879!5m2!1sen!2smw" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Southwest Engineering Building, Wits University"></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <h4>SAIMechE Central Branch</h4>
+            <p>Engineering research and innovation for Gauteng.</p>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <p><a href="mailto:carey@saimeche.org.za">carey@saimeche.org.za</a></p>
+          </div>
+          <div>
+            <h4>Quick links</h4>
+            <p><a href="register.html">Register</a></p>
+          </div>
+        </div>
+        <div class="foot-bottom">&copy; 2026 SAIMechE Central Branch</div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const revealEls = document.querySelectorAll('.page-head, .info-card, .form-card, .venue-map');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealEls.forEach((el) => {
+          el.classList.add('reveal');
+          observer.observe(el);
+        });
+      });
+    </script>
+  </body>
+</html>

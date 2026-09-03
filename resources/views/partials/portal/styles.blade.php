@@ -83,7 +83,7 @@
 .cp-nav-cluster {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 20px;
     margin-left: auto;
     min-width: 0;
 }
@@ -91,7 +91,7 @@
 .cp-nav {
     display: flex;
     align-items: center;
-    gap: 22px;
+    gap: 18px;
 }
 
 .cp-nav-item {
@@ -112,8 +112,22 @@
 .cp-nav-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     flex-shrink: 0;
+}
+
+.cp-nav-logout {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}
+
+.cp-nav-logout-button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
 }
 
 .cp-nav-secondary {
