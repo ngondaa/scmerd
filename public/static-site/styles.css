@@ -201,6 +201,25 @@ header.site {
   max-width: 18ch;
   margin-bottom: 0.3em;
 }
+.hero-title {
+  display: block;
+}
+.hero-title .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(26px);
+  animation: heroWordIn 0.8s ease forwards;
+}
+@keyframes heroWordIn {
+  0% {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .hero .lede {
   font-size: 18px;
   color: var(--ink-soft);

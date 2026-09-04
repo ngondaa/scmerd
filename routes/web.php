@@ -35,3 +35,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::post('stripe/webhook', [CheckoutController::class, 'webhook'])->name('stripe.webhook');
 
 require __DIR__.'/settings.php';
+
+// Admin settings and payment proof routes
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PaymentProofController;
+
+Route::middleware(['auth', 'can:admin'])->group(function () {
+    Route::get('admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::post('admin/settings/registration-toggle', [AdminController::class, 'toggleRegistration'])->name('admin.settings.toggle');
+    Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('registration/proof', [PaymentProofController::class, 'show'])->name('registration.proof');
+    Route::post('registration/proof', [PaymentProofController::class, 'store'])->name('registration.proof.store');
+});

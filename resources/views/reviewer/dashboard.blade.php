@@ -6,6 +6,11 @@
             <h2 class="cp-card-title">Reviewer dashboard</h2>
             <p class="cp-card-desc">All submissions received across the conference portal.</p>
 
+            <div style="margin-top:12px; display:flex; gap:8px;">
+                <a href="{{ route('reviewer.exports.abstracts') }}" class="btn">Export abstracts (CSV)</a>
+                <a href="{{ route('reviewer.exports.attachments') }}" class="btn">Download attachments (ZIP)</a>
+            </div>
+
             @if (session('status'))
                 <p class="cp-card-desc" style="color:#1a7f37; margin-bottom:16px;">{{ session('status') }}</p>
             @endif

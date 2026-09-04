@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('student_id')->nullable();
             $table->string('stripe_checkout_session_id')->nullable();
             $table->timestamp('registration_paid_at')->nullable();
+            $table->string('payment_proof_path')->nullable();
+            $table->text('payment_proof_analysis')->nullable();
+            $table->string('registration_status')->default('unpaid');
         });
     }
 
