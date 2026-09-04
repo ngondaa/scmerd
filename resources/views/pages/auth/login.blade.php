@@ -10,7 +10,7 @@
             @csrf
 
             <div class="flex flex-col gap-1">
-                <flux:label for="email" class="text-black font-medium">{{ __('Email address') }}</flux:label>
+                <flux:label for="email" class="!text-black font-medium">{{ __('Email address') }}</flux:label>
                 <flux:input
                     id="email"
                     name="email"
