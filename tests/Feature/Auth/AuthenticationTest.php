@@ -3,10 +3,30 @@
 use App\Models\User;
 use Laravel\Fortify\Features;
 
+beforeEach(function () {
+    config()->set('services.turnstile.secret', null);
+    config()->set('services.turnstile.site_key', null);
+    config()->set('services.turnstile.hostnames', ['localhost', '127.0.0.1']);
+});
+
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
     $response->assertOk();
+});
+
+test('login requires turnstile validation when configured', function () {
+    config()->set('services.turnstile.secret', 'test-secret');
+
+    $user = User::factory()->create();
+
+    $response = $this->from(route('login'))->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $response->assertSessionHasErrors('cf-turnstile-response');
+    $this->assertGuest();
 });
 
 test('users can authenticate using the login screen', function () {

@@ -3,15 +3,16 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\CustomLoginResponse;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Actions\Fortify\ValidateTurnstileLogin;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
-use App\Actions\Fortify\CustomLoginResponse;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,17 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        Fortify::authenticateThrough(function (Request $request) {
+            return array_filter([
+                config('fortify.limiters.login') ? null : \Laravel\Fortify\Actions\EnsureLoginIsNotThrottled::class,
+                config('fortify.lowercase_usernames') ? \Laravel\Fortify\Actions\CanonicalizeUsername::class : null,
+                \Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::twoFactorAuthentication()) ? \Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable::class : null,
+                ValidateTurnstileLogin::class,
+                \Laravel\Fortify\Actions\AttemptToAuthenticate::class,
+                \Laravel\Fortify\Actions\PrepareAuthenticatedSession::class,
+            ]);
+        });
 
         // Use custom login response to redirect reviewer users to reviewer dashboard
         $this->app->singleton(LoginResponseContract::class, CustomLoginResponse::class);
@@ -74,4 +86,6 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($throttleKey);
         });
     }
+
 }
+
