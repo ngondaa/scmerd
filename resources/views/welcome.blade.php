@@ -172,7 +172,7 @@
     <h2 style="margin-bottom:28px;">Scenes from past sessions, labs &amp; keynotes</h2>
     <div class="gallery-slider">
       <div class="gallery-grid">
-        <div class="gallery-item">
+        <div class="gallery-item active">
           <img src="{{ asset('images/3.jpeg') }}" alt="Keynote presentation">
           <span class="gallery-label">Keynote presentation</span>
         </div>

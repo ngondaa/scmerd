@@ -18,6 +18,7 @@
                 type="email"
                 required
                 autocomplete="email"
+                class="!border !border-zinc-400 !bg-white !text-zinc-950 !shadow-none"
             />
 
             <!-- Password -->
@@ -29,6 +30,7 @@
                 autocomplete="new-password"
                 :placeholder="__('Password')"
                 viewable
+                class="!border !border-zinc-400 !bg-white !text-zinc-950 !shadow-none"
             />
 
             <!-- Confirm Password -->
@@ -40,10 +42,11 @@
                 autocomplete="new-password"
                 :placeholder="__('Confirm password')"
                 viewable
+                class="!border !border-zinc-400 !bg-white !text-zinc-950 !shadow-none"
             />
 
             <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
+                <flux:button type="submit" variant="primary" class="w-full !bg-zinc-900 !text-white hover:!bg-zinc-800" data-test="reset-password-button">
                     {{ __('Reset password') }}
                 </flux:button>
             </div>
