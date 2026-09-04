@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -10,6 +11,25 @@ uses(WithFaker::class);
 beforeEach(function () {
     config()->set('services.turnstile.secret', 'test-secret');
     config()->set('app.url', 'http://localhost');
+});
+
+it('defaults registration to proof submission', function () {
+    expect(AppSetting::get('registration_mode', 'gateway'))->toBe('manual');
+});
+
+it('renders an invoice and proof payment form for the selected package', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)
+        ->get(route('registration.proof', [
+            'package' => 'standard',
+            'certificate_name' => 'Test User',
+        ]));
+
+    $response->assertOk()
+        ->assertSee('Invoice')
+        ->assertSee('R650')
+        ->assertSee('Bank transfer');
 });
 
 it('rejects manual proof upload when turnstile is missing', function () {

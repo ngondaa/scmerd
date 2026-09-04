@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class PaymentProofController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
         if (! auth()->check()) {
             return redirect()->route('login');
         }
 
         $registrationOpen = (bool) AppSetting::get('registration_open', '1');
-        $registrationMode = AppSetting::get('registration_mode', 'gateway');
+        $registrationMode = AppSetting::get('registration_mode', 'manual');
 
         if ($registrationMode !== 'manual') {
             return redirect()->route('dashboard')->with('error', 'Manual registration is not enabled.');
@@ -26,7 +26,17 @@ class PaymentProofController extends Controller
             return redirect()->route('dashboard')->with('error', 'Registration is currently closed.');
         }
 
-        return view('registration.proof');
+        $packageKey = $request->query('package', $request->input('package', auth()->user()->registration_package ?? session('registration_package', 'standard')));
+        $packageKey = is_string($packageKey) && $packageKey !== '' ? $packageKey : 'standard';
+        $packageConfig = config('registration.packages.' . $packageKey, config('registration.packages.standard'));
+        $certificateName = $request->query('certificate_name', $request->input('certificate_name', auth()->user()->certificate_name ?? ''));
+
+        return view('registration.proof', [
+            'packageKey' => $packageKey,
+            'package' => $packageConfig,
+            'certificateName' => is_string($certificateName) ? $certificateName : '',
+            'invoiceNumber' => 'INV-' . strtoupper(substr(auth()->user()->email, 0, 3)) . '-' . now()->format('YmdHis'),
+        ]);
     }
 
     public function store(Request $request)

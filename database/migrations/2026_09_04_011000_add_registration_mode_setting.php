@@ -12,7 +12,7 @@ return new class extends Migration
         if (! $exists) {
             DB::table('app_settings')->insert([
                 'key' => 'registration_mode',
-                'value' => 'gateway',
+                'value' => 'manual',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

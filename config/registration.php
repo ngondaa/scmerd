@@ -43,4 +43,18 @@ return [
         ],
     ],
 
+    'payment' => [
+        'bank_name' => 'Standard Bank',
+        'account_name' => 'SAIMECHE',
+        'account_number' => '002089074',
+        'branch_name' => 'Eastgate',
+        'branch_code' => '018505',
+        'electronic_branch_code' => '051001',
+        'swift_code' => 'SBZA ZA JJ',
+        'reference_prefix' => 'SCMERD',
+        'legal_entity' => 'SAIMECHE',
+        'account_type' => 'BUSINESS CURRENT ACCOUNT',
+        'date_opened' => '02 August 1996',
+    ],
+
 ];

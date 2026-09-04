@@ -16,7 +16,7 @@ class AdminController extends Controller
         }
 
         $registrationOpen = (bool) AppSetting::get('registration_open', '1');
-        $registrationMode = AppSetting::get('registration_mode', 'gateway');
+        $registrationMode = AppSetting::get('registration_mode', 'manual');
 
         $pending = User::where('registration_status', 'pending')->get();
 

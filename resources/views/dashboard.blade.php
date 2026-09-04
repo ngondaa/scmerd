@@ -36,42 +36,27 @@ $studentId = $user->student_id;
     .packages-grid{grid-template-columns:1fr;}
 }
 
-/* Package modal: was rendering as unstyled stacked text —
-   no overlay, no panel styling, no input styling. */
-.package-modal{position:fixed;inset:0;z-index:1000;}
-.package-modal-overlay{position:absolute;inset:0;background:rgba(17,17,17,0.55);backdrop-filter:blur(2px);}
-.package-modal-panel{
-    position:relative;
-    max-width:520px;
-    margin:8vh auto 0;
-    max-height:82vh;
-    overflow-y:auto;
-    background:#fff;
-    border-radius:10px;
-    padding:32px 32px 28px;
-    box-shadow:0 24px 60px rgba(0,0,0,.25);
+.package-card {
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    cursor: pointer;
 }
-.modal-close{
-    position:absolute;top:16px;right:16px;float:none !important;
-    width:32px;height:32px;border-radius:50%;
-    border:1px solid #eaeaea;background:#fff;
-    font-size:15px;line-height:1;cursor:pointer;
+.package-card:hover {
+    border-color: #111827;
+    box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
 }
-.modal-close:hover{background:#f5f5f5;}
-#package-modal-title{font-family:'Archivo',sans-serif;font-size:22px;margin:0 24px 4px 0;}
-.package-modal-desc{color:#5F6368;margin:0 0 4px;}
-.package-modal-price{font-size:15px;}
-.package-modal-body label{font-size:14px;font-weight:600;display:block;}
-.package-modal-body input[type="text"].form-control{
-    width:100%;margin-top:6px;padding:10px 12px;
-    border:1px solid #d8d8d8;border-radius:6px;font-size:14.5px;
+.package-card.selected {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
 }
-.package-modal-body input[type="text"].form-control:focus{
-    outline:none;border-color:#A41E22;box-shadow:0 0 0 3px rgba(164,30,34,.12);
+.package-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
-.package-modal-body input[type="checkbox"]{width:16px;height:16px;margin-right:6px;vertical-align:middle;}
 .field-hint{display:block;font-weight:400;font-size:12.5px;color:#5F6368;margin-top:4px;}
-#student-block,#ecsa-block{padding:14px 16px;background:#FAFAF8;border:1px solid #EAEAEA;border-radius:8px;}
 </style>
 
 <div class="cp-main-grid">
@@ -134,13 +119,11 @@ $studentId = $user->student_id;
                 </div>
             </div>
         @else
-            <div class="packages-grid">
-                <form method="POST" action="{{ route('update-package') }}" id="package-selector" class="package-form">
-                    @csrf
-
+            <form method="GET" action="{{ route('registration.proof') }}" id="package-selector" class="package-form" style="display:block;">
+                <div class="packages-grid">
                     <div class="package-option">
                         <input type="radio" id="pkg-student" name="package" value="student" required>
-                        <label for="pkg-student" class="package-card" data-package="student" data-price="R450" data-title="Student Package">
+                        <label for="pkg-student" class="package-card" data-package="student">
                             <div class="package-header">
                                 <h3>Student Package</h3>
                                 <div class="package-price">R450</div>
@@ -157,7 +140,7 @@ $studentId = $user->student_id;
 
                     <div class="package-option">
                         <input type="radio" id="pkg-standard" name="package" value="standard" required>
-                        <label for="pkg-standard" class="package-card" data-package="standard" data-price="R650" data-title="Standard Package">
+                        <label for="pkg-standard" class="package-card" data-package="standard">
                             <div class="package-header">
                                 <h3>Standard Package</h3>
                                 <div class="package-price">R650</div>
@@ -175,7 +158,7 @@ $studentId = $user->student_id;
 
                     <div class="package-option">
                         <input type="radio" id="pkg-premium" name="package" value="premium" required>
-                        <label for="pkg-premium" class="package-card" data-package="premium" data-price="R950" data-title="Premium Package">
+                        <label for="pkg-premium" class="package-card" data-package="premium">
                             <div class="package-header">
                                 <h3>Premium Package</h3>
                                 <div class="package-price">R950</div>
@@ -194,7 +177,7 @@ $studentId = $user->student_id;
 
                     <div class="package-option">
                         <input type="radio" id="pkg-presenter" name="package" value="presenter" required>
-                        <label for="pkg-presenter" class="package-card" data-package="presenter" data-price="R750" data-title="Presenter Package">
+                        <label for="pkg-presenter" class="package-card" data-package="presenter">
                             <div class="package-header">
                                 <h3>Presenter Package</h3>
                                 <div class="package-price">R750</div>
@@ -209,130 +192,44 @@ $studentId = $user->student_id;
                             </ul>
                         </label>
                     </div>
-                </form>
-            </div>
-            <button type="button" id="open-package-modal" class="btn btn-primary" style="margin-top: 24px; width: 100%;">
-                Confirm Registration Package
-            </button>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 24px; width: 100%;">
+                    Confirm Registration Package
+                </button>
+            </form>
         @endif
     </div>
 </div>
 
 @include('partials.portal.close')
 
-<!-- Package modal -->
-<div id="package-modal" class="package-modal" aria-hidden="true" style="display:none;">
-    <div class="package-modal-overlay" data-close role="button" tabindex="0" aria-label="Close"></div>
-    <div class="package-modal-panel cp-card" role="dialog" aria-modal="true" aria-labelledby="package-modal-title">
-        <button class="modal-close" data-close aria-label="Close" style="float:right;">✕</button>
-        <h3 id="package-modal-title">Package</h3>
-        <div class="package-modal-body">
-            <p class="package-modal-desc"></p>
-            <p class="package-modal-price" style="font-weight:700;margin-top:8px;"></p>
-
-            <form id="package-modal-form" method="POST" action="{{ route('checkout.create') }}">
-                @csrf
-                <input type="hidden" name="package" value="" id="modal-package-input">
-
-                <label style="display:block;margin-top:12px;">Name for certificate <small style="color:#666">(as it should appear)</small>
-                    <input name="certificate_name" type="text" required class="form-control" style="width:100%;margin-top:6px;" />
-                </label>
-
-                <div id="ecsa-block" style="margin-top:12px;">
-                    <label><input type="checkbox" name="ecsa_accredited" id="ecsa-accredited"> I am ECSA accredited</label>
-                    <div id="ecsa-number-wrap" style="margin-top:8px;display:none;">
-                        <label>ECSA number
-                            <input type="text" name="ecsa_number" id="ecsa-number" class="form-control" style="width:100%;margin-top:6px;" />
-                        </label>
-                    </div>
-                </div>
-
-                <div id="student-block" style="margin-top:12px;display:none;">
-                    <label>
-                        Student website ID
-                        <span class="field-hint">If you're a SAIMechE member, enter your member website ID here. Not a member? Leave this blank.</span>
-                        <input type="text" name="student_id" id="student-id" class="form-control" style="width:100%;margin-top:6px;" />
-                    </label>
-                </div>
-
-                <div style="margin-top:18px;display:flex;gap:10px;align-items:center;">
-                    <button type="submit" class="btn btn-primary">Proceed to checkout</button>
-                    <button type="button" class="btn" data-close>Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    var modal = document.getElementById('package-modal');
-    var panel = modal && modal.querySelector('.package-modal-panel');
-    var desc = modal && modal.querySelector('.package-modal-desc');
-    var priceEl = modal && modal.querySelector('.package-modal-price');
-    var pkgInput = document.getElementById('modal-package-input');
-    var ecsaCheckbox = document.getElementById('ecsa-accredited');
-    var ecsaWrap = document.getElementById('ecsa-number-wrap');
-    var studentBlock = document.getElementById('student-block');
+document.addEventListener('DOMContentLoaded', function () {
+    var selectedPackage = document.querySelector('#package-selector input[name="package"]:checked');
+    var cards = document.querySelectorAll('.package-card');
 
-    var titleEl = document.getElementById('package-modal-title');
-    var openBtn = document.getElementById('open-package-modal');
+    cards.forEach(function (card) {
+        var radio = document.getElementById('pkg-' + (card.dataset.package || ''));
+        if (!radio) return;
 
-    function openModal(data){
-        if (!modal) return;
-        if (titleEl) titleEl.textContent = data.title || 'Package';
-        desc.textContent = data.desc || '';
-        priceEl.textContent = data.price ? ('Price: ' + data.price) : '';
-        pkgInput.value = data.package || '';
-        // toggle student/ecsa fields
-        if (data.package === 'student'){
-            studentBlock.style.display = 'block';
-            ecsaWrap.style.display = 'none';
-            ecsaCheckbox.checked = false;
-        } else {
-            studentBlock.style.display = 'none';
-            ecsaWrap.style.display = 'none';
-            ecsaCheckbox.checked = false;
+        var syncSelection = function () {
+            cards.forEach(function (item) {
+                item.classList.toggle('selected', item === card && radio.checked);
+            });
+        };
+
+        radio.addEventListener('change', syncSelection);
+        if (radio.checked) {
+            syncSelection();
         }
-        modal.style.display = 'block';
-        modal.setAttribute('aria-hidden','false');
-        // focus first input
-        var first = modal.querySelector('input[name="certificate_name"]'); if (first) first.focus();
-    }
 
-    function closeModal(){ if(!modal) return; modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
-
-    // wire package cards
-    document.querySelectorAll('.package-card').forEach(function(card){
-        card.addEventListener('click', function(e){
-            e.preventDefault();
-            var radio = document.getElementById('pkg-' + (card.dataset.package || ''));
-            if (radio) radio.checked = true;
-            var packageKey = card.dataset.package || '';
-            var price = card.dataset.price || '';
-            var title = card.dataset.title || card.querySelector('h3')?.textContent || '';
-            var descText = card.querySelector('.package-desc') ? card.querySelector('.package-desc').textContent : '';
-            openModal({ package: packageKey, price: price, title: title, desc: descText });
+        card.addEventListener('click', function () {
+            radio.checked = true;
+            syncSelection();
         });
     });
-
-    openBtn && openBtn.addEventListener('click', function(){
-        var selected = document.querySelector('#package-selector input[name="package"]:checked');
-        if (!selected) {
-            alert('Please select a registration package first.');
-            return;
-        }
-        var card = document.querySelector('.package-card[data-package="' + selected.value + '"]');
-        if (!card) return;
-        card.click();
-    });
-
-    // close handlers
-    document.querySelectorAll('[data-close]').forEach(function(btn){ btn.addEventListener('click', function(){ closeModal(); }); });
-    document.querySelector('.package-modal-overlay')?.addEventListener('click', closeModal);
-
-    ecsaCheckbox && ecsaCheckbox.addEventListener('change', function(){ ecsaWrap.style.display = this.checked ? 'block' : 'none'; });
 });
 </script>
 @endpush

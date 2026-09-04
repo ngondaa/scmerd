@@ -13,7 +13,7 @@ class CheckoutController extends Controller
 {
     public function create(Request $request)
     {
-        $registrationMode = \App\Models\AppSetting::get('registration_mode', 'gateway');
+        $registrationMode = \App\Models\AppSetting::get('registration_mode', 'manual');
 
         if ($registrationMode !== 'gateway') {
             return redirect()->route('registration.proof')->with('error', 'Registration is currently set to manual proof upload.');
