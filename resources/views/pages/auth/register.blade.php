@@ -17,6 +17,7 @@
                 autofocus
                 autocomplete="name"
                 :placeholder="__('Full name')"
+                class="!border-zinc-400 !bg-white !text-black !shadow-none"
             />
 
             <!-- Email Address -->
@@ -28,6 +29,7 @@
                 required
                 autocomplete="email"
                 placeholder="email@example.com"
+                class="!border-zinc-400 !bg-white !text-black !shadow-none"
             />
 
             <!-- Password -->
@@ -39,6 +41,7 @@
                 autocomplete="new-password"
                 :placeholder="__('Password')"
                 viewable
+                class="!border-zinc-400 !bg-white !text-black !shadow-none"
             />
 
             <!-- Confirm Password -->
@@ -50,6 +53,7 @@
                 autocomplete="new-password"
                 :placeholder="__('Confirm password')"
                 viewable
+                class="!border-zinc-400 !bg-white !text-black !shadow-none"
             />
 
             <div class="flex items-center justify-end">
@@ -59,9 +63,9 @@
             </div>
         </form>
 
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black">
             <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            <flux:link :href="route('login')" wire:navigate class="text-black hover:text-zinc-900">{{ __('Log in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>
