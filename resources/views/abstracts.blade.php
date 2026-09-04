@@ -20,12 +20,17 @@
 @else
     @foreach ($submissions as $submission)
         @php
-            $badgeClass = match(strtolower($submission['status'] ?? '')) {
-                'under review'  => 'cp-badge-review',
-                'rebuttal open' => 'cp-badge-rebuttal',
-                'accepted'      => 'cp-badge-accepted',
-                default         => 'cp-badge-pending',
-            };
+            $status = is_array($submission) ? strtolower($submission['status'] ?? '') : strtolower($submission->status ?? '');
+
+            if (str_contains($status, 'initial') || str_contains($status, 'under')) {
+                $badgeClass = 'cp-badge-review';
+            } elseif (str_contains($status, 'rebuttal')) {
+                $badgeClass = 'cp-badge-rebuttal';
+            } elseif (str_contains($status, 'accept')) {
+                $badgeClass = 'cp-badge-accepted';
+            } else {
+                $badgeClass = 'cp-badge-pending';
+            }
         @endphp
         <div class="cp-card cp-card--inset">
             <div class="cp-card-head">
@@ -38,9 +43,13 @@
 
             <h3 class="cp-section-title">Submission lifecycle</h3>
             <div class="cp-lifecycle">
-                @foreach (['Abstract submitted', 'Under review', 'Rebuttal', 'Decision'] as $step)
-                    <div class="cp-step">{{ $step }}</div>
-                @endforeach
+                @php
+                    $current = $status;
+                @endphp
+                <div class="cp-step cp-step--done">Abstract submitted</div>
+                <div class="cp-step {{ (str_contains($current, 'initial') || str_contains($current, 'under')) ? 'cp-step--active' : '' }}">Under review</div>
+                <div class="cp-step {{ str_contains($current, 'rebuttal') ? 'cp-step--active' : '' }}">Rebuttal</div>
+                <div class="cp-step {{ (str_contains($current, 'accept') || str_contains($current, 'reject')) ? 'cp-step--active' : '' }}">Decision</div>
             </div>
 
             <h3 class="cp-section-title">Abstract</h3>
@@ -48,15 +57,33 @@
 
             <h3 class="cp-section-title">Review process &amp; comments</h3>
             <ul class="cp-list">
-                @foreach ($submission['comments'] as $comment)
-                    <li>{{ $comment }}</li>
-                @endforeach
+                @php
+                    $comments = is_array($submission) ? ($submission['comments'] ?? []) : ($submission->comments ?? []);
+                @endphp
+                @forelse ($comments as $comment)
+                    @if (is_array($comment) || is_object($comment))
+                        <li>
+                            <strong>{{ $comment['author'] ?? $comment->author ?? 'Reviewer' }}</strong>: {{ $comment['message'] ?? $comment->message ?? '' }}
+                            @if (!empty($comment['at'] ?? $comment->at ?? ''))
+                                <div class="cp-meta-text">{{ $comment['at'] ?? $comment->at }}</div>
+                            @endif
+                        </li>
+                    @else
+                        <li>{{ $comment }}</li>
+                    @endif
+                @empty
+                    <li>No comments yet.</li>
+                @endforelse
             </ul>
             <p class="cp-meta-text">Submitted: {{ $submission['submitted_at'] }}</p>
 
             <div class="cp-actions">
-                @if (!empty($submission['attachment_path']))
-                    <a href="{{ route('downloads.attachment', $submission['id']) }}" class="cp-btn-link">Download attachment</a>
+                @php
+                    $id = is_array($submission) ? ($submission['id'] ?? null) : ($submission->id ?? null);
+                    $attachment = is_array($submission) ? ($submission['attachment_path'] ?? null) : ($submission->attachment_path ?? null);
+                @endphp
+                @if (!empty($attachment) && $id)
+                    <a href="{{ route('downloads.attachment', $id) }}" class="cp-btn-link">Download attachment</a>
                 @endif
                 <a href="{{ route('rebuttals') }}" class="cp-btn-link">Open rebuttal</a>
             </div>

@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
 use Filament\Forms;
+use Illuminate\Support\Facades\Hash;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -38,8 +39,16 @@ class UserResource extends Resource
                         Forms\Components\Toggle::make('is_reviewer')
                             ->label('Reviewer access')
                             ->helperText('Grant access to the reviewer dashboard.'),
+                        Forms\Components\Toggle::make('is_admin')
+                            ->label('Admin access')
+                            ->helperText('Grant access to the Filament admin panel.'),
                         Forms\Components\TextInput::make('registration_package')
                             ->maxLength(50),
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)
+                            ->label('Password')
+                            ->helperText('Set a password when creating or updating a user. Leave blank to keep existing password.'),
                     ])
                     ->columns(2),
 

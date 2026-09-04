@@ -232,9 +232,9 @@ class AuthorPortalController extends Controller
 
     public function downloadAttachment(string $id)
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
+        // Allow reviewers to download attachments even if they haven't completed registration.
+        if (! auth()->check() || (! auth()->user()->registration_paid_at && ! auth()->user()->is_reviewer)) {
+            return redirect()->route('dashboard')->with('error', 'Complete your registration payment to download attachments.');
         }
 
         $submission = collect($this->submissions())->firstWhere('id', $id);

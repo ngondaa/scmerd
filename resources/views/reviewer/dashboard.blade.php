@@ -32,6 +32,15 @@
                                 <strong>Submitted:</strong> {{ $submission->submitted_at?->format('j M Y, H:i') ?? 'N/A' }}
                             </div>
 
+                            @if (! empty($submission->attachment_path))
+                                <div style="margin-top:12px;">
+                                    <a href="{{ route('downloads.attachment', $submission->id) }}" class="cp-btn-link">Download attachment</a>
+                                    @if (! empty($submission->attachment_name))
+                                        <span style="margin-left:8px; color:#6b7280;">{{ $submission->attachment_name }}</span>
+                                    @endif
+                                </div>
+                            @endif
+
                             <div style="margin-top:16px; padding:14px 16px; background:#fafaf8; border:1px solid #eaeaea; border-radius:8px;">
                                 <div style="font-weight:700; margin-bottom:8px;">Abstract</div>
                                 <div style="white-space:pre-wrap;">{{ $submission->abstract }}</div>
@@ -49,6 +58,24 @@
                                                     @if (! empty($comment['at']))
                                                         <small style="color:#6b7280;"> ({{ \Carbon\Carbon::parse($comment['at'])->format('d M Y H:i') }})</small>
                                                     @endif
+
+                                                        @if ($submission->relationLoaded('reviews') ? $submission->reviews->isNotEmpty() : $submission->reviews()->exists())
+                                                            <div style="margin-top:16px;">
+                                                                <div style="font-weight:700; margin-bottom:8px;">Reviews</div>
+                                                                <ul style="padding-left:18px; color:#374151; margin:0; display:grid; gap:8px;">
+                                                                    @foreach ($submission->reviews as $r)
+                                                                        <li>
+                                                                            <strong>{{ $r->user?->name ?? 'Reviewer' }}</strong>
+                                                                            <span> — {{ $r->comment }}</span>
+                                                                            @if (! empty($r->status))
+                                                                                <small style="color:#6b7280;"> (Status: {{ $r->status }})</small>
+                                                                            @endif
+                                                                            <small style="color:#6b7280;"> ({{ $r->created_at?->format('d M Y H:i') }})</small>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        @endif
                                                 @else
                                                     {{ $comment }}
                                                 @endif

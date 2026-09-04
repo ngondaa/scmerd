@@ -26,6 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('exports/submissions', [AuthorPortalController::class, 'exportCsv'])->name('exports.submissions');
     Route::get('reviewer/dashboard', [ReviewerController::class, 'dashboard'])->name('reviewer.dashboard');
     Route::post('reviewer/submissions/{submission}/comment', [ReviewerController::class, 'storeComment'])->name('reviewer.comment');
+    Route::get('reviewer/submissions/{submission}', [ReviewerController::class, 'show'])->name('reviewer.submission.show');
+    Route::post('reviewer/submissions/{submission}/assign', [ReviewerController::class, 'assignReviewer'])->name('reviewer.submission.assign');
+    Route::get('reviewer/exports/abstracts', [ReviewerController::class, 'exportAbstracts'])->name('reviewer.exports.abstracts');
+    Route::get('reviewer/exports/attachments', [ReviewerController::class, 'downloadAllAttachments'])->name('reviewer.exports.attachments');
 });
 
 Route::post('stripe/webhook', [CheckoutController::class, 'webhook'])->name('stripe.webhook');

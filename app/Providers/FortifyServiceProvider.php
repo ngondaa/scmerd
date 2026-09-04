@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use App\Actions\Fortify\CustomLoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,9 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // Use custom login response to redirect reviewer users to reviewer dashboard
+        $this->app->singleton(LoginResponseContract::class, CustomLoginResponse::class);
     }
 
     /**
