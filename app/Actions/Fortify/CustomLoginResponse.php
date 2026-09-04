@@ -14,6 +14,10 @@ class CustomLoginResponse implements LoginResponseContract
     {
         $user = $request->user();
 
+        if ($user && ! $user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
+
         if ($user && $user->is_reviewer) {
             return redirect()->route('reviewer.dashboard');
         }

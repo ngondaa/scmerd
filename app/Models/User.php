@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'is_reviewer',
 ])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
