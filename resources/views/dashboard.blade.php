@@ -10,6 +10,7 @@ $certificateName = $user->certificate_name;
 $ecsaAccredited = (bool) $user->ecsa_accredited;
 $ecsaNumber = $user->ecsa_number;
 $studentId = $user->student_id;
+$registrationStatus = $user->registration_status ?? 'unpaid';
 @endphp
 
 <style>
@@ -69,6 +70,12 @@ $studentId = $user->student_id;
                     — {{ config('registration.packages.'.$package.'.name', ucfirst($package)) }}
                 @endif
             </p>
+        @elseif ($registrationStatus === 'pending')
+            <div style="margin-top:18px; padding:20px 18px; border:1px solid #d9a441; border-radius:10px; background:#fff9eb;">
+                <div style="font-size:18px; font-weight:700; color:#6b4a00;">Payment proof awaiting verification</div>
+                <p class="cp-card-desc" style="margin:8px 0 0;">Your {{ config('registration.packages.'.$package.'.name', ucfirst($package)) }} registration and payment proof have been received. We will notify you once payment is approved.</p>
+                <a href="{{ route('registration.proof', ['package' => $package]) }}" class="btn btn-secondary" style="margin-top:16px;">Replace proof or update registration details</a>
+            </div>
         @else
             <p class="cp-card-desc">Select your registration package to proceed with abstract submission.</p>
         @endif

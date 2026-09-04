@@ -74,6 +74,7 @@ it('stores file and dispatches job on upload', function () {
         ->post(route('registration.proof.store'), [
             'proof' => $file,
             'package' => 'standard',
+            'certificate_name' => 'Test User',
             'cf-turnstile-response' => 'valid-token',
         ])
         ->assertRedirect(route('dashboard'));

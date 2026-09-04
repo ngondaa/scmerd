@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SubmissionResource\Pages\EditSubmission;
 use App\Filament\Resources\SubmissionResource\Pages\ListSubmissions;
 use App\Models\Submission;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -115,10 +117,10 @@ class SubmissionResource extends Resource
                     ),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                DeleteBulkAction::make(),
             ]);
     }
 

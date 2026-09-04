@@ -58,6 +58,7 @@ it('accepts valid turnstile submissions for manual proof upload', function () {
         ->post(route('registration.proof.store'), [
             'package' => 'standard',
             'proof' => UploadedFile::fake()->image('proof.png'),
+            'certificate_name' => 'Test User',
             'cf-turnstile-response' => 'valid-token',
         ]);
 

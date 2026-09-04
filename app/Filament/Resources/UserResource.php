@@ -4,7 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Models\User;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Illuminate\Support\Facades\Hash;
 use Filament\Resources\Resource;
@@ -46,6 +49,7 @@ class UserResource extends Resource
                             ->maxLength(50),
                         Forms\Components\TextInput::make('password')
                             ->password()
+                            ->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)
                             ->label('Password')
                             ->helperText('Set a password when creating or updating a user. Leave blank to keep existing password.'),
@@ -66,6 +70,17 @@ class UserResource extends Resource
                             ->label('Registration paid at'),
                         Forms\Components\TextInput::make('stripe_checkout_session_id')
                             ->maxLength(255),
+                        Forms\Components\Select::make('registration_status')
+                            ->options(['unpaid' => 'Unpaid', 'pending' => 'Pending review', 'paid' => 'Paid', 'rejected' => 'Rejected'])
+                            ->default('unpaid')
+                            ->required(),
+                        Forms\Components\FileUpload::make('payment_proof_path')
+                            ->label('Payment proof')
+                            ->disk('public')
+                            ->directory('payment_proofs')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp'])
+                            ->openable()
+                            ->downloadable(),
                     ])
                     ->columns(2),
             ]);
@@ -88,6 +103,15 @@ class UserResource extends Resource
                     ->label('Reviewer')
                     ->boolean()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('registration_status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'paid' => 'success', 'pending' => 'warning', 'rejected' => 'danger', default => 'gray',
+                    })
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('payment_proof_path')
+                    ->label('Proof')
+                    ->boolean(fn ($record): bool => filled($record->payment_proof_path)),
                 Tables\Columns\TextColumn::make('registration_paid_at')
                     ->dateTime()
                     ->sortable()
@@ -105,10 +129,10 @@ class UserResource extends Resource
                     ->falseLabel('Non-reviewers'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                DeleteBulkAction::make(),
             ]);
     }
 
@@ -116,6 +140,7 @@ class UserResource extends Resource
     {
         return [
             'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }

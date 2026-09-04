@@ -59,15 +59,33 @@
                         <input type="text" name="certificate_name" value="{{ old('certificate_name', $certificateName) }}" required>
                     </label>
 
-                    <label>Proof of payment (upload image/pdf)
-                        <input type="file" name="proof" required>
+                    <label style="display:flex; align-items:center; gap:8px;">
+                        <input type="hidden" name="ecsa_accredited" value="0">
+                        <input type="checkbox" name="ecsa_accredited" value="1" @checked(old('ecsa_accredited', $ecsaAccredited))>
+                        I require ECSA CPD recognition
                     </label>
 
-                    <div
-                        class="cf-turnstile"
-                        data-sitekey="{{ config('services.turnstile.site_key') }}"
-                        data-action="payment_proof_upload"
-                    ></div>
+                    <label>ECSA number <span style="font-weight:400; color:#666;">(required when claiming CPD)</span>
+                        <input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}">
+                    </label>
+
+                    @if ($packageKey === 'student')
+                        <label>Student number
+                            <input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" required>
+                        </label>
+                    @endif
+
+                    <label>Proof of payment <span style="font-weight:400; color:#666;">(PDF, JPG, PNG or WebP; max 10 MB)</span>
+                        <input type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                    </label>
+
+                    @if (config('services.turnstile.site_key'))
+                        <div
+                            class="cf-turnstile"
+                            data-sitekey="{{ config('services.turnstile.site_key') }}"
+                            data-action="payment_proof_upload"
+                        ></div>
+                    @endif
 
                     <button class="btn btn-primary" type="submit">Submit proof of payment</button>
                 </div>

@@ -28,6 +28,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'stripe_checkout_session_id',
     'registration_paid_at',
     'is_reviewer',
+    'is_admin',
+    'payment_proof_path',
+    'payment_proof_analysis',
+    'registration_status',
 ])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
