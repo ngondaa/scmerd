@@ -34,13 +34,13 @@
                 />
 
                 @if (Route::has('password.request'))
-                    <flux:link class="absolute -top-1 right-0 text-xs font-medium text-black hover:text-zinc-900" :href="route('password.request')" wire:navigate>
+                    <flux:link class="absolute -top-1 right-0 text-xs font-semibold text-black hover:text-zinc-900" :href="route('password.request')" wire:navigate>
                         {{ __('Forgot your password?') }}
                     </flux:link>
                 @endif
             </div>
 
-            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" class="text-black" />
+            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" class="font-medium text-black" />
 
             @if (config('services.turnstile.site_key'))
                 <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-action="login" data-theme="light"></div>
@@ -54,7 +54,7 @@
         </form>
 
         @if (Route::has('register'))
-            <div class="space-x-1 text-center text-sm text-black rtl:space-x-reverse">
+            <div class="space-x-1 text-center text-sm font-medium text-black rtl:space-x-reverse">
                 <span>{{ __('Don\'t have an account?') }}</span>
                 <flux:link :href="route('register')" wire:navigate class="text-black hover:text-zinc-900">{{ __('Sign up') }}</flux:link>
             </div>
