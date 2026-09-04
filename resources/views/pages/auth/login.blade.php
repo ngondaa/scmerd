@@ -10,7 +10,7 @@
             @csrf
 
             <div class="flex flex-col gap-1">
-                <flux:label for="email" class="!text-black font-medium">{{ __('Email address') }}</flux:label>
+                <flux:label for="email" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Email address') }}</flux:label>
                 <flux:input
                     id="email"
                     name="email"
@@ -20,12 +20,12 @@
                     autofocus
                     autocomplete="email"
                     placeholder="email@example.com"
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
             </div>
 
             <div class="relative flex flex-col gap-1">
-                <flux:label for="password" class="!text-black font-medium">{{ __('Password') }}</flux:label>
+                <flux:label for="password" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Password') }}</flux:label>
                 <flux:input
                     id="password"
                     name="password"
@@ -34,17 +34,17 @@
                     autocomplete="current-password"
                     :placeholder="__('Password')"
                     viewable
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
 
                 @if (Route::has('password.request'))
-                    <flux:link class="absolute -top-1 right-0 text-xs font-semibold !text-black hover:!text-zinc-900" :href="route('password.request')" wire:navigate>
+                    <flux:link class="absolute -top-1 right-0 text-sm !font-semibold !text-zinc-950 hover:!text-zinc-700" :href="route('password.request')" wire:navigate>
                         {{ __('Forgot your password?') }}
                     </flux:link>
                 @endif
             </div>
 
-            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" class="font-medium !text-black" />
+            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" class="!font-semibold !text-zinc-950" />
 
             @if (config('services.turnstile.site_key'))
                 <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-action="login" data-theme="light"></div>

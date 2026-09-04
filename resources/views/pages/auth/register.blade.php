@@ -10,7 +10,7 @@
 
             <!-- Name -->
             <div class="flex flex-col gap-1">
-                <flux:label for="name" class="!text-black font-medium">{{ __('Name') }}</flux:label>
+                <flux:label for="name" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Name') }}</flux:label>
                 <flux:input
                     id="name"
                     name="name"
@@ -20,13 +20,13 @@
                     autofocus
                     autocomplete="name"
                     :placeholder="__('Full name')"
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
             </div>
 
             <!-- Email Address -->
             <div class="flex flex-col gap-1">
-                <flux:label for="email" class="!text-black font-medium">{{ __('Email address') }}</flux:label>
+                <flux:label for="email" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Email address') }}</flux:label>
                 <flux:input
                     id="email"
                     name="email"
@@ -35,13 +35,13 @@
                     required
                     autocomplete="email"
                     placeholder="email@example.com"
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
             </div>
 
             <!-- Password -->
             <div class="flex flex-col gap-1">
-                <flux:label for="password" class="!text-black font-medium">{{ __('Password') }}</flux:label>
+                <flux:label for="password" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Password') }}</flux:label>
                 <flux:input
                     id="password"
                     name="password"
@@ -50,13 +50,13 @@
                     autocomplete="new-password"
                     :placeholder="__('Password')"
                     viewable
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
             </div>
 
             <!-- Confirm Password -->
             <div class="flex flex-col gap-1">
-                <flux:label for="password_confirmation" class="!text-black font-medium">{{ __('Confirm password') }}</flux:label>
+                <flux:label for="password_confirmation" class="!text-[15px] !font-semibold !text-zinc-950">{{ __('Confirm password') }}</flux:label>
                 <flux:input
                     id="password_confirmation"
                     name="password_confirmation"
@@ -65,7 +65,7 @@
                     autocomplete="new-password"
                     :placeholder="__('Confirm password')"
                     viewable
-                    class="!border !border-zinc-400 !bg-white !text-black !shadow-none"
+                    class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
             </div>
 

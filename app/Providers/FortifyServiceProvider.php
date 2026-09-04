@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\CustomLoginResponse;
+use App\Actions\Fortify\CustomRegisterResponse;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\ValidateTurnstileLogin;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -44,8 +46,9 @@ class FortifyServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Use custom login response to redirect reviewer users to reviewer dashboard
+        // Send unverified users to the verification notice after login or registration.
         $this->app->singleton(LoginResponseContract::class, CustomLoginResponse::class);
+        $this->app->singleton(RegisterResponseContract::class, CustomRegisterResponse::class);
     }
 
     /**
@@ -88,4 +91,3 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
 }
-
