@@ -53,8 +53,8 @@ class ProofAnalysisJob implements ShouldQueue
             }
 
         // Test hook: if PROOF_ANALYSIS_FAKE_OCR is set, use it as extracted text.
-        $fake = getenv('PROOF_ANALYSIS_FAKE_OCR') ?: ($_ENV['PROOF_ANALYSIS_FAKE_OCR'] ?? env('PROOF_ANALYSIS_FAKE_OCR'));
-        if ($fake) {
+        $fake = getenv('PROOF_ANALYSIS_FAKE_OCR');
+        if (is_string($fake) && $fake !== '') {
             $extracted = $fake;
         } else {
             $tesseractCmd = trim(shell_exec('which tesseract 2>/dev/null'));

@@ -5,6 +5,7 @@ use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
@@ -53,6 +54,14 @@ it('marks pending_review when amounts mismatch', function () {
 
 it('stores file and dispatches job on upload', function () {
     Bus::fake();
+    config()->set('services.turnstile.secret', 'test-secret');
+    Http::fake([
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify' => Http::response([
+            'success' => true,
+            'action' => 'payment_proof_upload',
+            'hostname' => 'localhost',
+        ], 200),
+    ]);
 
     AppSetting::set('registration_mode', 'manual');
     AppSetting::set('registration_open', '1');
@@ -65,6 +74,7 @@ it('stores file and dispatches job on upload', function () {
         ->post(route('registration.proof.store'), [
             'proof' => $file,
             'package' => 'standard',
+            'cf-turnstile-response' => 'valid-token',
         ])
         ->assertRedirect(route('dashboard'));
 

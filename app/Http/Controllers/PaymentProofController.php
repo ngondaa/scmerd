@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentProofController extends Controller
@@ -32,6 +33,34 @@ class PaymentProofController extends Controller
     {
         if (! auth()->check()) {
             return redirect()->route('login');
+        }
+
+        $token = $request->input('cf-turnstile-response');
+        $secret = config('services.turnstile.secret');
+
+        if (! is_string($token) || $token === '') {
+            return back()->withErrors(['cf-turnstile-response' => 'Please complete the security check.'])->withInput();
+        }
+
+        if (is_string($secret) && $secret !== '') {
+            $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                'secret' => $secret,
+                'response' => $token,
+                'remoteip' => $request->ip(),
+            ]);
+
+            $result = $response->json();
+            $hostname = $request->getHost();
+            $allowedHostnames = array_filter(array_map('trim', (array) config('services.turnstile.hostnames', ['localhost', '127.0.0.1'])));
+
+            $hostnameValid = in_array($hostname, $allowedHostnames, true)
+                || in_array($result['hostname'] ?? '', $allowedHostnames, true);
+
+            if (($result['success'] ?? false) !== true
+                || ($result['action'] ?? null) !== 'payment_proof_upload'
+                || ! $hostnameValid) {
+                return back()->withErrors(['cf-turnstile-response' => 'Security verification failed. Please try again.'])->withInput();
+            }
         }
 
         $request->validate([

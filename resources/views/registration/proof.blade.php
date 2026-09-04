@@ -1,4 +1,6 @@
 <x-layouts::app :title="__('Submit proof of payment')">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <div class="cp-main-grid">
         <div class="cp-card">
             <h2 class="cp-card-title">Submit proof of payment</h2>
@@ -22,6 +24,12 @@
                     <label>Proof of payment (upload image/pdf)
                         <input type="file" name="proof" required>
                     </label>
+
+                    <div
+                        class="cf-turnstile"
+                        data-sitekey="{{ config('services.turnstile.site_key') }}"
+                        data-action="payment_proof_upload"
+                    ></div>
 
                     <button class="btn btn-primary" type="submit">Upload proof</button>
                 </div>
