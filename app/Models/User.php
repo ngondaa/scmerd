@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'ecsa_accredited',
     'ecsa_number',
     'student_id',
-    'stripe_checkout_session_id',
     'registration_paid_at',
     'is_reviewer',
     'is_admin',

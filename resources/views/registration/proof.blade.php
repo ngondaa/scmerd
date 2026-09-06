@@ -1,12 +1,21 @@
 <x-layouts::app :title="__('Submit proof of payment')">
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
     <div class="cp-main-grid">
         <div class="cp-card">
             <h2 class="cp-card-title">Invoice & payment proof</h2>
 
             @if(session('status'))
                 <p style="color:#1a7f37;">{{ session('status') }}</p>
+            @endif
+
+            @if ($errors->any())
+                <div role="alert" style="margin:0 0 18px; padding:14px 16px; border:1px solid #e8a6a6; border-radius:8px; background:#fff5f5; color:#8b1e1e;">
+                    <strong>Please correct the following:</strong>
+                    <ul style="margin:8px 0 0; padding-left:20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             <div style="display:grid; gap:18px; margin-bottom:22px;">
@@ -78,14 +87,6 @@
                     <label>Proof of payment <span style="font-weight:400; color:#666;">(PDF, JPG, PNG or WebP; max 10 MB)</span>
                         <input type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
                     </label>
-
-                    @if (config('services.turnstile.site_key'))
-                        <div
-                            class="cf-turnstile"
-                            data-sitekey="{{ config('services.turnstile.site_key') }}"
-                            data-action="payment_proof_upload"
-                        ></div>
-                    @endif
 
                     <button class="btn btn-primary" type="submit">Submit proof of payment</button>
                 </div>

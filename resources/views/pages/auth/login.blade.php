@@ -1,10 +1,9 @@
 <x-layouts::auth :title="__('Log in')">
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
     <div class="flex flex-col gap-5">
         <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
 
         <x-auth-session-status class="text-center" :status="session('status')" />
+        <x-auth-validation-errors />
 
         <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-5">
             @csrf
@@ -45,10 +44,6 @@
             </div>
 
             <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" class="!font-semibold !text-zinc-950" />
-
-            @if (config('services.turnstile.site_key'))
-                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-action="login" data-theme="light"></div>
-            @endif
 
             <div class="flex items-center justify-end pt-1">
                 <flux:button variant="primary" type="submit" class="w-full !rounded-md !bg-zinc-900 !text-white hover:!bg-zinc-800" data-test="login-button">

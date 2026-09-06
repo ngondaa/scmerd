@@ -16,11 +16,9 @@ class AdminController extends Controller
         }
 
         $registrationOpen = (bool) AppSetting::get('registration_open', '1');
-        $registrationMode = AppSetting::get('registration_mode', 'manual');
-
         $pending = User::where('registration_status', 'pending')->get();
 
-        return view('admin.settings', compact('registrationOpen', 'registrationMode', 'pending'));
+        return view('admin.settings', compact('registrationOpen', 'pending'));
     }
 
     public function toggleRegistration(Request $request)
@@ -31,11 +29,6 @@ class AdminController extends Controller
 
         $state = $request->boolean('registration_open');
         AppSetting::set('registration_open', $state ? '1' : '0');
-
-        if ($request->has('registration_mode')) {
-            $mode = in_array($request->input('registration_mode'), ['gateway', 'manual']) ? $request->input('registration_mode') : 'gateway';
-            AppSetting::set('registration_mode', $mode);
-        }
 
         return redirect()->back()->with('status', 'Registration settings updated.');
     }

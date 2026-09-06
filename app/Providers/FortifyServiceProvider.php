@@ -6,7 +6,6 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\CustomLoginResponse;
 use App\Actions\Fortify\CustomRegisterResponse;
 use App\Actions\Fortify\ResetUserPassword;
-use App\Actions\Fortify\ValidateTurnstileLogin;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -40,7 +39,6 @@ class FortifyServiceProvider extends ServiceProvider
                 config('fortify.limiters.login') ? null : \Laravel\Fortify\Actions\EnsureLoginIsNotThrottled::class,
                 config('fortify.lowercase_usernames') ? \Laravel\Fortify\Actions\CanonicalizeUsername::class : null,
                 \Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::twoFactorAuthentication()) ? \Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable::class : null,
-                ValidateTurnstileLogin::class,
                 \Laravel\Fortify\Actions\AttemptToAuthenticate::class,
                 \Laravel\Fortify\Actions\PrepareAuthenticatedSession::class,
             ]);

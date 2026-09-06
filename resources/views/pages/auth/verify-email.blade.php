@@ -3,6 +3,10 @@
         <flux:text class="text-center !text-zinc-800">
             {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
         </flux:text>
+        <flux:text class="text-center !text-sm !font-medium !text-zinc-700">
+            {{ auth()->user()?->email }}
+        </flux:text>
+        <x-auth-validation-errors />
 
         @if (session('status') == 'verification-link-sent')
             <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">

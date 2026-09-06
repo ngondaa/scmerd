@@ -35,16 +35,4 @@ return [
         ],
     ],
 
-    'stripe' => [
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
-        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
-    ],
-
-    'turnstile' => [
-        'site_key' => env('TURNSTILE_SITE_KEY'),
-        'secret' => env('TURNSTILE_SECRET'),
-        'hostnames' => array_filter(array_map('trim', explode(',', (string) env('TURNSTILE_HOSTNAMES', 'localhost,127.0.0.1')))),
-    ],
-
 ];

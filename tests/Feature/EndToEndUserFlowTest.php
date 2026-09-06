@@ -3,8 +3,17 @@
 use App\Models\Submission;
 use App\Models\User;
 use App\Models\Review;
+use App\Models\AppSetting;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> review', function () {
+    Storage::fake('public');
+    Bus::fake();
+    AppSetting::set('registration_open', '1');
+
     // Register a new user
     $email = 'e2e-user+'.time().'@example.com';
 
@@ -15,19 +24,42 @@ test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> revi
         'password_confirmation' => 'password',
     ]);
 
-    $response->assertSessionHasNoErrors()->assertRedirect(route('dashboard', absolute: false));
+    $response->assertSessionHasNoErrors()->assertRedirect(route('verification.notice', absolute: false));
     $this->assertAuthenticated();
 
     $user = auth()->user();
 
-    // Mark registration as paid
-    $user->registration_paid_at = now();
-    $user->save();
+    // Verify the email before accessing registration and submission routes.
+    $verificationUrl = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(60),
+        ['id' => $user->id, 'hash' => sha1($user->email)],
+    );
+    $this->actingAs($user)->get($verificationUrl)
+        ->assertRedirect(route('dashboard', absolute: false).'?verified=1');
+    $user->refresh();
+
+    // Submit a proof of payment, then approve it as an administrator.
+    $this->actingAs($user)->post(route('registration.proof.store'), [
+        'package' => 'standard',
+        'certificate_name' => 'E2E User',
+        'proof' => UploadedFile::fake()->image('payment-proof.png'),
+    ])->assertRedirect(route('dashboard'));
+
+    expect($user->fresh()->registration_status)->toBe('pending');
+
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->actingAs($admin)->post(route('admin.users.verify-payment', $user), [
+        'action' => 'approve',
+    ])->assertSessionHas('status');
+
+    expect($user->fresh()->registration_status)->toBe('paid')
+        ->and($user->fresh()->registration_paid_at)->not->toBeNull();
 
     // Submit an abstract
     $title = 'E2E Test Submission ' . time();
 
-    $submitResponse = $this->actingAs($user)->post(route('submit.store'), [
+    $submitResponse = $this->actingAs($user->fresh())->post(route('submit.store'), [
         'title' => $title,
         'author' => 'E2E User',
         'track' => 'Abstract Submission',

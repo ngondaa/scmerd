@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthorPortalController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ReviewerController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,9 +9,6 @@ Route::view('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [AuthorPortalController::class, 'dashboard'])->name('dashboard');
     Route::post('package/update', [AuthorPortalController::class, 'updatePackage'])->name('update-package');
-    Route::post('checkout', [CheckoutController::class, 'create'])->name('checkout.create');
-    Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
     Route::get('submit', [AuthorPortalController::class, 'showSubmit'])->name('submit');
     Route::post('submit', [AuthorPortalController::class, 'storeSubmit'])->name('submit.store');
     Route::get('abstracts', [AuthorPortalController::class, 'abstracts'])->name('abstracts');
@@ -32,8 +28,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reviewer/exports/attachments', [ReviewerController::class, 'downloadAllAttachments'])->name('reviewer.exports.attachments');
 });
 
-Route::post('stripe/webhook', [CheckoutController::class, 'webhook'])->name('stripe.webhook');
-
 require __DIR__.'/settings.php';
 
 // Admin settings and payment proof routes
@@ -46,7 +40,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('registration/proof', [PaymentProofController::class, 'show'])->name('registration.proof');
     Route::post('registration/proof', [PaymentProofController::class, 'store'])->name('registration.proof.store');
 });

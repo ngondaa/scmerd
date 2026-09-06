@@ -13,14 +13,6 @@
                     <input type="checkbox" name="registration_open" value="1" {{ $registrationOpen ? 'checked' : '' }}> Registration open
                 </label>
 
-                <label style="display:block; margin-top:8px;">
-                    Registration mode
-                    <select name="registration_mode">
-                        <option value="gateway" {{ ($registrationMode ?? 'gateway') === 'gateway' ? 'selected' : '' }}>Payment gateway (Stripe)</option>
-                        <option value="manual" {{ ($registrationMode ?? '') === 'manual' ? 'selected' : '' }}>Manual (upload proof)</option>
-                    </select>
-                </label>
-
                 <button type="submit" class="btn btn-primary" style="margin-top:8px;">Save</button>
             </form>
         </div>

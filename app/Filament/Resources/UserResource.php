@@ -68,8 +68,6 @@ class UserResource extends Resource
                             ->maxLength(255),
                         Forms\Components\DateTimePicker::make('registration_paid_at')
                             ->label('Registration paid at'),
-                        Forms\Components\TextInput::make('stripe_checkout_session_id')
-                            ->maxLength(255),
                         Forms\Components\Select::make('registration_status')
                             ->options(['unpaid' => 'Unpaid', 'pending' => 'Pending review', 'paid' => 'Paid', 'rejected' => 'Rejected'])
                             ->default('unpaid')
