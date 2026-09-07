@@ -25,6 +25,7 @@ test('an unverified user can request another verification email', function () {
     $user = User::factory()->unverified()->create();
 
     $this->actingAs($user)
+        ->from(route('verification.notice'))
         ->post(route('verification.send'))
         ->assertRedirect(route('verification.notice'))
         ->assertSessionHas('status', 'verification-link-sent');
