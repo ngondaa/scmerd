@@ -72,6 +72,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(Review::class);
     }
 
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(Submission::class);
+    }
+
     public function assignedSubmissions(): BelongsToMany
     {
         return $this->belongsToMany(Submission::class, 'submission_reviewer')
@@ -82,5 +87,38 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function canAccessPanel(Panel $panel): bool
     {
         return (bool) $this->is_admin;
+    }
+
+    public function needsPaymentReview(): bool
+    {
+        return filled($this->payment_proof_path)
+            && in_array($this->registration_status, ['pending', 'pending_review'], true);
+    }
+
+    public function approvePayment(): void
+    {
+        $this->update([
+            'registration_paid_at' => now(),
+            'registration_status' => 'paid',
+        ]);
+    }
+
+    public function rejectPayment(): void
+    {
+        $this->update([
+            'registration_status' => 'rejected',
+            'registration_paid_at' => null,
+        ]);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<static>
+     */
+    public function scopeNeedsPaymentReview($query)
+    {
+        return $query
+            ->whereNotNull('payment_proof_path')
+            ->whereIn('registration_status', ['pending', 'pending_review']);
     }
 }

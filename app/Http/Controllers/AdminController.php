@@ -16,7 +16,7 @@ class AdminController extends Controller
         }
 
         $registrationOpen = (bool) AppSetting::get('registration_open', '1');
-        $pending = User::where('registration_status', 'pending')->get();
+        $pending = User::query()->needsPaymentReview()->latest('updated_at')->get();
 
         return view('admin.settings', compact('registrationOpen', 'pending'));
     }
@@ -42,17 +42,14 @@ class AdminController extends Controller
         $action = $request->input('action');
 
         if ($action === 'approve') {
-            $user->update([
-                'registration_paid_at' => now(),
-                'registration_status' => 'paid',
-            ]);
+            $user->approvePayment();
+
             return redirect()->back()->with('status', 'Payment approved.');
         }
 
         if ($action === 'reject') {
-            $user->update([
-                'registration_status' => 'rejected',
-            ]);
+            $user->rejectPayment();
+
             return redirect()->back()->with('status', 'Payment rejected.');
         }
 

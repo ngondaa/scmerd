@@ -85,7 +85,10 @@ class ProofAnalysisJob implements ShouldQueue
         $result = self::analyzeText($text, (int) $expected);
 
         if (($result['status'] ?? '') === 'approved') {
-            $user->update(['registration_paid_at' => now(), 'registration_status' => 'approved']);
+            $user->update([
+                'registration_paid_at' => now(),
+                'registration_status' => 'paid',
+            ]);
         } elseif (! empty($result['best'])) {
             $user->update(['registration_status' => 'pending_review']);
         }

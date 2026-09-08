@@ -1,4 +1,11 @@
 <x-layouts::app :title="__('Submit proof of payment')">
+
+    @push('styles')
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/registration-payment.css') }}">
+    @endpush
+
     <div class="cp-main-grid">
         <div class="cp-card cp-payment-card">
             <div class="cp-payment-heading">
@@ -11,11 +18,11 @@
             </div>
 
             @if(session('status'))
-                <p style="color:#1a7f37;">{{ session('status') }}</p>
+                <p style="color:#1a7f37; margin:20px 32px 0;">{{ session('status') }}</p>
             @endif
 
             @if ($errors->any())
-                <div role="alert" style="margin:0 0 18px; padding:14px 16px; border:1px solid #e8a6a6; border-radius:8px; background:#fff5f5; color:#8b1e1e;">
+                <div role="alert" style="margin:20px 32px 0; padding:14px 16px; border:1px solid #e8a6a6; border-radius:8px; background:#fff5f5; color:#8b1e1e;">
                     <strong>Please correct the following:</strong>
                     <ul style="margin:8px 0 0; padding-left:20px;">
                         @foreach ($errors->all() as $error)

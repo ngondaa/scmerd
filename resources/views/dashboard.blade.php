@@ -70,7 +70,7 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
                     — {{ config('registration.packages.'.$package.'.name', ucfirst($package)) }}
                 @endif
             </p>
-        @elseif ($registrationStatus === 'pending')
+        @elseif (in_array($registrationStatus, ['pending', 'pending_review'], true))
             <div style="margin-top:18px; padding:20px 18px; border:1px solid #d9a441; border-radius:10px; background:#fff9eb;">
                 <div style="font-size:18px; font-weight:700; color:#6b4a00;">Payment proof awaiting verification</div>
                 <p class="cp-card-desc" style="margin:8px 0 0;">Your {{ config('registration.packages.'.$package.'.name', ucfirst($package)) }} registration and payment proof have been received. We will notify you once payment is approved.</p>

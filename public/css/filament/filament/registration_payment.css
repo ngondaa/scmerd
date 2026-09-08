@@ -1,0 +1,434 @@
+/* ==========================================================================
+   Registration payment — invoice & payment proof
+   Blueprint / title-block theme
+   Add to <head> before this file:
+   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+   ========================================================================== */
+
+   :root{
+    --cp-navy: #0F1B2E;
+    --cp-navy-2: #16253D;
+    --cp-grid-line: #22344F;
+    --cp-paper: #EDEEE6;
+    --cp-paper-line: rgba(15,27,46,0.08);
+    --cp-ink: #0F1B2E;
+    --cp-ink-soft: #5A6572;
+    --cp-text-on-navy-soft: #9FADC2;
+    --cp-amber: #C4954A;
+    --cp-amber-dim: #8A6E43;
+    --cp-green: #7FA98C;
+    --cp-radius: 3px;
+    --cp-font-display: 'Space Grotesk', sans-serif;
+    --cp-font-mono: 'IBM Plex Mono', monospace;
+    --cp-font-body: 'Inter', sans-serif;
+  }
+  
+  /* ---------- page + card shell ---------- */
+  
+  .cp-main-grid{
+    display:flex;
+    justify-content:center;
+    padding:40px 16px;
+    background:#F4F4F1;
+  }
+  
+  .cp-card.cp-payment-card{
+    width:100%;
+    max-width:900px;
+    background:#FFFFFF;
+    border:1px solid rgba(15,27,46,0.14);
+    box-shadow:0 24px 48px -30px rgba(15,27,46,0.22);
+    padding:0;
+    font-family:var(--cp-font-body);
+    color:var(--cp-ink);
+  }
+  
+  /* ---------- heading ---------- */
+  
+  .cp-payment-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    padding:28px 32px 20px;
+    border-bottom:2px solid var(--cp-ink);
+  }
+  
+  .cp-payment-eyebrow{
+    font-family:var(--cp-font-mono);
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--cp-ink-soft);
+    margin:0 0 6px;
+  }
+  
+  .cp-card-title{
+    font-family:var(--cp-font-display);
+    font-weight:600;
+    font-size:24px;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  
+  .cp-payment-intro{
+    font-size:14px;
+    color:var(--cp-ink-soft);
+    max-width:38ch;
+    margin:6px 0 0;
+  }
+  
+  .cp-payment-step{
+    font-family:var(--cp-font-mono);
+    font-size:12px;
+    color:var(--cp-ink-soft);
+    white-space:nowrap;
+  }
+  
+  /* ---------- status / error box ---------- */
+  
+  .cp-card.cp-payment-card > p[style]{
+    margin:20px 32px 0 !important;
+  }
+  
+  /* ---------- summary: invoice + bank panels ---------- */
+  
+  .cp-payment-summary{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    margin:24px 32px;
+    border:1px solid var(--cp-ink);
+  }
+  
+  @media (max-width: 700px){
+    .cp-payment-summary{ grid-template-columns:1fr; }
+  }
+  
+  .cp-invoice-panel,
+  .cp-bank-panel{
+    background:#FFFFFF;
+    background-image:
+      linear-gradient(var(--cp-paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--cp-paper-line) 1px, transparent 1px);
+    background-size:22px 22px;
+    color:var(--cp-ink);
+    padding:22px 22px 24px;
+  }
+  
+  .cp-invoice-panel{
+    border-right:1px solid var(--cp-ink);
+  }
+  
+  @media (max-width: 700px){
+    .cp-invoice-panel{
+      border-right:none;
+      border-bottom:1px solid var(--cp-ink);
+    }
+  }
+  
+  .cp-data-label{
+    font-family:var(--cp-font-mono);
+    font-size:10px;
+    letter-spacing:0.06em;
+    color:var(--cp-amber-dim);
+    margin-bottom:5px;
+  }
+  
+  .cp-invoice-topline{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid rgba(15,27,46,0.15);
+  }
+  
+  .cp-invoice-number{
+    font-family:var(--cp-font-mono);
+    font-size:17px;
+    font-weight:500;
+    color:var(--cp-ink);
+  }
+  
+  .cp-bill-to{
+    font-size:13px;
+    color:var(--cp-ink-soft);
+    text-align:right;
+    line-height:1.5;
+  }
+  
+  .cp-bill-to strong{ color:var(--cp-ink); font-weight:500; }
+  
+  .cp-invoice-details{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  
+  .cp-data-value{
+    font-size:14px;
+    font-weight:500;
+    color:var(--cp-ink);
+  }
+  
+  .cp-data-value--large{
+    font-family:var(--cp-font-display);
+    font-size:16px;
+  }
+  
+  .cp-data-value--amount{
+    font-family:var(--cp-font-mono);
+    font-size:26px;
+    font-weight:600;
+    color:var(--cp-amber-dim);
+  }
+  
+  /* bank panel */
+  
+  .cp-bank-heading{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding-bottom:14px;
+    margin-bottom:14px;
+    border-bottom:1px solid rgba(15,27,46,0.15);
+  }
+  
+  .cp-bank-icon{
+    width:26px;
+    height:26px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--cp-amber-dim);
+    color:var(--cp-amber-dim);
+    font-size:13px;
+  }
+  
+  .cp-bank-heading h3{
+    font-family:var(--cp-font-display);
+    font-size:15px;
+    font-weight:600;
+    color:var(--cp-ink);
+    margin:0 0 3px;
+  }
+  
+  .cp-bank-heading p{
+    font-size:12.5px;
+    color:var(--cp-ink-soft);
+    margin:0;
+  }
+  
+  .cp-bank-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border:1px solid rgba(15,27,46,0.15);
+  }
+  
+  .cp-bank-details > div{
+    padding:10px 12px;
+    border-right:1px solid rgba(15,27,46,0.15);
+    border-bottom:1px solid rgba(15,27,46,0.15);
+  }
+  
+  .cp-bank-details > div:nth-child(2n){
+    border-right:none;
+  }
+  
+  .cp-bank-details > div span{
+    display:block;
+    font-family:var(--cp-font-mono);
+    font-size:9.5px;
+    letter-spacing:0.05em;
+    color:var(--cp-ink-soft);
+    margin-bottom:4px;
+  }
+  
+  .cp-bank-details > div strong{
+    font-family:var(--cp-font-mono);
+    font-size:13px;
+    font-weight:600;
+    color:var(--cp-ink);
+    word-break:break-word;
+  }
+  
+  .cp-bank-reference{
+    grid-column:1 / -1;
+    border-right:none !important;
+  }
+  
+  /* ---------- form ---------- */
+  
+  .cp-payment-form{
+    padding:8px 32px 32px;
+  }
+  
+  .cp-payment-form-fields{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  
+  .cp-form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  
+  .cp-label{
+    font-family:var(--cp-font-display);
+    font-weight:600;
+    font-size:14px;
+    color:var(--cp-ink);
+  }
+  
+  .cp-label em{
+    font-family:var(--cp-font-mono);
+    font-style:normal;
+    font-size:10.5px;
+    color:var(--cp-amber-dim);
+    margin-left:6px;
+  }
+  
+  .cp-input{
+    padding:11px 12px;
+    border:1.5px solid var(--cp-ink);
+    border-radius:var(--cp-radius);
+    background:#fff;
+    font-family:var(--cp-font-body);
+    font-size:14.5px;
+    color:var(--cp-ink);
+  }
+  
+  .cp-input:focus{
+    outline:2px solid var(--cp-amber);
+    outline-offset:1px;
+  }
+  
+  .cp-help-text{
+    font-size:12.5px;
+    color:var(--cp-ink-soft);
+  }
+  
+  /* CPD checkbox row */
+  
+  .cp-cpd-option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:14px;
+    border:1.5px solid var(--cp-ink);
+    border-radius:var(--cp-radius);
+    background:rgba(255,255,255,0.5);
+    cursor:pointer;
+  }
+  
+  .cp-cpd-option input[type="checkbox"]{
+    margin-top:3px;
+    width:16px;
+    height:16px;
+    accent-color:var(--cp-amber-dim);
+  }
+  
+  .cp-cpd-option strong{
+    display:block;
+    font-family:var(--cp-font-display);
+    font-size:14px;
+    font-weight:600;
+    color:var(--cp-ink);
+  }
+  
+  .cp-cpd-option small{
+    display:block;
+    margin-top:3px;
+    font-size:12.5px;
+    color:var(--cp-ink-soft);
+  }
+  
+  /* upload zone */
+  
+  .cp-upload-zone{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:26px 18px;
+    border:1.5px dashed var(--cp-ink);
+    border-radius:var(--cp-radius);
+    background:rgba(255,255,255,0.4);
+    text-align:center;
+  }
+  
+  .cp-upload-icon{
+    font-family:var(--cp-font-mono);
+    font-size:20px;
+    color:var(--cp-amber-dim);
+  }
+  
+  .cp-upload-text strong{
+    display:block;
+    font-size:14px;
+    color:var(--cp-ink);
+  }
+  
+  .cp-upload-text span{
+    display:block;
+    font-size:12.5px;
+    color:var(--cp-ink-soft);
+    margin-top:2px;
+  }
+  
+  .cp-upload-input{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    cursor:pointer;
+  }
+  
+  .cp-upload-zone:has(.cp-upload-input:hover),
+  .cp-upload-zone:has(.cp-upload-input:focus){
+    border-color:var(--cp-amber-dim);
+    background:rgba(196,149,74,0.06);
+  }
+  
+  /* submit row */
+  
+  .cp-submit-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    padding-top:8px;
+    border-top:1px solid rgba(15,27,46,0.12);
+  }
+  
+  .cp-submit-row p{
+    font-size:12.5px;
+    color:var(--cp-ink-soft);
+    margin:0;
+    max-width:34ch;
+  }
+  
+  .btn.btn-primary{
+    font-family:var(--cp-font-display);
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--cp-paper);
+    background:var(--cp-ink);
+    border:none;
+    border-radius:var(--cp-radius);
+    padding:13px 22px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  
+  .btn.btn-primary:hover{
+    background:#1c2f4c;
+  }
