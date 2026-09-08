@@ -1,7 +1,14 @@
 <x-layouts::app :title="__('Submit proof of payment')">
     <div class="cp-main-grid">
-        <div class="cp-card">
-            <h2 class="cp-card-title">Invoice & payment proof</h2>
+        <div class="cp-card cp-payment-card">
+            <div class="cp-payment-heading">
+                <div>
+                    <p class="cp-payment-eyebrow">Registration payment</p>
+                    <h2 class="cp-card-title">Invoice &amp; payment proof</h2>
+                    <p class="cp-payment-intro">Confirm your registration details, then upload your bank-transfer receipt.</p>
+                </div>
+                <span class="cp-payment-step">Step 2 of 2</span>
+            </div>
 
             @if(session('status'))
                 <p style="color:#1a7f37;">{{ session('status') }}</p>
@@ -18,77 +25,92 @@
                 </div>
             @endif
 
-            <div style="display:grid; gap:18px; margin-bottom:22px;">
-                <div style="border:1px solid #eaeaea; border-radius:10px; background:#fafaf8; padding:20px;">
-                    <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap; margin-bottom:18px;">
+            <div class="cp-payment-summary">
+                <div class="cp-invoice-panel">
+                    <div class="cp-invoice-topline">
                         <div>
-                            <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666;">Invoice</div>
-                            <div style="font-size:22px; font-weight:700; margin-top:4px;">{{ $invoiceNumber }}</div>
+                            <div class="cp-data-label">Invoice</div>
+                            <div class="cp-invoice-number">{{ $invoiceNumber }}</div>
                         </div>
-                        <div style="text-align:right; font-size:14px; color:#333;">
+                        <div class="cp-bill-to">
                             <div><strong>Bill to:</strong> {{ auth()->user()->name }}</div>
                             <div>{{ auth()->user()->email }}</div>
                         </div>
                     </div>
 
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+                    <div class="cp-invoice-details">
                         <div>
-                            <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:5px;">Package</div>
-                            <div style="font-weight:700; font-size:18px;">{{ $package['name'] ?? ucfirst($packageKey) }}</div>
+                            <div class="cp-data-label">Package</div>
+                            <div class="cp-data-value cp-data-value--large">{{ $package['name'] ?? ucfirst($packageKey) }}</div>
                         </div>
                         <div>
-                            <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:5px;">Name on certificate</div>
-                            <div style="font-weight:600;">{{ $certificateName ?: 'Not provided yet' }}</div>
+                            <div class="cp-data-label">Name on certificate</div>
+                            <div class="cp-data-value">{{ $certificateName ?: 'Not provided yet' }}</div>
                         </div>
                         <div>
-                            <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:5px;">Total due</div>
-                            <div style="font-weight:700; font-size:20px; color:#1d1d1d;">{{ $package['display_price'] ?? 'R0' }}</div>
+                            <div class="cp-data-label">Total due</div>
+                            <div class="cp-data-value cp-data-value--amount">{{ $package['display_price'] ?? 'R0' }}</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="border:1px solid #eaeaea; border-radius:10px; background:#fff; padding:20px;">
-                    <h3 style="margin:0 0 12px; font-size:18px;">Bank transfer details</h3>
-                    <div style="display:grid; gap:8px; font-size:14px; color:#2b2b2b;">
-                        <div><strong>Bank:</strong> {{ config('registration.payment.bank_name', 'Conference Secretariat Bank') }}</div>
-                        <div><strong>Account name:</strong> {{ config('registration.payment.account_name', 'SCMERD Conference Registration') }}</div>
-                        <div><strong>Account number:</strong> {{ config('registration.payment.account_number', '0000000000') }}</div>
-                        <div><strong>Branch code:</strong> {{ config('registration.payment.branch_code', '000000') }}</div>
-                        <div><strong>Reference:</strong> {{ config('registration.payment.reference_prefix', 'SCMERD') }} - {{ auth()->user()->email }}</div>
+                <div class="cp-bank-panel">
+                    <div class="cp-bank-heading">
+                        <div class="cp-bank-icon" aria-hidden="true">↗</div>
+                        <div>
+                            <h3>Bank transfer details</h3>
+                            <p>Use these details when making your payment.</p>
+                        </div>
+                    </div>
+                    <div class="cp-bank-details">
+                        <div><span>Bank</span><strong>{{ config('registration.payment.bank_name', 'Conference Secretariat Bank') }}</strong></div>
+                        <div><span>Account name</span><strong>{{ config('registration.payment.account_name', 'SCMERD Conference Registration') }}</strong></div>
+                        <div><span>Account number</span><strong>{{ config('registration.payment.account_number', '0000000000') }}</strong></div>
+                        <div><span>Branch code</span><strong>{{ config('registration.payment.branch_code', '000000') }}</strong></div>
+                        <div class="cp-bank-reference"><span>Payment reference</span><strong>{{ config('registration.payment.reference_prefix', 'SCMERD') }} - {{ auth()->user()->email }}</strong></div>
                     </div>
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('registration.proof.store') }}" enctype="multipart/form-data">
+            <form class="cp-payment-form" method="POST" action="{{ route('registration.proof.store') }}" enctype="multipart/form-data">
                 @csrf
-                <div style="display:flex; gap:12px; flex-direction:column;">
+                <div class="cp-payment-form-fields">
                     <input type="hidden" name="package" value="{{ $packageKey }}">
 
-                    <label>Name on certificate
-                        <input type="text" name="certificate_name" value="{{ old('certificate_name', $certificateName) }}" required>
+                    <label class="cp-form-group"> <span class="cp-label">Name on certificate</span>
+                        <input class="cp-input" type="text" name="certificate_name" value="{{ old('certificate_name', $certificateName) }}" placeholder="Enter your full name" required>
+                        <span class="cp-help-text">This is how your name will appear on your certificate.</span>
                     </label>
 
-                    <label style="display:flex; align-items:center; gap:8px;">
+                    <label class="cp-cpd-option">
                         <input type="hidden" name="ecsa_accredited" value="0">
                         <input type="checkbox" name="ecsa_accredited" value="1" @checked(old('ecsa_accredited', $ecsaAccredited))>
-                        I require ECSA CPD recognition
+                        <span><strong>I require ECSA CPD recognition</strong><small>Provide your ECSA number below if you are claiming CPD points.</small></span>
                     </label>
 
-                    <label>ECSA number <span style="font-weight:400; color:#666;">(required when claiming CPD)</span>
-                        <input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}">
+                    <label class="cp-form-group"><span class="cp-label">ECSA number <em>Required when claiming CPD</em></span>
+                        <input class="cp-input" type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="e.g. 2020123456">
                     </label>
 
                     @if ($packageKey === 'student')
-                        <label>Student number
-                            <input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" required>
+                        <label class="cp-form-group"><span class="cp-label">Student number</span>
+                            <input class="cp-input" type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your student number" required>
                         </label>
                     @endif
 
-                    <label>Proof of payment <span style="font-weight:400; color:#666;">(PDF, JPG, PNG or WebP; max 10 MB)</span>
-                        <input type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                    <label class="cp-form-group"><span class="cp-label">Proof of payment</span>
+                        <span class="cp-upload-zone">
+                            <span class="cp-upload-icon" aria-hidden="true">↑</span>
+                            <span class="cp-upload-text"><strong>Drop your document here</strong><span>or browse to choose a file</span></span>
+                            <input class="cp-upload-input" type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                        </span>
+                        <span class="cp-help-text">PDF, JPG, PNG or WebP · Maximum file size 10 MB</span>
                     </label>
 
-                    <button class="btn btn-primary" type="submit">Submit proof of payment</button>
+                    <div class="cp-submit-row">
+                        <p>Your registration will be confirmed after the payment is verified.</p>
+                        <button class="btn btn-primary" type="submit">Submit proof of payment <span aria-hidden="true">→</span></button>
+                    </div>
                 </div>
             </form>
         </div>
