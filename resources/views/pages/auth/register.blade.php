@@ -1,6 +1,6 @@
 <x-layouts::auth :title="__('Register')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+        <x-auth-header :title="__('Create your conference account')" :description="__('Use an email address you can access now. You’ll verify it before registration and abstract submission.')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -38,6 +38,7 @@
                     placeholder="email@example.com"
                     class="!border !border-zinc-500 !bg-white !text-base !font-medium !text-zinc-950 !shadow-none placeholder:!font-normal placeholder:!text-zinc-500"
                 />
+                <p class="text-xs text-zinc-600">We’ll send a verification link to this address.</p>
             </div>
 
             <!-- Password -->
@@ -72,7 +73,7 @@
 
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full !bg-zinc-900 !text-white hover:!bg-zinc-800" data-test="register-user-button">
-                    {{ __('Create account') }}
+                    {{ __('Create account and verify email') }}
                 </flux:button>
             </div>
         </form>

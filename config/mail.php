@@ -115,4 +115,20 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Reply-To Address
+    |--------------------------------------------------------------------------
+    |
+    | Account emails should have a monitored human contact. This builds trust
+    | with recipients and prevents replies to a no-reply address from being
+    | lost. Leave this blank only when a support address is unavailable.
+    |
+    */
+
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS'),
+        'name' => env('MAIL_REPLY_TO_NAME'),
+    ],
+
 ];

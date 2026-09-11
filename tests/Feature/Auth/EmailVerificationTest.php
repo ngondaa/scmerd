@@ -17,7 +17,11 @@ test('email verification screen can be rendered', function () {
 
     $response = $this->actingAs($user)->get(route('verification.notice'));
 
-    $response->assertOk();
+    $response->assertOk()
+        ->assertSee('Check your inbox')
+        ->assertSee($user->email)
+        ->assertSee('Correct your email address')
+        ->assertSee(route('profile.edit'));
 });
 
 test('an unverified user can request another verification email', function () {
@@ -31,6 +35,17 @@ test('an unverified user can request another verification email', function () {
         ->assertSessionHas('status', 'verification-link-sent');
 
     Notification::assertSentTo($user, VerifyEmail::class);
+});
+
+test('verification emails explain why verification is required and when the link expires', function () {
+    $user = User::factory()->unverified()->create(['name' => 'Conference Delegate']);
+    $notification = new VerifyEmail();
+
+    $message = $notification->toMail($user);
+
+    expect($message->subject)->toBe('Verify your '.config('app.name').' account')
+        ->and($message->introLines)->toContain('Please verify your email address to continue to conference registration and abstract submission.')
+        ->and($message->introLines)->toContain('For your security, this link expires in 60 minutes.');
 });
 
 test('email can be verified', function () {
