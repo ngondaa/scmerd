@@ -13,7 +13,7 @@
                 <flux:input
                     id="email"
                     name="email"
-                    :value="old('email')"
+                    :value="old('email', request('email'))"
                     type="email"
                     required
                     autofocus
@@ -37,7 +37,7 @@
                 />
 
                 @if (Route::has('password.request'))
-                    <flux:link class="absolute -top-1 right-0 text-sm !font-semibold !text-zinc-950 hover:!text-zinc-700" :href="route('password.request')" wire:navigate>
+                    <flux:link class="absolute -top-1 right-0 text-sm !font-semibold !text-zinc-950 hover:!text-zinc-700" :href="route('password.request', ['email' => request('email')])">
                         {{ __('Forgot your password?') }}
                     </flux:link>
                 @endif

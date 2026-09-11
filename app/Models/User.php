@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'is_reviewer',
     'is_admin',
     'payment_proof_path',
+    'payment_proof_original_name',
+    'payment_invoice_number',
     'payment_proof_analysis',
     'registration_status',
 ])]

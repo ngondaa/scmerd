@@ -44,6 +44,7 @@ return [
     ],
 
     'payment' => [
+        'proof_recipient' => env('PAYMENT_PROOF_RECIPIENT', 'carey@saimeche.org.za'),
         'bank_name' => 'Standard Bank',
         'account_name' => 'SAIMECHE',
         'account_number' => '002089074',

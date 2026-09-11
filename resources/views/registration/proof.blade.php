@@ -138,9 +138,9 @@
                             <span class="rp-upload-icon" aria-hidden="true">↑</span>
                             <span class="rp-upload-copy">
                                 <strong id="rp-upload-title">Drop your document here</strong>
-                                <span id="rp-upload-sub">or browse · PDF, JPG, PNG, WebP · max 10 MB</span>
+                                <span id="rp-upload-sub">or browse · PDF, DOC, DOCX, JPG, PNG, WebP · max 10 MB</span>
                             </span>
-                            <input class="rp-upload-input" id="rp-proof-input" type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                            <input class="rp-upload-input" id="rp-proof-input" type="file" name="proof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" required>
                         </span>
                     </label>
 

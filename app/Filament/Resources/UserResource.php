@@ -118,7 +118,14 @@ class UserResource extends Resource
                             ->label('Payment proof')
                             ->disk('public')
                             ->directory('payment_proofs')
-                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp'])
+                            ->acceptedFileTypes([
+                                'application/pdf',
+                                'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                            ])
                             ->openable()
                             ->downloadable()
                             ->columnSpanFull(),

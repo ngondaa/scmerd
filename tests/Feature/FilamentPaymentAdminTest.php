@@ -46,7 +46,7 @@ it('scopes users that need payment review including pending_review', function ()
     expect(User::query()->needsPaymentReview()->count())->toBe(2);
 });
 
-it('sets paid status when OCR approves a proof', function () {
+it('flags an OCR amount match for manual review rather than unlocking submission automatically', function () {
     putenv('PROOF_ANALYSIS_FAKE_OCR=R650');
     $_ENV['PROOF_ANALYSIS_FAKE_OCR'] = 'R650';
 
@@ -62,8 +62,8 @@ it('sets paid status when OCR approves a proof', function () {
 
     (new \App\Jobs\ProofAnalysisJob($user->id))->handle();
 
-    expect($user->fresh()->registration_status)->toBe('paid')
-        ->and($user->fresh()->registration_paid_at)->not->toBeNull();
+    expect($user->fresh()->registration_status)->toBe('pending_review')
+        ->and($user->fresh()->registration_paid_at)->toBeNull();
 });
 
 it('keeps blade admin verify-payment approve reject working', function () {

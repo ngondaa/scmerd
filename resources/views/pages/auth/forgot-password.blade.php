@@ -15,6 +15,7 @@
                 <flux:input
                     id="email"
                     name="email"
+                    :value="old('email', request('email'))"
                     type="email"
                     required
                     autofocus

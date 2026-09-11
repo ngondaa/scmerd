@@ -16,7 +16,13 @@ class CreateAdminCommand extends Command
     {
         $email = $this->argument('email');
         $name = $this->argument('name');
-        $password = $this->option('password') ?: 'password';
+        $password = $this->option('password') ?: $this->secret('Admin password');
+
+        if (blank($password)) {
+            $this->error('An admin password is required.');
+
+            return self::FAILURE;
+        }
 
         $user = User::query()->firstOrNew(['email' => $email]);
         $user->name = $name;
@@ -26,7 +32,6 @@ class CreateAdminCommand extends Command
         $user->save();
 
         $this->info("Admin account ready for {$user->email}.");
-        $this->line('Password: '.$password);
         $this->line('Admin login URL: '.url('/admin/login'));
 
         return self::SUCCESS;

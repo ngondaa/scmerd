@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentProofSubmitted;
 use App\Models\AppSetting;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentProofController extends Controller
@@ -27,7 +30,7 @@ class PaymentProofController extends Controller
             'ecsaAccredited' => (bool) auth()->user()->ecsa_accredited,
             'ecsaNumber' => auth()->user()->ecsa_number,
             'studentId' => auth()->user()->student_id,
-            'invoiceNumber' => 'INV-' . strtoupper(substr(auth()->user()->email, 0, 3)) . '-' . now()->format('YmdHis'),
+            'invoiceNumber' => $this->invoiceNumber($request->user()),
         ]);
     }
 
@@ -39,7 +42,7 @@ class PaymentProofController extends Controller
         }
 
         $validated = $request->validate([
-            'proof' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
+            'proof' => ['required', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:10240'],
             'package' => ['required', 'in:student,standard,premium,presenter'],
             'certificate_name' => ['required', 'string', 'max:255'],
             'ecsa_accredited' => ['nullable', 'boolean'],
@@ -52,6 +55,8 @@ class PaymentProofController extends Controller
         $user = $request->user();
         $user->update([
             'payment_proof_path' => $path,
+            'payment_proof_original_name' => $request->file('proof')->getClientOriginalName(),
+            'payment_invoice_number' => $this->invoiceNumber($user),
             'registration_status' => 'pending',
             'registration_package' => $validated['package'],
             'certificate_name' => $validated['certificate_name'],
@@ -64,7 +69,21 @@ class PaymentProofController extends Controller
         $user->update(['payment_proof_analysis' => 'queued']);
 
         \App\Jobs\ProofAnalysisJob::dispatch($user->id);
+        Mail::to(config('registration.payment.proof_recipient'))
+            ->queue(new PaymentProofSubmitted($user->fresh()));
 
-        return redirect()->route('dashboard')->with('status', 'Proof uploaded and awaiting verification.');
+        return redirect()->route('dashboard')->with('status', 'Proof uploaded. It has been sent to the finance team for verification.');
+    }
+
+    private function invoiceNumber(User $user): string
+    {
+        if (filled($user->payment_invoice_number)) {
+            return $user->payment_invoice_number;
+        }
+
+        $invoiceNumber = sprintf('SCMERD-%s-%06d', now()->format('Y'), $user->id);
+        $user->forceFill(['payment_invoice_number' => $invoiceNumber])->save();
+
+        return $invoiceNumber;
     }
 }

@@ -55,6 +55,19 @@
     @apply  !mb-0 !leading-tight;
 }
 
+/* Keep typed values, placeholders, and field guidance readable on white. */
+input[data-flux-control],
+textarea[data-flux-control],
+select[data-flux-control] {
+    color: var(--color-zinc-950) !important;
+}
+
+input[data-flux-control]::placeholder,
+textarea[data-flux-control]::placeholder {
+    color: var(--color-zinc-600) !important;
+    opacity: 1;
+}
+
 input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {

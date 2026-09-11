@@ -84,12 +84,10 @@ class ProofAnalysisJob implements ShouldQueue
 
         $result = self::analyzeText($text, (int) $expected);
 
-        if (($result['status'] ?? '') === 'approved') {
-            $user->update([
-                'registration_paid_at' => now(),
-                'registration_status' => 'paid',
-            ]);
-        } elseif (! empty($result['best'])) {
+        // OCR can help the finance team spot a matching amount, but it cannot
+        // confirm the sender, payment reference, or whether a receipt is real.
+        // Only an administrator may unlock abstract submission by approving it.
+        if (! empty($result['best'])) {
             $user->update(['registration_status' => 'pending_review']);
         }
 
