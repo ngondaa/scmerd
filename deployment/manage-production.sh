@@ -32,17 +32,52 @@ require_artisan() {
     fi
 }
 
+run_as_root() {
+    if [[ "$EUID" -eq 0 ]]; then
+        "$@"
+        return
+    fi
+
+    command -v sudo >/dev/null 2>&1 || { echo 'This command requires root access or sudo.' >&2; exit 1; }
+    sudo "$@"
+}
+
+require_supervisor() {
+    if command -v supervisorctl >/dev/null 2>&1; then
+        return
+    fi
+
+    if ! command -v apt-get >/dev/null 2>&1; then
+        echo 'Supervisor is not installed. Install it with your operating system package manager, then rerun this command.' >&2
+        exit 1
+    fi
+
+    echo 'Installing Supervisor…'
+    run_as_root apt-get update
+    run_as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor
+}
+
 queue_install() {
     [[ -f "$SUPERVISOR_CONFIG" ]] || { echo "Supervisor configuration not found." >&2; exit 1; }
-    sudo install -m 0644 "$SUPERVISOR_CONFIG" "$SUPERVISOR_TARGET"
-    sudo supervisorctl reread
-    sudo supervisorctl update
-    sudo supervisorctl status scmerd-queue:*
+    require_supervisor
+    run_as_root systemctl enable --now supervisor
+    # The worker runs as www-data and must be able to write queue jobs, logs,
+    # cached configuration, and the default SQLite database.
+    run_as_root chown -R www-data:www-data "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
+    if [[ -f "$APP_DIR/database/database.sqlite" ]]; then
+        run_as_root chown www-data:www-data "$APP_DIR/database/database.sqlite"
+        run_as_root chmod 0660 "$APP_DIR/database/database.sqlite"
+    fi
+    run_as_root install -m 0644 "$SUPERVISOR_CONFIG" "$SUPERVISOR_TARGET"
+    run_as_root supervisorctl reread
+    run_as_root supervisorctl update
+    run_as_root supervisorctl status scmerd-queue:*
 }
 
 queue_restart() {
-    sudo supervisorctl restart scmerd-queue:*
-    sudo supervisorctl status scmerd-queue:*
+    require_supervisor
+    run_as_root supervisorctl restart scmerd-queue:*
+    run_as_root supervisorctl status scmerd-queue:*
 }
 
 queue_work() {
