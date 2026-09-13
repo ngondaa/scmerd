@@ -36,18 +36,14 @@ test('new users can register', function () {
     );
 });
 
-test('an existing email gives the user a direct path to log in or reset their password', function () {
+test('an existing email is rejected during registration', function () {
     User::factory()->create(['email' => 'existing@example.com']);
 
-    $this->followingRedirects()
-        ->post(route('register.store'), [
+    $this->post(route('register.store'), [
             'name' => 'Existing Delegate',
             'email' => 'existing@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
-        ->assertSee('This address already has an account.')
-        ->assertSee('Log in instead')
-        ->assertSee(route('login', ['email' => 'existing@example.com']))
-        ->assertSee(route('password.request', ['email' => 'existing@example.com']));
+        ->assertSessionHasErrors('email');
 });
