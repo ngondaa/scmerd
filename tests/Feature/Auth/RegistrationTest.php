@@ -2,8 +2,9 @@
 
 use Laravel\Fortify\Features;
 use App\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Notifications\QueuedVerifyEmail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::registration());
@@ -17,6 +18,7 @@ test('registration screen can be rendered', function () {
 
 test('new users can register', function () {
     Notification::fake();
+    Queue::fake();
 
     $response = $this->post(route('register.store'), [
         'name' => 'John Doe',
@@ -32,8 +34,21 @@ test('new users can register', function () {
 
     Notification::assertSentTo(
         \App\Models\User::where('email', 'test@example.com')->firstOrFail(),
-        VerifyEmail::class,
+        QueuedVerifyEmail::class,
     );
+});
+
+test('registration still reaches the verification notice when email delivery is queued', function () {
+    Queue::fake();
+
+    $this->post(route('register.store'), [
+        'name' => 'Queued Delegate',
+        'email' => 'queued@example.com',
+        'password' => 'ValidPassword1!',
+        'password_confirmation' => 'ValidPassword1!',
+    ])->assertRedirect(route('verification.notice', absolute: false));
+
+    Queue::assertPushed(\Illuminate\Notifications\SendQueuedNotifications::class);
 });
 
 test('an existing email is rejected during registration', function () {

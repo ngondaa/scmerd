@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\QueuedVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\URL;
 use Laravel\Fortify\Features;
@@ -34,7 +35,7 @@ test('an unverified user can request another verification email', function () {
         ->assertRedirect(route('verification.notice'))
         ->assertSessionHas('status', 'verification-link-sent');
 
-    Notification::assertSentTo($user, VerifyEmail::class);
+    Notification::assertSentTo($user, QueuedVerifyEmail::class);
 });
 
 test('verification emails explain why verification is required and when the link expires', function () {
@@ -45,7 +46,7 @@ test('verification emails explain why verification is required and when the link
 
     expect($message->subject)->toBe('Verify your '.config('app.name').' account')
         ->and($message->introLines)->toContain('Please verify your email address to continue to conference registration and abstract submission.')
-        ->and($message->introLines)->toContain('For your security, this link expires in 60 minutes.');
+        ->and($message->outroLines)->toContain('For your security, this link expires in 60 minutes.');
 });
 
 test('email can be verified', function () {
