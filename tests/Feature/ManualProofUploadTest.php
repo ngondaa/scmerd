@@ -48,7 +48,8 @@ it('accepts a proof upload without a bot-check challenge', function () {
         ->and($user->fresh()->payment_proof_original_name)->toBe('proof.png');
     Storage::disk('public')->assertExists('payment_proofs/'.$proof->hashName());
     Mail::assertQueued(PaymentProofSubmitted::class, function (PaymentProofSubmitted $mail) use ($user): bool {
-        return $mail->hasTo(config('registration.payment.proof_recipient'))
+        return $mail->hasTo('carey@saimeche.org.za')
+            && $mail->hasTo('ngondaa@yahoo.com')
             && $mail->user->is($user)
             && $mail->user->payment_invoice_number === $user->fresh()->payment_invoice_number;
     });
@@ -72,14 +73,19 @@ it('accepts a Word document as proof of payment', function () {
     Mail::assertQueued(PaymentProofSubmitted::class);
 });
 
-it('requires a student number for the student package', function () {
+it('accepts the just attend package without a student number', function () {
+    Bus::fake();
+    Mail::fake();
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->post(route('registration.proof.store'), [
             'proof' => UploadedFile::fake()->image('proof.png'),
-            'package' => 'student',
+            'package' => 'just_attend',
             'certificate_name' => 'Test User',
         ])
-        ->assertSessionHasErrors('student_id');
+        ->assertRedirect(route('dashboard'));
+
+    expect($user->fresh()->registration_package)->toBe('just_attend')
+        ->and($user->fresh()->student_id)->toBeNull();
 });

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AuthorPortalController extends Controller
 {
@@ -31,7 +32,7 @@ class AuthorPortalController extends Controller
     public function updatePackage(Request $request)
     {
         $validated = $request->validate([
-            'package' => ['required', 'string', 'in:student,standard,premium,presenter'],
+            'package' => ['required', 'string', Rule::in(array_keys(config('registration.packages')))],
         ]);
 
         $user = $request->user();

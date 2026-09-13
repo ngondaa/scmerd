@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PaymentProofController extends Controller
 {
@@ -19,6 +20,8 @@ class PaymentProofController extends Controller
         }
 
         $packageKey = $request->query('package', $request->input('package', auth()->user()->registration_package ?? session('registration_package', 'standard')));
+        // Keep existing student registrations usable after replacing that package.
+        $packageKey = $packageKey === 'student' ? 'just_attend' : $packageKey;
         $packageKey = is_string($packageKey) && array_key_exists($packageKey, config('registration.packages')) ? $packageKey : 'standard';
         $packageConfig = config('registration.packages.' . $packageKey);
         $certificateName = $request->query('certificate_name', $request->input('certificate_name', auth()->user()->certificate_name ?? ''));
@@ -43,11 +46,11 @@ class PaymentProofController extends Controller
 
         $validated = $request->validate([
             'proof' => ['required', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:10240'],
-            'package' => ['required', 'in:student,standard,premium,presenter'],
+            'package' => ['required', Rule::in(array_keys(config('registration.packages')))],
             'certificate_name' => ['required', 'string', 'max:255'],
             'ecsa_accredited' => ['nullable', 'boolean'],
             'ecsa_number' => ['nullable', 'string', 'max:100', 'required_if:ecsa_accredited,1'],
-            'student_id' => ['nullable', 'string', 'max:100', 'required_if:package,student'],
+            'student_id' => ['nullable', 'string', 'max:100'],
         ]);
 
         $path = $request->file('proof')->store('payment_proofs', 'public');
@@ -69,7 +72,7 @@ class PaymentProofController extends Controller
         $user->update(['payment_proof_analysis' => 'queued']);
 
         \App\Jobs\ProofAnalysisJob::dispatch($user->id);
-        Mail::to(config('registration.payment.proof_recipient'))
+        Mail::to(config('registration.payment.proof_recipients'))
             ->queue(new PaymentProofSubmitted($user->fresh()));
 
         return redirect()->route('dashboard')->with('status', 'Proof uploaded. It has been sent to the finance team for verification.');

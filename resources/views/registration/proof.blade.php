@@ -125,13 +125,6 @@
                         <input class="rp-input" type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="e.g. 2020123456" autocomplete="off">
                     </label>
 
-                    @if ($packageKey === 'student')
-                        <label class="rp-field">
-                            <span class="rp-field-label">Student number</span>
-                            <input class="rp-input" type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your student number" required>
-                        </label>
-                    @endif
-
                     <label class="rp-field">
                         <span class="rp-field-label">Proof of payment</span>
                         <span class="rp-upload" id="rp-upload">

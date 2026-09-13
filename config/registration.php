@@ -13,9 +13,9 @@ return [
     */
 
     'packages' => [
-        'student' => [
-            'name' => 'Student Package',
-            'description' => 'Day session, gala dinner, 1 CPD credit, certificate of attendance',
+        'just_attend' => [
+            'name' => 'Just Attend Package',
+            'description' => 'Conference attendance, gala dinner, and certificate of attendance',
             'amount' => 45000,
             'currency' => 'zar',
             'display_price' => 'R450',
@@ -44,7 +44,10 @@ return [
     ],
 
     'payment' => [
-        'proof_recipient' => env('PAYMENT_PROOF_RECIPIENT', 'carey@saimeche.org.za'),
+        'proof_recipients' => array_filter(array_map(
+            'trim',
+            explode(',', env('PAYMENT_PROOF_RECIPIENTS', 'carey@saimeche.org.za,ngondaa@yahoo.com')),
+        )),
         'bank_name' => 'Standard Bank',
         'account_name' => 'SAIMECHE',
         'account_number' => '002089074',

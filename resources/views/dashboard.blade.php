@@ -4,12 +4,12 @@
 
 @php
 $user = auth()->user();
-$package = session('registration_package') ?? $user->registration_package;
+$selectedPackage = session('registration_package') ?? $user->registration_package;
+$package = $selectedPackage === 'student' ? 'just_attend' : $selectedPackage;
 $paid = $user->registration_paid_at;
 $certificateName = $user->certificate_name;
 $ecsaAccredited = (bool) $user->ecsa_accredited;
 $ecsaNumber = $user->ecsa_number;
-$studentId = $user->student_id;
 $registrationStatus = $user->registration_status ?? 'unpaid';
 @endphp
 
@@ -112,13 +112,6 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
                         </div>
                     @endif
 
-                    @if ($package === 'student')
-                        <div>
-                            <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px;">Student website ID</div>
-                            <div style="font-size:16px; font-weight:600; color:#1d1d1d;">{{ $studentId ?: 'Not provided' }}</div>
-                        </div>
-                    @endif
-
                     <div>
                         <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px;">Payment status</div>
                         <div style="font-size:16px; font-weight:700; color:#1a7f37;">Paid</div>
@@ -129,17 +122,16 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
             <form method="GET" action="{{ route('registration.proof') }}" id="package-selector" class="package-form" style="display:block;">
                 <div class="packages-grid">
                     <div class="package-option">
-                        <input type="radio" id="pkg-student" name="package" value="student" required>
-                        <label for="pkg-student" class="package-card" data-package="student">
+                        <input type="radio" id="pkg-just-attend" name="package" value="just_attend" required>
+                        <label for="pkg-just-attend" class="package-card" data-package="just_attend">
                             <div class="package-header">
-                                <h3>Student Package</h3>
+                                <h3>Just Attend Package</h3>
                                 <div class="package-price">R450</div>
                             </div>
-                            <p class="package-desc">Perfect for postgraduate students</p>
+                            <p class="package-desc">For conference attendees</p>
                             <ul class="package-features">
                                 <li>Day session attendance</li>
                                 <li>Gala dinner & awards</li>
-                                <li>1 CPD credit (ECSA)</li>
                                 <li>Certificate of attendance</li>
                             </ul>
                         </label>
