@@ -20,8 +20,8 @@ test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> revi
     $response = $this->post(route('register.store'), [
         'name' => 'E2E User',
         'email' => $email,
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => 'ValidPassword1!',
+        'password_confirmation' => 'ValidPassword1!',
     ]);
 
     $response->assertSessionHasNoErrors()->assertRedirect(route('verification.notice', absolute: false));
