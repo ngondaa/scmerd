@@ -37,6 +37,7 @@ require __DIR__.'/settings.php';
 // Admin settings and payment proof routes
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentProofController;
+use App\Http\Controllers\RegistrationInvoiceController;
 
 Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
@@ -45,6 +46,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('payment-invoices/{user}', [RegistrationInvoiceController::class, 'show'])->name('payment-invoices.show');
     Route::get('registration/proof', [PaymentProofController::class, 'show'])->name('registration.proof');
     Route::post('registration/proof', [PaymentProofController::class, 'store'])->name('registration.proof.store');
 });

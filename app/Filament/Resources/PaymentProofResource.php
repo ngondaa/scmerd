@@ -82,6 +82,12 @@ class PaymentProofResource extends Resource
                     ]),
             ])
             ->recordActions([
+                Action::make('viewInvoice')
+                    ->label('View invoice')
+                    ->icon('heroicon-o-document-text')
+                    ->visible(fn (User $record): bool => filled($record->payment_invoice_number))
+                    ->url(fn (User $record): string => route('payment-invoices.show', $record))
+                    ->openUrlInNewTab(),
                 Action::make('approve')
                     ->label('Accept')
                     ->icon('heroicon-o-check-circle')
