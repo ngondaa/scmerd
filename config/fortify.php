@@ -117,8 +117,6 @@ return [
     'limiters' => [
         'login' => 'login',
         'two-factor' => 'two-factor',
-        // Prevent verification-email flooding while still allowing a quick retry.
-        'verification' => '3,1',
     ],
 
     /*
@@ -148,7 +146,6 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,

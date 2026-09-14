@@ -8,12 +8,12 @@ use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 class CustomRegisterResponse implements RegisterResponseContract
 {
     /**
-     * Redirect newly registered users to the email-verification notice.
+     * Redirect newly registered users to their dashboard.
      */
     public function toResponse($request)
     {
         return $request->wantsJson()
             ? new JsonResponse('', 201)
-            : redirect()->route('verification.notice');
+            : redirect()->route('dashboard');
     }
 }

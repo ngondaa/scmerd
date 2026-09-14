@@ -126,9 +126,9 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
                         <label for="pkg-just-attend" class="package-card" data-package="just_attend">
                             <div class="package-header">
                                 <h3>Just Attend Package</h3>
-                                <div class="package-price">R450</div>
+                                <div class="package-price">No payment required</div>
                             </div>
-                            <p class="package-desc">For conference attendees</p>
+                            <p class="package-desc">For conference attendees — name and ID only</p>
                             <ul class="package-features">
                                 <li>Day session attendance</li>
                                 <li>Gala dinner & awards</li>

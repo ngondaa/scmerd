@@ -1,8 +1,8 @@
 <?php
 
+use App\Mail\PaymentProofSubmitted;
 use App\Models\AppSetting;
 use App\Models\User;
-use App\Mail\PaymentProofSubmitted;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -22,11 +22,11 @@ it('renders bank-transfer instructions for the selected package', function () {
         ->assertSee('R650');
 });
 
-it('requires a verified email address before registration can begin', function () {
+it('allows an account without a verified-email timestamp to begin registration', function () {
     $response = $this->actingAs(User::factory()->unverified()->create())
         ->get(route('registration.proof', ['package' => 'standard']));
 
-    $response->assertRedirect(route('verification.notice'));
+    $response->assertOk();
 });
 
 it('accepts a proof upload without a bot-check challenge', function () {
@@ -73,19 +73,24 @@ it('accepts a Word document as proof of payment', function () {
     Mail::assertQueued(PaymentProofSubmitted::class);
 });
 
-it('accepts the just attend package without a student number', function () {
+it('confirms the just attend package with only a certificate name and ID number', function () {
     Bus::fake();
     Mail::fake();
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->post(route('registration.proof.store'), [
-            'proof' => UploadedFile::fake()->image('proof.png'),
             'package' => 'just_attend',
             'certificate_name' => 'Test User',
+            'student_id' => 'ID-1234567',
         ])
         ->assertRedirect(route('dashboard'));
 
     expect($user->fresh()->registration_package)->toBe('just_attend')
-        ->and($user->fresh()->student_id)->toBeNull();
+        ->and($user->fresh()->student_id)->toBe('ID-1234567')
+        ->and($user->fresh()->registration_status)->toBe('paid')
+        ->and($user->fresh()->registration_paid_at)->not->toBeNull()
+        ->and($user->fresh()->payment_proof_path)->toBeNull();
+    Mail::assertNothingQueued();
+    Bus::assertNothingDispatched();
 });

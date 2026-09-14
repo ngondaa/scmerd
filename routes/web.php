@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\AuthorPortalController;
 use App\Http\Controllers\ReviewerController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
+Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [AuthorPortalController::class, 'dashboard'])->name('dashboard');
     Route::post('package/update', [AuthorPortalController::class, 'updatePackage'])->name('update-package');
     Route::get('submit', [AuthorPortalController::class, 'showSubmit'])->name('submit');
@@ -40,7 +44,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('registration/proof', [PaymentProofController::class, 'show'])->name('registration.proof');
     Route::post('registration/proof', [PaymentProofController::class, 'store'])->name('registration.proof.store');
 });

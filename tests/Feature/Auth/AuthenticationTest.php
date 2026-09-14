@@ -24,7 +24,7 @@ test('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
 });
 
-test('unverified users are redirected to the email verification screen after login', function () {
+test('users can log in even when their account has no email verification timestamp', function () {
     $user = User::factory()->unverified()->create();
 
     $response = $this->post(route('login.store'), [
@@ -34,7 +34,7 @@ test('unverified users are redirected to the email verification screen after log
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('verification.notice', absolute: false));
+        ->assertRedirect(route('dashboard', absolute: false));
 
     $this->assertAuthenticatedAs($user);
 });

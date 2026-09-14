@@ -6,6 +6,16 @@
         <x-auth-session-status class="text-center" :status="session('status')" />
         <x-auth-validation-errors />
 
+        <a href="{{ route('auth.google.redirect') }}" class="flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50">
+            Sign up with Google
+        </a>
+
+        <div class="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <span class="h-px flex-1 bg-zinc-200"></span>
+            Or sign up with email
+            <span class="h-px flex-1 bg-zinc-200"></span>
+        </div>
+
         <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-5">
             @csrf
 

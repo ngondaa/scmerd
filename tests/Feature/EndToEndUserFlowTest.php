@@ -1,13 +1,12 @@
 <?php
 
+use App\Models\AppSetting;
+use App\Models\Review;
 use App\Models\Submission;
 use App\Models\User;
-use App\Models\Review;
-use App\Models\AppSetting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 
 test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> review', function () {
     Storage::fake('public');
@@ -24,20 +23,10 @@ test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> revi
         'password_confirmation' => 'ValidPassword1!',
     ]);
 
-    $response->assertSessionHasNoErrors()->assertRedirect(route('verification.notice', absolute: false));
+    $response->assertSessionHasNoErrors()->assertRedirect(route('dashboard', absolute: false));
     $this->assertAuthenticated();
 
     $user = auth()->user();
-
-    // Verify the email before accessing registration and submission routes.
-    $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1($user->email)],
-    );
-    $this->actingAs($user)->get($verificationUrl)
-        ->assertRedirect(route('dashboard', absolute: false).'?verified=1');
-    $user->refresh();
 
     // Submit a proof of payment, then approve it as an administrator.
     $this->actingAs($user)->post(route('registration.proof.store'), [
@@ -57,7 +46,7 @@ test('end-to-end user flow: register -> pay -> submit -> assign reviewer -> revi
         ->and($user->fresh()->registration_paid_at)->not->toBeNull();
 
     // Submit an abstract
-    $title = 'E2E Test Submission ' . time();
+    $title = 'E2E Test Submission '.time();
 
     $submitResponse = $this->actingAs($user->fresh())->post(route('submit.store'), [
         'title' => $title,

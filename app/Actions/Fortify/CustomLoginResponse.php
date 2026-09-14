@@ -2,7 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
@@ -18,10 +17,6 @@ class CustomLoginResponse implements LoginResponseContract
         }
 
         $user = $request->user();
-
-        if ($user && ! $user->hasVerifiedEmail()) {
-            return redirect()->route('verification.notice');
-        }
 
         if ($user && $user->is_reviewer) {
             return redirect()->route('reviewer.dashboard');
