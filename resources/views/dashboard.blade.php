@@ -65,7 +65,7 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
         <h2 class="cp-card-title">Register for the conference</h2>
         @if ($paid)
             <p class="cp-card-desc" style="color:#1a7f37;font-weight:600;">
-                Registration paid on {{ $paid->format('j F Y') }}
+                {{ $package === 'just_attend' ? 'Registration confirmed' : 'Registration paid on '.$paid->format('j F Y') }}
                 @if ($package)
                     — {{ config('registration.packages.'.$package.'.name', ucfirst($package)) }}
                 @endif
@@ -113,8 +113,8 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
                     @endif
 
                     <div>
-                        <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px;">Payment status</div>
-                        <div style="font-size:16px; font-weight:700; color:#1a7f37;">Paid</div>
+                        <div style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#666; margin-bottom:6px;">{{ $package === 'just_attend' ? 'Registration status' : 'Payment status' }}</div>
+                        <div style="font-size:16px; font-weight:700; color:#1a7f37;">{{ $package === 'just_attend' ? 'Confirmed' : 'Paid' }}</div>
                     </div>
                 </div>
             </div>
