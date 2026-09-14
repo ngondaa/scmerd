@@ -1,8 +1,15 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\PaymentReviewPanelProvider;
+use App\Providers\FortifyServiceProvider;
+use Filament\FilamentServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\FortifyServiceProvider::class,
-    Filament\FilamentServiceProvider::class,
+    AppServiceProvider::class,
+    AdminPanelProvider::class,
+    PaymentReviewPanelProvider::class,
+    FortifyServiceProvider::class,
+    FilamentServiceProvider::class,
 ];

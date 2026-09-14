@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\PaymentApproved;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -28,6 +30,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
     'student_id',
     'registration_paid_at',
     'is_reviewer',
+    'is_payment_reviewer',
     'is_admin',
     'payment_proof_path',
     'payment_proof_original_name',
@@ -54,6 +57,7 @@ class User extends Authenticatable implements FilamentUser
             'ecsa_accredited' => 'boolean',
             'registration_paid_at' => 'datetime',
             'is_reviewer' => 'boolean',
+            'is_payment_reviewer' => 'boolean',
             'is_admin' => 'boolean',
         ];
     }
@@ -89,6 +93,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'payment-review') {
+            return (bool) ($this->is_admin || $this->is_payment_reviewer);
+        }
+
         return (bool) $this->is_admin;
     }
 
@@ -100,10 +108,16 @@ class User extends Authenticatable implements FilamentUser
 
     public function approvePayment(): void
     {
+        if ($this->registration_status === 'paid') {
+            return;
+        }
+
         $this->update([
             'registration_paid_at' => now(),
             'registration_status' => 'paid',
         ]);
+
+        Mail::to($this->email)->queue(new PaymentApproved($this->fresh()));
     }
 
     public function rejectPayment(): void

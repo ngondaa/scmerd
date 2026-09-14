@@ -1,12 +1,16 @@
 <?php
 
+use App\Jobs\ProofAnalysisJob;
+use App\Mail\PaymentApproved;
 use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 it('approves and rejects payment via user model helpers', function () {
+    Mail::fake();
     $user = User::factory()->create([
         'registration_status' => 'pending',
         'payment_proof_path' => 'payment_proofs/proof.png',
@@ -17,6 +21,8 @@ it('approves and rejects payment via user model helpers', function () {
 
     expect($user->fresh()->registration_status)->toBe('paid')
         ->and($user->fresh()->registration_paid_at)->not->toBeNull();
+
+    Mail::assertQueued(PaymentApproved::class, fn (PaymentApproved $mail): bool => $mail->hasTo($user->email));
 
     $user->rejectPayment();
 
@@ -60,7 +66,7 @@ it('flags an OCR amount match for manual review rather than unlocking submission
 
     Storage::disk('public')->put('payment_proofs/proof1.png', 'FAKE_OCR:R650');
 
-    (new \App\Jobs\ProofAnalysisJob($user->id))->handle();
+    (new ProofAnalysisJob($user->id))->handle();
 
     expect($user->fresh()->registration_status)->toBe('pending_review')
         ->and($user->fresh()->registration_paid_at)->toBeNull();

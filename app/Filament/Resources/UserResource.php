@@ -75,6 +75,9 @@ class UserResource extends Resource
                         Toggle::make('is_reviewer')
                             ->label('Reviewer access')
                             ->helperText('Grant access to the reviewer dashboard.'),
+                        Toggle::make('is_payment_reviewer')
+                            ->label('Payment-proof reviewer access')
+                            ->helperText('Grant access to approve or reject payment proofs only.'),
                         Toggle::make('is_admin')
                             ->label('Admin access')
                             ->helperText('Grant access to the Filament admin panel.'),
@@ -173,6 +176,10 @@ class UserResource extends Resource
                     ->label('Reviewer')
                     ->boolean()
                     ->sortable(),
+                IconColumn::make('is_payment_reviewer')
+                    ->label('Payment reviewer')
+                    ->boolean()
+                    ->sortable(),
                 IconColumn::make('is_admin')
                     ->label('Admin')
                     ->boolean()
@@ -229,6 +236,11 @@ class UserResource extends Resource
                     ->placeholder('All users')
                     ->trueLabel('Reviewers')
                     ->falseLabel('Non-reviewers'),
+                TernaryFilter::make('is_payment_reviewer')
+                    ->label('Payment reviewer status')
+                    ->placeholder('All users')
+                    ->trueLabel('Payment reviewers')
+                    ->falseLabel('Non-payment reviewers'),
                 TernaryFilter::make('is_admin')
                     ->label('Admin status')
                     ->placeholder('All users')
