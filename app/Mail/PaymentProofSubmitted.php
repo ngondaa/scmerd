@@ -5,24 +5,24 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class PaymentProofSubmitted extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public User $user)
-    {
-    }
+    public function __construct(public User $user) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Payment proof received — '.$this->user->payment_invoice_number,
+            subject: 'Invoice '.$this->user->payment_invoice_number.' — payment proof for '.$this->user->name,
+            replyTo: [new Address($this->user->email, $this->user->name)],
         );
     }
 

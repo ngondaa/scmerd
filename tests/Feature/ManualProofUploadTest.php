@@ -48,10 +48,13 @@ it('accepts a proof upload without a bot-check challenge', function () {
         ->and($user->fresh()->payment_proof_original_name)->toBe('proof.png');
     Storage::disk('public')->assertExists('payment_proofs/'.$proof->hashName());
     Mail::assertQueued(PaymentProofSubmitted::class, function (PaymentProofSubmitted $mail) use ($user): bool {
+        expect($mail->attachments())->toHaveCount(1);
+
         return $mail->hasTo('carey@saimeche.org.za')
             && $mail->hasTo('ngondaa@yahoo.com')
             && $mail->user->is($user)
-            && $mail->user->payment_invoice_number === $user->fresh()->payment_invoice_number;
+            && $mail->user->payment_invoice_number === $user->fresh()->payment_invoice_number
+            && str_contains($mail->envelope()->subject, $user->fresh()->payment_invoice_number);
     });
 });
 

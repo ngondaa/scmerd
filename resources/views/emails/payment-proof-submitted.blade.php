@@ -1,6 +1,6 @@
-<h1>Payment proof submitted</h1>
+<h1>Invoice and payment proof received</h1>
 
-<p>A delegate has submitted payment proof for manual review.</p>
+<p>This payment-review record and its attached proof belong together. Match the proof against the invoice number below before approving payment.</p>
 
 <table cellpadding="6" cellspacing="0" border="0">
     <tr><th align="left">Invoice</th><td>{{ $user->payment_invoice_number }}</td></tr>
@@ -17,4 +17,6 @@
     @endif
 </table>
 
-<p>The uploaded proof is attached. Approve or reject it in the administration panel after matching the attachment to invoice <strong>{{ $user->payment_invoice_number }}</strong>.</p>
+<p>The uploaded payment proof is attached to this email. Replying to this message reaches {{ $user->name }} directly.</p>
+
+<p>Approve or reject it in the administration panel after matching the attachment to invoice <strong>{{ $user->payment_invoice_number }}</strong>.</p>

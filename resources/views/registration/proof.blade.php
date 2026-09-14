@@ -53,12 +53,12 @@
                     @if ($isJustAttend)
                         <label><span>ID number</span><input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your ID number" required autocomplete="off"></label>
                         <label><span>Proof of payment</span><span class="rp-upload"><strong id="rp-upload-title">Choose payment proof</strong><small>PDF, DOC, DOCX, JPG, PNG or WebP · max 10 MB</small><input id="rp-proof-input" type="file" name="proof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" required></span></label>
-                        <div class="rp-actions"><p>Your registration is confirmed after payment is verified.</p><button type="submit">Submit payment proof →</button></div>
+                        <div class="rp-actions"><p>Your invoice and proof will be sent together to finance for verification.</p><button type="submit">Submit payment proof →</button></div>
                     @else
                         <label class="rp-check"><input type="hidden" name="ecsa_accredited" value="0"><input type="checkbox" name="ecsa_accredited" value="1" id="rp-ecsa-toggle" @checked(old('ecsa_accredited', $ecsaAccredited))><span><strong>I require ECSA CPD recognition</strong><small>Provide your ECSA number if you are claiming CPD points.</small></span></label>
                         <label id="rp-ecsa-field" @if (! old('ecsa_accredited', $ecsaAccredited)) hidden @endif><span>ECSA number</span><input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="e.g. 2020123456"></label>
                         <label><span>Proof of payment</span><span class="rp-upload"><strong id="rp-upload-title">Choose payment proof</strong><small>PDF, DOC, DOCX, JPG, PNG or WebP · max 10 MB</small><input id="rp-proof-input" type="file" name="proof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" required></span></label>
-                        <div class="rp-actions"><p>Your registration is confirmed after payment is verified.</p><button type="submit">Submit proof of payment →</button></div>
+                        <div class="rp-actions"><p>Your invoice and proof will be sent together to finance for verification.</p><button type="submit">Submit proof of payment →</button></div>
                     @endif
                 </form>
             </section>
