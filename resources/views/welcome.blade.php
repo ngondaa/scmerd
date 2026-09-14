@@ -50,8 +50,8 @@
     <p class="lede">This year's conference brings together postgraduate engineers from eight universities across Gauteng, presenting original research in mechanical, industrial and aeronautical engineering before a night of prizes at the gala dinner. Here's what you need to know.</p>
   </div>
   <div class="welcome-cta-banners">
-    @if (Route::has('register'))
-      <a href="{{ route('register') }}" class="cta-banner cta-banner--register">
+    @if (Route::has('auth.google.redirect'))
+      <a href="{{ route('auth.google.redirect') }}" class="cta-banner cta-banner--register">
         <div class="cta-row">
           <div>
             <span class="label">Register to attend</span>

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\CustomLoginResponse;
 use App\Actions\Fortify\CustomRegisterResponse;
+use App\Actions\Fortify\RedirectPasswordLoginToGoogle;
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::authenticateThrough(function (Request $request) {
             return array_filter([
+                RedirectPasswordLoginToGoogle::class,
                 config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
                 config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
                 Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,

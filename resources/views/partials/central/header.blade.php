@@ -24,8 +24,8 @@
               @if (Route::has('login'))
                 <a href="{{ route('login') }}" class="nav-cta nav-cta-light">Log in</a>
               @endif
-              @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="nav-cta">Register</a>
+              @if (Route::has('auth.google.redirect'))
+                <a href="{{ route('auth.google.redirect') }}" class="nav-cta">Register</a>
               @endif
             </div>
           @endauth
