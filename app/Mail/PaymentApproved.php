@@ -19,7 +19,7 @@ class PaymentApproved extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration payment approved — SCMERD',
+            subject: 'Registration payment approved — Central Branch Conference',
         );
     }
 

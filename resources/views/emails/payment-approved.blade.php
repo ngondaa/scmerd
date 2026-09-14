@@ -12,7 +12,7 @@
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px; background:#ffffff; border:1px solid #e3e8df;">
                     <tr>
                         <td style="padding:30px 34px; background:#203a20; color:#ffffff;">
-                            <div style="font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;">SCMERD Conference</div>
+                            <div style="font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;">Central Branch Conference</div>
                             <h1 style="margin:10px 0 0; font-size:26px; line-height:1.25;">Your payment has been approved</h1>
                         </td>
                     </tr>
@@ -54,7 +54,7 @@
                                 @endif
                             </table>
 
-                            <p style="margin:24px 0 0; font-size:14px; line-height:1.6; color:#526052;">Please keep this email for your records. We look forward to welcoming you at SCMERD.</p>
+                            <p style="margin:24px 0 0; font-size:14px; line-height:1.6; color:#526052;">Please keep this email for your records. We look forward to welcoming you at Central Branch.</p>
                         </td>
                     </tr>
                 </table>

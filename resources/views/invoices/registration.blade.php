@@ -29,7 +29,7 @@
     <main class="invoice">
         <header class="header">
             <div>
-                <p class="brand">SCMERD Conference</p>
+                <p class="brand">Central Branch Conference</p>
                 <h1>Registration invoice</h1>
             </div>
             <div class="reference">
@@ -62,7 +62,7 @@
             <h2>Bank transfer details</h2>
             <p><strong>{{ config('registration.payment.bank_name') }}</strong> · {{ config('registration.payment.account_name') }}</p>
             <p>Account number: {{ config('registration.payment.account_number') }} · Branch code: {{ config('registration.payment.branch_code') }}</p>
-            <p>Payment reference: {{ config('registration.payment.reference_prefix') }} - {{ $user->email }}</p>
+            <p>Payment reference: {{ $user->payment_invoice_number }}</p>
         </section>
     </main>
 </body>

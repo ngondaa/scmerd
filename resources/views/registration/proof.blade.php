@@ -8,7 +8,7 @@
 
     <div class="rp-page">
         <header class="rp-hero">
-            <p class="rp-eyebrow">SCMERD · Conference registration</p>
+            <p class="rp-eyebrow">Central Branch · Conference registration</p>
             <h1>{{ $isJustAttend ? 'Complete your attendance registration' : 'Submit your payment proof' }}</h1>
             <p>{{ $isJustAttend ? 'Pay the R450 attendance fee, then add your name, optional registration numbers and proof of payment.' : 'Pay by bank transfer, then add your certificate details and proof of payment.' }}</p>
         </header>
@@ -46,7 +46,7 @@
                         <div class="rp-row"><dt>Account name</dt><dd>{{ config('registration.payment.account_name') }}</dd></div>
                         <div class="rp-row"><dt>Account number</dt><dd>{{ config('registration.payment.account_number') }}</dd></div>
                         <div class="rp-row"><dt>Branch code</dt><dd>{{ config('registration.payment.branch_code') }}</dd></div>
-                        <div class="rp-row rp-row-full"><dt>Payment reference</dt><dd>{{ config('registration.payment.reference_prefix') }} - {{ auth()->user()->email }}</dd></div>
+                        <div class="rp-row rp-row-full"><dt>Payment reference</dt><dd>{{ $paymentReference }}</dd></div>
                     </dl>
                 </section>
             </aside>

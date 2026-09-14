@@ -59,7 +59,7 @@ return [
         'branch_code' => '018505',
         'electronic_branch_code' => '051001',
         'swift_code' => 'SBZA ZA JJ',
-        'reference_prefix' => 'SCMERD',
+        'reference_prefix' => 'Central Branch',
         'legal_entity' => 'SAIMECHE',
         'account_type' => 'BUSINESS CURRENT ACCOUNT',
         'date_opened' => '02 August 1996',

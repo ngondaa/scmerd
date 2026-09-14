@@ -34,6 +34,7 @@ class PaymentProofController extends Controller
             'certificateName' => is_string($certificateName) ? $certificateName : '',
             'ecsaNumber' => auth()->user()->ecsa_number,
             'studentId' => auth()->user()->student_id,
+            'paymentReference' => $this->invoiceNumber($request->user()),
         ]);
     }
 

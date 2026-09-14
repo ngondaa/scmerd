@@ -38,7 +38,7 @@
     <span class="dot"></span>
     <div>
       <h2>Abstracts open now</h2>
-      <p>Submit by 25 September 2026</p>
+      <p>Submit by 23 October 2026</p>
     </div>
   </div>
 </div>
@@ -113,7 +113,7 @@
           <div class="timeline-dot"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-date">25 September 2026</div>
+          <div class="timeline-date">23 October 2026</div>
           <div class="timeline-title">Abstract submission deadline</div>
           <div class="timeline-desc">Final date for abstracts to be considered for the programme</div>
         </div>
@@ -123,7 +123,7 @@
           <div class="timeline-dot"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-date">09 October 2026 · 09h00</div>
+          <div class="timeline-date">30 October 2026 · 09h00</div>
           <div class="timeline-title">Conference day</div>
           <div class="timeline-desc">SWEB, West Campus, University of the Witwatersrand</div>
         </div>
@@ -133,7 +133,7 @@
           <div class="timeline-dot"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-date">09 October 2026 · 18h00</div>
+          <div class="timeline-date">30 October 2026 · 18h00</div>
           <div class="timeline-title">Gala dinner & prize awards</div>
           <div class="timeline-desc">Evening venue to be confirmed closer to the date</div>
         </div>
@@ -233,7 +233,7 @@
         <li><div class="k mono">BUILDING</div><div>Southwest Engineering Building (SWEB)</div></li>
         <li><div class="k mono">CAMPUS</div><div>West Campus, University of the Witwatersrand</div></li>
         <li><div class="k mono">ADDRESS</div><div>1 Jan Smuts Avenue, Braamfontein, Johannesburg, 2000</div></li>
-        <li><div class="k mono">START</div><div>09h00, Friday 09 October 2026</div></li>
+        <li><div class="k mono">START</div><div>09h00, Friday 30 October 2026</div></li>
         <li><div class="k mono">EVENING</div><div>Gala dinner venue to be confirmed</div></li>
       </ul>
     </div>

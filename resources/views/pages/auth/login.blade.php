@@ -1,6 +1,6 @@
 <x-layouts::auth :title="__('Continue with Google')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Welcome to SCMERD')" :description="__('Sign in or create your conference account with Google.')" />
+        <x-auth-header :title="__('Welcome to Central Branch')" :description="__('Sign in or create your conference account with Google.')" />
 
         <x-auth-validation-errors />
 
