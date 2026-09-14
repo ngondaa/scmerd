@@ -32,10 +32,8 @@ class PaymentProofController extends Controller
             'package' => $packageConfig,
             'isJustAttend' => $isJustAttend,
             'certificateName' => is_string($certificateName) ? $certificateName : '',
-            'ecsaAccredited' => (bool) auth()->user()->ecsa_accredited,
             'ecsaNumber' => auth()->user()->ecsa_number,
             'studentId' => auth()->user()->student_id,
-            'invoiceNumber' => $this->invoiceNumber($request->user()),
         ]);
     }
 
@@ -47,15 +45,13 @@ class PaymentProofController extends Controller
         }
 
         $packageKey = $request->input('package');
-        $isJustAttend = $packageKey === 'just_attend';
-
         $validated = $request->validate([
             'proof' => ['required', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:10240'],
             'package' => ['required', Rule::in(array_keys(config('registration.packages')))],
             'certificate_name' => ['required', 'string', 'max:255'],
             'ecsa_accredited' => ['nullable', 'boolean'],
-            'ecsa_number' => ['nullable', 'string', 'max:100', 'required_if:ecsa_accredited,1'],
-            'student_id' => [Rule::requiredIf($isJustAttend), 'nullable', 'string', 'max:100'],
+            'ecsa_number' => ['nullable', 'string', 'max:100'],
+            'student_id' => ['nullable', 'string', 'max:100'],
         ]);
 
         $user = $request->user();
@@ -69,8 +65,8 @@ class PaymentProofController extends Controller
             'registration_status' => 'pending',
             'registration_package' => $validated['package'],
             'certificate_name' => $validated['certificate_name'],
-            'ecsa_accredited' => $isJustAttend ? false : $request->boolean('ecsa_accredited'),
-            'ecsa_number' => $isJustAttend ? null : ($validated['ecsa_number'] ?? null),
+            'ecsa_accredited' => filled($validated['ecsa_number'] ?? null),
+            'ecsa_number' => $validated['ecsa_number'] ?? null,
             'student_id' => $validated['student_id'] ?? null,
         ]);
 

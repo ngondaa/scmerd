@@ -10,7 +10,7 @@
         <header class="rp-hero">
             <p class="rp-eyebrow">SCMERD · Conference registration</p>
             <h1>{{ $isJustAttend ? 'Complete your attendance registration' : 'Submit your payment proof' }}</h1>
-            <p>{{ $isJustAttend ? 'Pay the R450 attendance fee, then add your name, ID number and proof of payment.' : 'Pay by bank transfer, then add your certificate details and proof of payment.' }}</p>
+            <p>{{ $isJustAttend ? 'Pay the R450 attendance fee, then add your name, optional registration numbers and proof of payment.' : 'Pay by bank transfer, then add your certificate details and proof of payment.' }}</p>
         </header>
 
         @if (session('status'))
@@ -35,11 +35,6 @@
                     <div class="rp-summary-head">
                         <h2>{{ $package['name'] }}</h2>
                         <strong class="rp-price">{{ $package['display_price'] }}</strong>
-                    </div>
-                    <p>{{ $package['description'] }}</p>
-                    <div class="rp-invoice-ref">
-                        <span>Invoice reference</span>
-                        <strong>{{ $invoiceNumber }}</strong>
                     </div>
                 </section>
 
@@ -72,26 +67,17 @@
                         <small>This is how your name will appear on your certificate.</small>
                     </label>
 
-                    @if ($isJustAttend)
+                    <div class="rp-field-grid">
                         <label class="rp-field">
-                            <span>ID number</span>
-                            <input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your ID number" required autocomplete="off">
-                        </label>
-                    @else
-                        <label class="rp-check">
-                            <input type="hidden" name="ecsa_accredited" value="0">
-                            <input type="checkbox" name="ecsa_accredited" value="1" id="rp-ecsa-toggle" @checked(old('ecsa_accredited', $ecsaAccredited))>
-                            <span>
-                                <strong>I require ECSA CPD recognition</strong>
-                                <small>Provide your ECSA number if you are claiming CPD points.</small>
-                            </span>
+                            <span>ECSA number <em>Optional</em></span>
+                            <input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="Enter your ECSA number" autocomplete="off">
                         </label>
 
-                        <label class="rp-field" id="rp-ecsa-field" @if (! old('ecsa_accredited', $ecsaAccredited)) hidden @endif>
-                            <span>ECSA number</span>
-                            <input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="e.g. 2020123456">
+                        <label class="rp-field">
+                            <span>Student number <em>Optional</em></span>
+                            <input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your student number" autocomplete="off">
                         </label>
-                    @endif
+                    </div>
 
                     <label class="rp-field">
                         <span>Proof of payment</span>
@@ -103,7 +89,6 @@
                     </label>
 
                     <div class="rp-actions">
-                        <p>Your invoice and payment proof will be sent together to finance for verification.</p>
                         <button type="submit">Submit payment proof <span aria-hidden="true">→</span></button>
                     </div>
                 </form>
@@ -113,12 +98,6 @@
 
     @push('scripts')
         <script>
-            @unless ($isJustAttend)
-                document.getElementById('rp-ecsa-toggle')?.addEventListener('change', event => {
-                    document.getElementById('rp-ecsa-field').hidden = !event.target.checked;
-                });
-            @endunless
-
             document.getElementById('rp-proof-input')?.addEventListener('change', event => {
                 if (event.target.files?.[0]) {
                     document.getElementById('rp-upload-title').textContent = event.target.files[0].name;
