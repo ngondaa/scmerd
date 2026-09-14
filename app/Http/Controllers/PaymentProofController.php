@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProofAnalysisJob;
 use App\Mail\PaymentProofSubmitted;
 use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class PaymentProofController extends Controller
@@ -23,7 +23,7 @@ class PaymentProofController extends Controller
         // Keep existing student registrations usable after replacing that package.
         $packageKey = $packageKey === 'student' ? 'just_attend' : $packageKey;
         $packageKey = is_string($packageKey) && array_key_exists($packageKey, config('registration.packages')) ? $packageKey : 'standard';
-        $packageConfig = config('registration.packages.' . $packageKey);
+        $packageConfig = config('registration.packages.'.$packageKey);
         $isJustAttend = $packageKey === 'just_attend';
         $certificateName = $request->query('certificate_name', $request->input('certificate_name', auth()->user()->certificate_name ?? ''));
 
@@ -35,7 +35,7 @@ class PaymentProofController extends Controller
             'ecsaAccredited' => (bool) auth()->user()->ecsa_accredited,
             'ecsaNumber' => auth()->user()->ecsa_number,
             'studentId' => auth()->user()->student_id,
-            'invoiceNumber' => $isJustAttend ? null : $this->invoiceNumber($request->user()),
+            'invoiceNumber' => $this->invoiceNumber($request->user()),
         ]);
     }
 
@@ -50,7 +50,7 @@ class PaymentProofController extends Controller
         $isJustAttend = $packageKey === 'just_attend';
 
         $validated = $request->validate([
-            'proof' => [Rule::requiredIf(! $isJustAttend), 'nullable', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:10240'],
+            'proof' => ['required', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:10240'],
             'package' => ['required', Rule::in(array_keys(config('registration.packages')))],
             'certificate_name' => ['required', 'string', 'max:255'],
             'ecsa_accredited' => ['nullable', 'boolean'],
@@ -59,24 +59,6 @@ class PaymentProofController extends Controller
         ]);
 
         $user = $request->user();
-
-        if ($isJustAttend) {
-            $user->update([
-                'payment_proof_path' => null,
-                'payment_proof_original_name' => null,
-                'payment_proof_analysis' => null,
-                'payment_invoice_number' => null,
-                'registration_status' => 'paid',
-                'registration_paid_at' => now(),
-                'registration_package' => $validated['package'],
-                'certificate_name' => $validated['certificate_name'],
-                'ecsa_accredited' => false,
-                'ecsa_number' => null,
-                'student_id' => $validated['student_id'],
-            ]);
-
-            return redirect()->route('dashboard')->with('status', 'Your Just Attend registration is confirmed.');
-        }
 
         $path = $request->file('proof')->store('payment_proofs', 'public');
 
@@ -87,15 +69,15 @@ class PaymentProofController extends Controller
             'registration_status' => 'pending',
             'registration_package' => $validated['package'],
             'certificate_name' => $validated['certificate_name'],
-            'ecsa_accredited' => $request->boolean('ecsa_accredited'),
-            'ecsa_number' => $validated['ecsa_number'] ?? null,
+            'ecsa_accredited' => $isJustAttend ? false : $request->boolean('ecsa_accredited'),
+            'ecsa_number' => $isJustAttend ? null : ($validated['ecsa_number'] ?? null),
             'student_id' => $validated['student_id'] ?? null,
         ]);
 
         // enqueue AI proof analysis job (OCR + rule engine)
         $user->update(['payment_proof_analysis' => 'queued']);
 
-        \App\Jobs\ProofAnalysisJob::dispatch($user->id);
+        ProofAnalysisJob::dispatch($user->id);
         Mail::to(config('registration.payment.proof_recipients'))
             ->queue(new PaymentProofSubmitted($user->fresh()));
 

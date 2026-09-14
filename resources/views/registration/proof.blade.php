@@ -11,7 +11,7 @@
             <div>
                 <p class="rp-eyebrow">SCMERD · Conference registration</p>
                 <h1>{{ $isJustAttend ? 'Complete your attendance registration' : 'Invoice & payment proof' }}</h1>
-                <p>{{ $isJustAttend ? 'Provide your name and ID number. No payment or payment proof is required.' : 'Pay by bank transfer, then upload your receipt so we can unlock abstract submission.' }}</p>
+                <p>{{ $isJustAttend ? 'Pay the R450 attendance fee, then provide your name, ID number and payment proof.' : 'Pay by bank transfer, then upload your receipt so we can unlock abstract submission.' }}</p>
             </div>
             <ol class="rp-steps"><li>1 · Package</li><li class="current">2 · {{ $isJustAttend ? 'Details' : 'Payment proof' }}</li></ol>
         </header>
@@ -27,15 +27,10 @@
                     <span>Registration package</span>
                     <h2>{{ $package['name'] }}</h2>
                     <p>{{ $package['description'] }}</p>
-                    @if ($isJustAttend)
-                        <div class="rp-note"><strong>No payment required</strong><span>Your registration is confirmed when you submit your details.</span></div>
-                    @else
-                        <div class="rp-price"><span>Total due</span><strong>{{ $package['display_price'] }}</strong></div>
-                    @endif
+                    <div class="rp-price"><span>Total due</span><strong>{{ $package['display_price'] }}</strong></div>
                 </section>
 
-                @unless ($isJustAttend)
-                    <section class="rp-bank">
+                <section class="rp-bank">
                         <h2>Bank transfer details</h2><p>Use this reference exactly so we can match your payment.</p>
                         <dl>
                             <div><dt>Bank</dt><dd>{{ config('registration.payment.bank_name') }}</dd></div>
@@ -44,8 +39,7 @@
                             <div><dt>Branch code</dt><dd>{{ config('registration.payment.branch_code') }}</dd></div>
                             <div class="full"><dt>Payment reference</dt><dd>{{ config('registration.payment.reference_prefix') }} - {{ auth()->user()->email }}</dd></div>
                         </dl>
-                    </section>
-                @endunless
+                </section>
             </aside>
 
             <section class="rp-panel">
@@ -58,7 +52,8 @@
 
                     @if ($isJustAttend)
                         <label><span>ID number</span><input type="text" name="student_id" value="{{ old('student_id', $studentId) }}" placeholder="Enter your ID number" required autocomplete="off"></label>
-                        <div class="rp-actions"><p>No payment proof is needed for the Just Attend package.</p><button type="submit">Confirm registration →</button></div>
+                        <label><span>Proof of payment</span><span class="rp-upload"><strong id="rp-upload-title">Choose payment proof</strong><small>PDF, DOC, DOCX, JPG, PNG or WebP · max 10 MB</small><input id="rp-proof-input" type="file" name="proof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" required></span></label>
+                        <div class="rp-actions"><p>Your registration is confirmed after payment is verified.</p><button type="submit">Submit payment proof →</button></div>
                     @else
                         <label class="rp-check"><input type="hidden" name="ecsa_accredited" value="0"><input type="checkbox" name="ecsa_accredited" value="1" id="rp-ecsa-toggle" @checked(old('ecsa_accredited', $ecsaAccredited))><span><strong>I require ECSA CPD recognition</strong><small>Provide your ECSA number if you are claiming CPD points.</small></span></label>
                         <label id="rp-ecsa-field" @if (! old('ecsa_accredited', $ecsaAccredited)) hidden @endif><span>ECSA number</span><input type="text" name="ecsa_number" value="{{ old('ecsa_number', $ecsaNumber) }}" placeholder="e.g. 2020123456"></label>
@@ -70,12 +65,12 @@
         </main>
     </div>
 
-    @unless ($isJustAttend)
-        @push('scripts')
-            <script>
+    @push('scripts')
+        <script>
+            @unless ($isJustAttend)
                 document.getElementById('rp-ecsa-toggle')?.addEventListener('change', event => document.getElementById('rp-ecsa-field').hidden = !event.target.checked);
-                document.getElementById('rp-proof-input')?.addEventListener('change', event => { if (event.target.files?.[0]) document.getElementById('rp-upload-title').textContent = event.target.files[0].name; });
-            </script>
-        @endpush
-    @endunless
+            @endunless
+            document.getElementById('rp-proof-input')?.addEventListener('change', event => { if (event.target.files?.[0]) document.getElementById('rp-upload-title').textContent = event.target.files[0].name; });
+        </script>
+    @endpush
 </x-layouts::app>

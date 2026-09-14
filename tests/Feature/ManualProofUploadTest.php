@@ -73,7 +73,7 @@ it('accepts a Word document as proof of payment', function () {
     Mail::assertQueued(PaymentProofSubmitted::class);
 });
 
-it('confirms the just attend package with only a certificate name and ID number', function () {
+it('requires proof of payment for the just attend package', function () {
     Bus::fake();
     Mail::fake();
     $user = User::factory()->create();
@@ -84,13 +84,32 @@ it('confirms the just attend package with only a certificate name and ID number'
             'certificate_name' => 'Test User',
             'student_id' => 'ID-1234567',
         ])
+        ->assertSessionHasErrors('proof');
+
+    Mail::assertNothingQueued();
+    Bus::assertNothingDispatched();
+});
+
+it('accepts payment proof, certificate name and ID number for the just attend package', function () {
+    Bus::fake();
+    Mail::fake();
+    $user = User::factory()->create();
+    $proof = UploadedFile::fake()->image('just-attend-proof.png');
+
+    $this->actingAs($user)
+        ->post(route('registration.proof.store'), [
+            'proof' => $proof,
+            'package' => 'just_attend',
+            'certificate_name' => 'Test User',
+            'student_id' => 'ID-1234567',
+        ])
         ->assertRedirect(route('dashboard'));
 
     expect($user->fresh()->registration_package)->toBe('just_attend')
         ->and($user->fresh()->student_id)->toBe('ID-1234567')
-        ->and($user->fresh()->registration_status)->toBe('paid')
-        ->and($user->fresh()->registration_paid_at)->not->toBeNull()
-        ->and($user->fresh()->payment_proof_path)->toBeNull();
-    Mail::assertNothingQueued();
-    Bus::assertNothingDispatched();
+        ->and($user->fresh()->registration_status)->toBe('pending')
+        ->and($user->fresh()->registration_paid_at)->toBeNull()
+        ->and($user->fresh()->payment_proof_original_name)->toBe('just-attend-proof.png');
+    Storage::disk('public')->assertExists('payment_proofs/'.$proof->hashName());
+    Mail::assertQueued(PaymentProofSubmitted::class);
 });

@@ -15,10 +15,10 @@ return [
     'packages' => [
         'just_attend' => [
             'name' => 'Just Attend Package',
-            'description' => 'Conference attendance and certificate of attendance',
-            'amount' => 0,
+            'description' => 'Conference attendance, gala dinner, and certificate of attendance',
+            'amount' => 45000,
             'currency' => 'zar',
-            'display_price' => 'No payment required',
+            'display_price' => 'R450',
         ],
         'standard' => [
             'name' => 'Standard Package',
