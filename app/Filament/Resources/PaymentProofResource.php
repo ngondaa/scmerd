@@ -40,8 +40,18 @@ class PaymentProofResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Registrant')->searchable()->sortable(),
                 TextColumn::make('email')->searchable(),
+                TextColumn::make('payment_invoice_number')
+                    ->label('Invoice reference')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('registration_package')->label('Package')->formatStateUsing(fn (?string $state): string => config('registration.packages.'.$state.'.name', ucfirst((string) $state))),
+                TextColumn::make('registration_fee')
+                    ->label('Fee')
+                    ->getStateUsing(fn (User $record): ?string => config('registration.packages.'.$record->registration_package.'.display_price'))
+                    ->toggleable(),
                 TextColumn::make('certificate_name')->label('Certificate name')->toggleable(),
+                TextColumn::make('ecsa_number')->label('ECSA number')->placeholder('—')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student_id')->label('Student number')->placeholder('—')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payment_proof_original_name')
                     ->label('Proof of payment')
                     ->default('View uploaded proof')
@@ -58,6 +68,7 @@ class PaymentProofResource extends Resource
                     })
                     ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state))),
                 TextColumn::make('updated_at')->label('Submitted')->dateTime()->sortable(),
+                TextColumn::make('registration_paid_at')->label('Approved')->dateTime()->placeholder('—')->sortable()->toggleable(),
             ])
             ->defaultSort('updated_at', 'desc')
             ->filters([
