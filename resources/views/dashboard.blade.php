@@ -13,7 +13,7 @@ $ecsaNumber = $user->ecsa_number;
 $registrationStatus = $user->registration_status ?? 'unpaid';
 $availablePackages = collect(config('registration.packages'))
     ->filter(fn (array $package) => $package['available'] ?? true)
-    ->groupBy('category');
+    ->groupBy('category', preserveKeys: true);
 @endphp
 
 <style>
@@ -129,13 +129,14 @@ $availablePackages = collect(config('registration.packages'))
                 </div>
             </div>
         @else
-            <form method="GET" action="{{ route('registration.proof') }}" id="package-selector" class="package-form" style="display:block;">
+            <form method="POST" action="{{ route('update-package') }}" id="package-selector" class="package-form" style="display:block;">
+                @csrf
                 <div class="packages-grid">
                     @foreach ($availablePackages as $category => $packages)
                         <div class="package-category">{{ $category }}</div>
                         @foreach ($packages as $key => $packageOption)
                             <div class="package-option">
-                                <input type="radio" id="pkg-{{ $key }}" name="package" value="{{ $key }}" required>
+                                <input type="radio" id="pkg-{{ $key }}" name="package" value="{{ $key }}" required @checked($package === $key)>
                                 <label for="pkg-{{ $key }}" class="package-card" data-package="{{ $key }}">
                                     <div class="package-header">
                                         <h3>{{ $packageOption['name'] }}</h3>
@@ -177,7 +178,9 @@ $availablePackages = collect(config('registration.packages'))
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var selectedPackage = document.querySelector('#package-selector input[name="package"]:checked');
+    var form = document.getElementById('package-selector');
+    if (!form) return;
+
     var cards = document.querySelectorAll('.package-card');
 
     cards.forEach(function (card) {
@@ -195,10 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
             syncSelection();
         }
 
-        card.addEventListener('click', function () {
-            radio.checked = true;
-            syncSelection();
-        });
+        card.addEventListener('click', syncSelection);
     });
 });
 </script>

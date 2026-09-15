@@ -49,7 +49,9 @@ class AuthorPortalController extends Controller
             // Column doesn't exist yet, fall back to session storage
         }
 
-        return redirect()->route('dashboard')->with('status', 'Registration package selected successfully.');
+        return redirect()
+            ->route('registration.proof', ['package' => $validated['package']])
+            ->with('status', 'Registration package selected successfully.');
     }
 
     public function showSubmit()
