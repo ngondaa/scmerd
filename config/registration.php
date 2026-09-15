@@ -13,34 +13,20 @@ return [
     */
 
     'packages' => [
-        'just_attend' => [
-            'name' => 'Just Attend Package',
-            'description' => 'Conference attendance, gala dinner, and certificate of attendance',
-            'amount' => 45000,
-            'currency' => 'zar',
-            'display_price' => 'R450',
-        ],
-        'standard' => [
-            'name' => 'Standard Package',
-            'description' => 'Day session, gala dinner, 1 CPD credit, proceedings, networking materials',
-            'amount' => 65000,
-            'currency' => 'zar',
-            'display_price' => 'R650',
-        ],
-        'premium' => [
-            'name' => 'Premium Package',
-            'description' => 'Full conference experience with VIP networking and merchandise',
-            'amount' => 95000,
-            'currency' => 'zar',
-            'display_price' => 'R950',
-        ],
-        'presenter' => [
-            'name' => 'Presenter Package',
-            'description' => 'Full access, gala dinner, proceedings, and presentation slot',
-            'amount' => 75000,
-            'currency' => 'zar',
-            'display_price' => 'R750',
-        ],
+        'student_member_conference' => ['name' => 'SAIMechE Student', 'description' => 'Conference attendance only', 'amount' => 45000, 'currency' => 'zar', 'display_price' => 'R450', 'category' => 'Student packages'],
+        'student_non_member_conference' => ['name' => 'Non-SAIMechE Student', 'description' => 'Conference attendance only', 'amount' => 65000, 'currency' => 'zar', 'display_price' => 'R650', 'category' => 'Student packages'],
+        'student_member_conference_gala' => ['name' => 'SAIMechE Student — Conference & Gala Dinner', 'description' => 'Conference attendance and gala dinner', 'amount' => 100000, 'currency' => 'zar', 'display_price' => 'R1 000', 'category' => 'Conference & gala dinner attendance'],
+        'student_non_member_conference_gala' => ['name' => 'Non-SAIMechE Student — Conference & Gala Dinner', 'description' => 'Conference attendance and gala dinner', 'amount' => 135000, 'currency' => 'zar', 'display_price' => 'R1 350', 'category' => 'Conference & gala dinner attendance'],
+        'standard_member_conference' => ['name' => 'Standard — SAIMechE Member', 'description' => 'Conference attendance only', 'amount' => 95000, 'currency' => 'zar', 'display_price' => 'R950', 'category' => 'Standard packages'],
+        'standard_non_member_conference' => ['name' => 'Standard — Non-SAIMechE Member', 'description' => 'Conference attendance only', 'amount' => 100000, 'currency' => 'zar', 'display_price' => 'R1 000', 'category' => 'Standard packages'],
+        'full_member' => ['name' => 'Full Conference — SAIMechE Member', 'description' => 'Full conference package', 'amount' => 165000, 'currency' => 'zar', 'display_price' => 'R1 650', 'category' => 'Full packages'],
+        'full_non_member' => ['name' => 'Full Conference — Non-SAIMechE Member', 'description' => 'Full conference package', 'amount' => 185000, 'currency' => 'zar', 'display_price' => 'R1 850', 'category' => 'Full packages'],
+
+        // Existing registrations retain their original package and price. These options are not shown for new registrations.
+        'just_attend' => ['name' => 'Just Attend Package', 'description' => 'Legacy registration package', 'amount' => 45000, 'currency' => 'zar', 'display_price' => 'R450', 'available' => false],
+        'standard' => ['name' => 'Standard Package', 'description' => 'Legacy registration package', 'amount' => 65000, 'currency' => 'zar', 'display_price' => 'R650', 'available' => false],
+        'premium' => ['name' => 'Premium Package', 'description' => 'Legacy registration package', 'amount' => 95000, 'currency' => 'zar', 'display_price' => 'R950', 'available' => false],
+        'presenter' => ['name' => 'Presenter Package', 'description' => 'Legacy registration package', 'amount' => 75000, 'currency' => 'zar', 'display_price' => 'R750', 'available' => false],
     ],
 
     'payment' => [

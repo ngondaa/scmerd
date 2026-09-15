@@ -11,6 +11,9 @@ $certificateName = $user->certificate_name;
 $ecsaAccredited = (bool) $user->ecsa_accredited;
 $ecsaNumber = $user->ecsa_number;
 $registrationStatus = $user->registration_status ?? 'unpaid';
+$availablePackages = collect(config('registration.packages'))
+    ->filter(fn (array $package) => $package['available'] ?? true)
+    ->groupBy('category');
 @endphp
 
 <style>
@@ -52,6 +55,13 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
     border-color: #111827;
     box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
 }
+.package-category{grid-column:1 / -1;margin:10px 0 -4px;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4b5563;}
+.registration-notes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px;}
+.registration-note{padding:20px;border:1px solid #d9d9d9;border-radius:8px;background:#f3f3f3;}
+.registration-note-label{margin:0 0 14px;color:#748091;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
+.registration-note-fee{margin:0;color:#173a5e;font-family:Georgia,serif;font-size:25px;font-weight:700;}
+.registration-note-copy{margin:6px 0 0;color:#687587;font-size:14px;}
+@media (max-width:640px){.registration-notes{grid-template-columns:1fr;}}
 .package-option input[type="radio"] {
     position: absolute;
     opacity: 0;
@@ -121,76 +131,37 @@ $registrationStatus = $user->registration_status ?? 'unpaid';
         @else
             <form method="GET" action="{{ route('registration.proof') }}" id="package-selector" class="package-form" style="display:block;">
                 <div class="packages-grid">
-                    <div class="package-option">
-                        <input type="radio" id="pkg-just-attend" name="package" value="just_attend" required>
-                        <label for="pkg-just-attend" class="package-card" data-package="just_attend">
-                            <div class="package-header">
-                                <h3>Just Attend Package</h3>
-                                <div class="package-price">R450</div>
+                    @foreach ($availablePackages as $category => $packages)
+                        <div class="package-category">{{ $category }}</div>
+                        @foreach ($packages as $key => $packageOption)
+                            <div class="package-option">
+                                <input type="radio" id="pkg-{{ $key }}" name="package" value="{{ $key }}" required>
+                                <label for="pkg-{{ $key }}" class="package-card" data-package="{{ $key }}">
+                                    <div class="package-header">
+                                        <h3>{{ $packageOption['name'] }}</h3>
+                                        <div class="package-price">{{ $packageOption['display_price'] }}</div>
+                                    </div>
+                                    <p class="package-desc">{{ $packageOption['description'] }}</p>
+                                    <ul class="package-features">
+                                        <li>{{ str_contains(strtolower($packageOption['description']), 'gala') ? 'Conference and gala dinner' : 'Conference attendance' }}</li>
+                                        <li>Certificate of attendance</li>
+                                    </ul>
+                                </label>
                             </div>
-                            <p class="package-desc">For conference attendees — name, ID and payment proof</p>
-                            <ul class="package-features">
-                                <li>Day session attendance</li>
-                                <li>Gala dinner & awards</li>
-                                <li>Certificate of attendance</li>
-                            </ul>
-                        </label>
-                    </div>
+                        @endforeach
+                    @endforeach
+                </div>
 
-                    <div class="package-option">
-                        <input type="radio" id="pkg-standard" name="package" value="standard" required>
-                        <label for="pkg-standard" class="package-card" data-package="standard">
-                            <div class="package-header">
-                                <h3>Standard Package</h3>
-                                <div class="package-price">R650</div>
-                            </div>
-                            <p class="package-desc">For researchers and practitioners</p>
-                            <ul class="package-features">
-                                <li>Day session attendance</li>
-                                <li>Gala dinner & awards</li>
-                                <li>1 CPD credit (ECSA)</li>
-                                <li>Abstract proceedings</li>
-                                <li>Networking materials</li>
-                            </ul>
-                        </label>
-                    </div>
-
-                    <div class="package-option">
-                        <input type="radio" id="pkg-premium" name="package" value="premium" required>
-                        <label for="pkg-premium" class="package-card" data-package="premium">
-                            <div class="package-header">
-                                <h3>Premium Package</h3>
-                                <div class="package-price">R950</div>
-                            </div>
-                            <p class="package-desc">Full conference experience</p>
-                            <ul class="package-features">
-                                <li>Day session attendance</li>
-                                <li>Gala dinner & awards</li>
-                                <li>1 CPD credit (ECSA)</li>
-                                <li>Abstract proceedings</li>
-                                <li>VIP networking session</li>
-                                <li>Merchandise pack</li>
-                            </ul>
-                        </label>
-                    </div>
-
-                    <div class="package-option">
-                        <input type="radio" id="pkg-presenter" name="package" value="presenter" required>
-                        <label for="pkg-presenter" class="package-card" data-package="presenter">
-                            <div class="package-header">
-                                <h3>Presenter Package</h3>
-                                <div class="package-price">R750</div>
-                            </div>
-                            <p class="package-desc">For abstract submitters</p>
-                            <ul class="package-features">
-                                <li>Full conference access</li>
-                                <li>Gala dinner & awards</li>
-                                <li>1 CPD credit (ECSA)</li>
-                                <li>Abstract proceedings</li>
-                                <li>Presentation slot</li>
-                            </ul>
-                        </label>
-                    </div>
+                <div class="registration-notes" aria-label="Registration fee notes">
+                    <section class="registration-note">
+                        <p class="registration-note-label">Sponsor delegate</p>
+                        <p class="registration-note-fee">Free</p>
+                        <p class="registration-note-copy">As per sponsorship package</p>
+                    </section>
+                    <section class="registration-note">
+                        <p class="registration-note-label">Late registration fee (after 20 October 2026)</p>
+                        <p class="registration-note-fee">R250</p>
+                    </section>
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="margin-top: 24px; width: 100%;">

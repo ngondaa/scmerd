@@ -19,10 +19,10 @@ class PaymentProofController extends Controller
             return redirect()->route('dashboard')->with('error', 'Registration is currently closed.');
         }
 
-        $packageKey = $request->query('package', $request->input('package', auth()->user()->registration_package ?? session('registration_package', 'standard')));
+        $packageKey = $request->query('package', $request->input('package', auth()->user()->registration_package ?? session('registration_package', 'standard_member_conference')));
         // Keep existing student registrations usable after replacing that package.
         $packageKey = $packageKey === 'student' ? 'just_attend' : $packageKey;
-        $packageKey = is_string($packageKey) && array_key_exists($packageKey, config('registration.packages')) ? $packageKey : 'standard';
+        $packageKey = is_string($packageKey) && array_key_exists($packageKey, config('registration.packages')) ? $packageKey : 'standard_member_conference';
         $packageConfig = config('registration.packages.'.$packageKey);
         $isJustAttend = $packageKey === 'just_attend';
         $certificateName = $request->query('certificate_name', $request->input('certificate_name', auth()->user()->certificate_name ?? ''));
