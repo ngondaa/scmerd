@@ -346,7 +346,7 @@ section:last-of-type{border-bottom:none;}
 
 .gallery-grid{
   display:grid;grid-template-columns:2fr 1fr 1fr;
-  grid-template-rows:1fr 1fr;gap:8px;height:520px;
+  grid-template-rows:1fr 1fr;gap:8px;height:680px;
 }
 .gallery-item{position:relative;overflow:hidden;background:var(--paper-deep);border:1px solid var(--line);}
 .gallery-item:first-child{grid-row:span 2;}
@@ -360,7 +360,7 @@ section:last-of-type{border-bottom:none;}
 }
 
 /* ---------- Gallery slider (fades between big images) ---------- */
-.gallery-slider{position:relative;height:520px;overflow:hidden;border:1px solid var(--line);background:var(--paper);}
+.gallery-slider{position:relative;height:680px;overflow:hidden;border:1px solid var(--line);background:var(--paper);}
 .gallery-slider .gallery-grid{display:block;height:100%;}
 .gallery-slider .gallery-item{position:absolute;inset:0;opacity:0;transition:opacity .6s ease, transform .6s ease;pointer-events:none}
 .gallery-slider .gallery-item:first-child{z-index:1}
@@ -372,7 +372,7 @@ section:last-of-type{border-bottom:none;}
 .gallery-slider .slider-dots button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.7);border:none;cursor:pointer}
 .gallery-slider .slider-dots button.active{background:var(--crimson)}
 
-@media (max-width:900px){.gallery-slider{height:420px}}
+@media (max-width:900px){.gallery-slider{height:500px}}
 
 /* Pizzazz: subtle reveals and hover polish */
 .reveal-init{opacity:0;transform:translateY(18px) scale(0.995);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.9,.2,1);will-change:opacity,transform}

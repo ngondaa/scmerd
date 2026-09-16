@@ -173,24 +173,28 @@
     <div class="gallery-slider">
       <div class="gallery-grid">
         <div class="gallery-item active">
-          <img src="{{ asset('images/3.jpeg') }}" alt="Keynote presentation">
-          <span class="gallery-label">Keynote presentation</span>
+          <img src="{{ asset('images/20251028_083413.jpg') }}" alt="Conference attendees at a past session">
+          <span class="gallery-label">Conference moments</span>
         </div>
         <div class="gallery-item">
-          <img src="{{ asset('images/4.jpeg') }}" alt="Research presentations">
-          <span class="gallery-label">Research presentations</span>
+          <img src="{{ asset('images/20251028_083434.jpg') }}" alt="Conference activity at a past session" loading="lazy">
+          <span class="gallery-label">Sharing ideas</span>
         </div>
         <div class="gallery-item">
-          <img src="{{ asset('images/5.jpeg') }}" alt="Wits campus">
-          <span class="gallery-label">Wits campus</span>
+          <img src="{{ asset('images/20251028_164018.jpg') }}" alt="Delegates during a conference session" loading="lazy">
+          <span class="gallery-label">Research in conversation</span>
         </div>
         <div class="gallery-item">
-          <img src="{{ asset('images/6.jpeg') }}" alt="Award ceremony">
-          <span class="gallery-label">Award ceremony</span>
+          <img src="{{ asset('images/20251028_164020.jpg') }}" alt="Conference programme in progress" loading="lazy">
+          <span class="gallery-label">Session highlights</span>
         </div>
         <div class="gallery-item">
-          <img src="{{ asset('images/7.jpeg') }}" alt="Panel discussion">
-          <span class="gallery-label">Panel discussion</span>
+          <img src="{{ asset('images/20251028_164912.jpg') }}" alt="Conference community gathering" loading="lazy">
+          <span class="gallery-label">Our community</span>
+        </div>
+        <div class="gallery-item">
+          <img src="{{ asset('images/IMG-20251028-WA0029.jpg') }}" alt="Conference delegates together" loading="lazy">
+          <span class="gallery-label">Together at SCMERD</span>
         </div>
       </div>
       <div class="slider-controls" aria-hidden="true">
