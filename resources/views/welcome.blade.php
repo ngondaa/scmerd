@@ -197,9 +197,9 @@
           <span class="gallery-label">Together at SCMERD</span>
         </div>
       </div>
-      <div class="slider-controls" aria-hidden="true">
-        <button class="slider-control prev" aria-label="Previous">‹</button>
-        <button class="slider-control next" aria-label="Next">›</button>
+      <div class="slider-controls">
+        <button type="button" class="slider-control prev" aria-label="Show previous photo">‹</button>
+        <button type="button" class="slider-control next" aria-label="Show next photo">›</button>
       </div>
       <div class="slider-dots" aria-hidden="false"></div>
     </div>
@@ -375,6 +375,8 @@
   (function(){
     var slider = document.querySelector('.gallery-slider');
     if (!slider) return;
+    var desktop = window.matchMedia && window.matchMedia('(min-width: 901px)').matches;
+    if (!desktop) return;
     var slides = Array.prototype.slice.call(slider.querySelectorAll('.gallery-item'));
     if (!slides.length) return;
     // init

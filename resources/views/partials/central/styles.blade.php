@@ -359,20 +359,21 @@ section:last-of-type{border-bottom:none;}
   text-transform:uppercase;color:#fff;
 }
 
-/* ---------- Gallery slider (fades between big images) ---------- */
-.gallery-slider{position:relative;height:680px;overflow:hidden;border:1px solid var(--line);background:var(--paper);}
-.gallery-slider .gallery-grid{display:block;height:100%;}
-.gallery-slider .gallery-item{position:absolute;inset:0;opacity:0;transition:opacity .6s ease, transform .6s ease;pointer-events:none}
-.gallery-slider .gallery-item:first-child{z-index:1}
-.gallery-slider .gallery-item.active{opacity:1;pointer-events:auto;z-index:2}
-.gallery-slider .gallery-item img{width:100%;height:100%;object-fit:cover}
-.gallery-slider .slider-controls{position:absolute;right:18px;top:18px;display:flex;gap:8px;z-index:4}
-.gallery-slider .slider-control{background:rgba(255,255,255,0.9);border-radius:999px;padding:8px 10px;cursor:pointer;border:1px solid rgba(0,0,0,0.06)}
-.gallery-slider .slider-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:8px;z-index:4}
-.gallery-slider .slider-dots button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.7);border:none;cursor:pointer}
-.gallery-slider .slider-dots button.active{background:var(--crimson)}
-
-@media (max-width:900px){.gallery-slider{height:500px}}
+/* ---------- Gallery slider (desktop) ---------- */
+@media (min-width:901px){
+  .gallery-slider{position:relative;height:680px;overflow:hidden;border:1px solid var(--line);background:var(--paper);}
+  .gallery-slider .gallery-grid{display:block;height:100%;}
+  .gallery-slider .gallery-item{position:absolute;inset:0;opacity:0;transition:opacity .6s ease,transform .6s ease;pointer-events:none}
+  .gallery-slider .gallery-item:first-child{z-index:1}
+  .gallery-slider .gallery-item.active{opacity:1;pointer-events:auto;z-index:2}
+  .gallery-slider .gallery-item img{width:100%;height:100%;object-fit:cover}
+  .gallery-slider .slider-controls{position:absolute;right:18px;top:18px;display:flex;gap:8px;z-index:4}
+  .gallery-slider .slider-control{background:rgba(255,255,255,0.9);border-radius:999px;padding:8px 10px;cursor:pointer;border:1px solid rgba(0,0,0,0.06)}
+  .gallery-slider .slider-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:8px;z-index:4}
+  .gallery-slider .slider-dots button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.7);border:none;cursor:pointer}
+  .gallery-slider .slider-dots button.active{background:var(--crimson)}
+}
+@media (max-width:900px){.gallery-slider .slider-controls,.gallery-slider .slider-dots{display:none}}
 
 /* Pizzazz: subtle reveals and hover polish */
 .reveal-init{opacity:0;transform:translateY(18px) scale(0.995);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.9,.2,1);will-change:opacity,transform}

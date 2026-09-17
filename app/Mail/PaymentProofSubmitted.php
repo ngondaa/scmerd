@@ -21,7 +21,7 @@ class PaymentProofSubmitted extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invoice '.$this->user->payment_invoice_number.' — payment proof for '.$this->user->name,
+            subject: 'Payment proof — '.$this->packageName().' — Invoice '.$this->user->payment_invoice_number,
             replyTo: [new Address($this->user->email, $this->user->name)],
         );
     }
@@ -46,5 +46,13 @@ class PaymentProofSubmitted extends Mailable implements ShouldQueue
             Attachment::fromStorageDisk('public', $this->user->payment_proof_path)
                 ->as($this->user->payment_proof_original_name ?: basename($this->user->payment_proof_path)),
         ];
+    }
+
+    private function packageName(): string
+    {
+        return config(
+            'registration.packages.'.$this->user->registration_package.'.name',
+            ucfirst((string) $this->user->registration_package),
+        );
     }
 }

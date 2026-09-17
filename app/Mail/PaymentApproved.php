@@ -19,7 +19,7 @@ class PaymentApproved extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration payment approved — Central Branch Conference',
+            subject: 'Registration confirmed — '.$this->packageName().' — Central Branch Conference',
         );
     }
 
@@ -27,6 +27,14 @@ class PaymentApproved extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.payment-approved',
+        );
+    }
+
+    private function packageName(): string
+    {
+        return config(
+            'registration.packages.'.$this->user->registration_package.'.name',
+            ucfirst((string) $this->user->registration_package),
         );
     }
 }

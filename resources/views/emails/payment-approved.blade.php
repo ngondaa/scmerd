@@ -6,6 +6,7 @@
     <title>Registration payment approved</title>
 </head>
 <body style="margin:0; padding:24px; background:#f4f6f2; color:#1d2e1d; font-family:Arial, sans-serif;">
+    @php($package = config('registration.packages.'.$user->registration_package, []))
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
@@ -24,11 +25,15 @@
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e3e8df; border-collapse:collapse; font-size:14px;">
                                 <tr>
                                     <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; color:#687568;">Registration package</td>
-                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; font-weight:700;">{{ config('registration.packages.'.$user->registration_package.'.name', ucfirst((string) $user->registration_package)) }}</td>
+                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; font-weight:700;">{{ $package['name'] ?? ucfirst((string) $user->registration_package) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; color:#687568;">Includes</td>
+                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; font-weight:700;">{{ $package['description'] ?? 'Conference registration' }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; color:#687568;">Registration fee</td>
-                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; font-weight:700;">{{ config('registration.packages.'.$user->registration_package.'.display_price') }}</td>
+                                    <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; font-weight:700;">{{ $package['display_price'] ?? '—' }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:12px 14px; border-bottom:1px solid #e3e8df; color:#687568;">Name on certificate</td>
