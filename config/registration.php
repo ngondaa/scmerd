@@ -30,12 +30,14 @@ return [
     ],
 
     'payment' => [
-        // Carey is the finance owner and must receive every invoice/proof pair.
-        'proof_recipients' => array_values(array_unique(array_filter(array_map(
+        // Conference administrators receive a private copy of every registration,
+        // submission, and review email.
+        'notification_recipients' => array_values(array_unique(array_filter(array_map(
             'trim',
             [
                 'carey@saimeche.org.za',
-                ...explode(',', env('PAYMENT_PROOF_RECIPIENTS', 'ngondaa@yahoo.com')),
+                'ngondaa@yahoo.com',
+                ...explode(',', env('CONFERENCE_NOTIFICATION_RECIPIENTS', '')),
             ],
         )))),
         'bank_name' => 'Standard Bank',

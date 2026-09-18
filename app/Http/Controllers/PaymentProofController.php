@@ -75,7 +75,7 @@ class PaymentProofController extends Controller
         $user->update(['payment_proof_analysis' => 'queued']);
 
         ProofAnalysisJob::dispatch($user->id);
-        Mail::to(config('registration.payment.proof_recipients'))
+        Mail::to(config('registration.payment.notification_recipients'))
             ->queue(new PaymentProofSubmitted($user->fresh()));
 
         return redirect()->route('dashboard')->with('status', 'Proof uploaded. It has been sent to the finance team for verification.');

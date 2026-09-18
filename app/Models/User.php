@@ -117,7 +117,9 @@ class User extends Authenticatable implements FilamentUser
             'registration_status' => 'paid',
         ]);
 
-        Mail::to($this->email)->queue(new PaymentApproved($this->fresh()));
+        Mail::to($this->email)
+            ->bcc(config('registration.payment.notification_recipients'))
+            ->queue(new PaymentApproved($this->fresh()));
     }
 
     public function rejectPayment(): void
