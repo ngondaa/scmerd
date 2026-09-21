@@ -2,27 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Submission;
 use App\Models\Review;
-use Illuminate\Http\Request;
+use App\Models\Submission;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use ZipArchive;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use ZipArchive;
 
 class ReviewerController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         if (! auth()->check() || ! auth()->user()->is_reviewer) {
             abort(403, 'Reviewer access required.');
         }
 
-        $submissions = Submission::with(['user', 'reviews.user'])->latest('submitted_at')->get();
+        $filters = $request->validate([
+            'q' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'string', 'max:100'],
+            'sort' => ['nullable', 'in:newest,oldest'],
+        ]);
+
+        $submissions = Submission::query()
+            ->with('user')
+            ->when($filters['q'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('author', 'like', "%{$search}%");
+                });
+            })
+            ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->orderBy('submitted_at', ($filters['sort'] ?? 'newest') === 'oldest' ? 'asc' : 'desc')
+            ->paginate(12)
+            ->withQueryString();
+
+        $statuses = Submission::query()
+            ->whereNotNull('status')
+            ->distinct()
+            ->orderBy('status')
+            ->pluck('status');
 
         return view('reviewer.dashboard', [
             'submissions' => $submissions,
+            'statuses' => $statuses,
         ]);
     }
 
@@ -34,7 +58,7 @@ class ReviewerController extends Controller
 
         $validated = $request->validate([
             'comment' => ['required', 'string', 'max:3000'],
-            'status' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', 'in:Under Initial Review,Rebuttal Open,Accepted,Revisions Requested,Rejected'],
         ]);
 
         $review = Review::create([
@@ -60,11 +84,25 @@ class ReviewerController extends Controller
 
         $submission->load(['user', 'reviews.user', 'reviewers']);
 
-        $possibleReviewers = User::where('is_reviewer', true)->get();
+        $previousSubmission = Submission::query()
+            ->where('submitted_at', '<', $submission->submitted_at)
+            ->orderByDesc('submitted_at')
+            ->first();
+        $nextSubmission = Submission::query()
+            ->where('submitted_at', '>', $submission->submitted_at)
+            ->orderBy('submitted_at')
+            ->first();
+
+        $attachmentSize = null;
+        if ($submission->attachment_path && Storage::disk('public')->exists($submission->attachment_path)) {
+            $attachmentSize = Storage::disk('public')->size($submission->attachment_path);
+        }
 
         return view('reviewer.show', [
             'submission' => $submission,
-            'possibleReviewers' => $possibleReviewers,
+            'previousSubmission' => $previousSubmission,
+            'nextSubmission' => $nextSubmission,
+            'attachmentSize' => $attachmentSize,
         ]);
     }
 
@@ -132,7 +170,7 @@ class ReviewerController extends Controller
 
         $submissions = Submission::whereNotNull('attachment_path')->get();
 
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         $filename = storage_path('app/public/reviewer_attachments_'.Str::slug(now()->toDateTimeString()).'.zip');
 
         if ($zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -145,7 +183,7 @@ class ReviewerController extends Controller
             if ($s->attachment_path && $disk->exists($s->attachment_path)) {
                 $path = $disk->path($s->attachment_path);
                 $localName = basename($s->attachment_path);
-                $zip->addFile($path, $s->id . '/' . $localName);
+                $zip->addFile($path, $s->id.'/'.$localName);
             }
         }
 

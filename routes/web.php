@@ -24,9 +24,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('downloads', [AuthorPortalController::class, 'downloads'])->name('downloads');
     Route::get('downloads/{id}', [AuthorPortalController::class, 'downloadAttachment'])->name('downloads.attachment');
     Route::get('exports/submissions', [AuthorPortalController::class, 'exportCsv'])->name('exports.submissions');
-    Route::get('reviewer/dashboard', [ReviewerController::class, 'dashboard'])->name('reviewer.dashboard');
+    Route::get('reviewer', [ReviewerController::class, 'dashboard'])->name('reviewer.dashboard');
+    Route::redirect('reviewer/dashboard', 'reviewer');
     Route::post('reviewer/submissions/{submission}/comment', [ReviewerController::class, 'storeComment'])->name('reviewer.comment');
-    Route::get('reviewer/submissions/{submission}', [ReviewerController::class, 'show'])->name('reviewer.submission.show');
+    Route::get('reviewer/abstracts/{submission}', [ReviewerController::class, 'show'])->name('reviewer.submission.show');
+    Route::get('reviewer/submissions/{submission}', [ReviewerController::class, 'show']);
     Route::post('reviewer/submissions/{submission}/assign', [ReviewerController::class, 'assignReviewer'])->name('reviewer.submission.assign');
     Route::get('reviewer/exports/abstracts', [ReviewerController::class, 'exportAbstracts'])->name('reviewer.exports.abstracts');
     Route::get('reviewer/exports/attachments', [ReviewerController::class, 'downloadAllAttachments'])->name('reviewer.exports.attachments');

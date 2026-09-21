@@ -1,66 +1,16 @@
 <x-layouts::app :title="$submission->title">
     @include('partials.portal.open')
-
-    <div class="cp-main-grid">
-        <div class="cp-card cp-card-highlight">
-            <h2 class="cp-card-title">{{ $submission->title }}</h2>
-            <p class="cp-card-desc">Author: {{ $submission->author }}</p>
-
-            <div style="margin-top:12px; color:#4b5563; line-height:1.6;">
-                <strong>Track:</strong> {{ $submission->track }}<br>
-                <strong>Submitted by:</strong> {{ $submission->user?->email ?? 'Unknown' }}<br>
-                <strong>Status:</strong> {{ $submission->status ?? 'Under Initial Review' }}
-            </div>
-
-            <div style="margin-top:16px; padding:14px 16px; background:#fafaf8; border:1px solid #eaeaea; border-radius:8px;">
-                <div style="font-weight:700; margin-bottom:8px;">Abstract</div>
-                <div style="white-space:pre-wrap;">{{ $submission->abstract }}</div>
-            </div>
-
-            <div style="margin-top:16px;">
-                <div style="font-weight:700; margin-bottom:8px;">Assigned Reviewers</div>
-                <ul style="padding-left:18px; color:#374151; margin:0; display:grid; gap:8px;">
-                    @forelse ($submission->reviewers as $r)
-                        <li>{{ $r->name }} ({{ $r->email }}) — assigned {{ $r->pivot->assigned_at?->format('j M Y, H:i') }}</li>
-                    @empty
-                        <li>No reviewers assigned</li>
-                    @endforelse
-                </ul>
-            </div>
-
-            <form method="POST" action="{{ route('reviewer.submission.assign', $submission) }}" style="margin-top:16px;">
-                @csrf
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <select name="user_id" style="padding:10px 12px; border:1px solid #d8d8d8; border-radius:8px; background:#fff;">
-                        @foreach ($possibleReviewers as $pr)
-                            <option value="{{ $pr->id }}">{{ $pr->name }} — {{ $pr->email }}</option>
-                        @endforeach
-                    </select>
-                    <button type="submit" class="btn btn-primary">Assign reviewer</button>
-                </div>
-            </form>
-
-            @if (! empty($submission->reviews))
-                <div style="margin-top:18px;">
-                    <div style="font-weight:700; margin-bottom:8px;">Reviews</div>
-                    <ul style="padding-left:18px; color:#374151; margin:0; display:grid; gap:8px;">
-                        @foreach ($submission->reviews as $r)
-                            <li>
-                                <strong>{{ $r->user?->name ?? 'Reviewer' }}</strong>
-                                <span> — {{ $r->comment }}</span>
-                                @if (! empty($r->status))
-                                    <small style="color:#6b7280;"> (Status: {{ $r->status }})</small>
-                                @endif
-                                <small style="color:#6b7280;"> ({{ $r->created_at?->format('d M Y H:i') }})</small>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <div style="margin-top:20px;">
-                <a href="{{ route('reviewer.dashboard') }}" class="cp-btn-link">Back to dashboard</a>
-            </div>
-        </div>
-    </div>
+    <main class="reviewer-page reviewer-detail" aria-labelledby="abstract-title">
+        <a class="reviewer-back-link" href="{{ route('reviewer.dashboard') }}">← All abstracts</a>
+        <header class="reviewer-detail-header">
+            <div><div class="reviewer-detail-title-line"><h1 id="abstract-title">{{ $submission->title }}</h1><span class="reviewer-status reviewer-status--{{ Str::slug($submission->status ?? 'Under Initial Review') }}">{{ $submission->status ?? 'Under Initial Review' }}</span></div><p class="reviewer-detail-meta">{{ $submission->author }} <span aria-hidden="true">·</span> {{ $submission->user?->email ?? 'Email unavailable' }} <span aria-hidden="true">·</span> Submitted {{ $submission->submitted_at?->format('j M Y, H:i') ?? 'date unavailable' }}</p></div>
+        </header>
+        @if ($submission->attachment_path)
+            <section class="reviewer-download-bar" aria-label="Downloads"><div><strong>Attachment</strong><span>{{ $submission->attachment_name ?? basename($submission->attachment_path) }}@if ($attachmentSize), {{ \Illuminate\Support\Number::fileSize($attachmentSize) }}@endif</span></div><a href="{{ route('downloads.attachment', $submission->id) }}" class="reviewer-button reviewer-button--dark">Download attachment</a></section>
+        @endif
+        <section class="reviewer-detail-section" aria-labelledby="abstract-heading"><h2 id="abstract-heading">Abstract</h2><div class="reviewer-abstract-panel">{{ $submission->abstract }}</div></section>
+        <section class="reviewer-detail-section" aria-labelledby="comments-heading"><h2 id="comments-heading">Review comments</h2><div class="reviewer-timeline">@forelse ($submission->reviews->sortBy('created_at') as $review)<article class="reviewer-comment"><div class="reviewer-comment-head"><strong>{{ $review->user?->name ?? 'Reviewer' }}</strong><time datetime="{{ $review->created_at?->toAtomString() }}">{{ $review->created_at?->format('j M Y, H:i') }}</time></div><p>{{ $review->comment }}</p>@if ($review->status)<span class="reviewer-comment-status">Status changed to {{ $review->status }}</span>@endif</article>@empty<p class="reviewer-muted">No review comments yet.</p>@endforelse</div></section>
+        <section class="reviewer-comment-form" aria-labelledby="add-comment-heading"><h2 id="add-comment-heading">Add review comment</h2><form method="POST" action="{{ route('reviewer.comment', $submission) }}">@csrf<label for="comment">Comment</label><textarea id="comment" name="comment" rows="6" required aria-describedby="comment-error">{{ old('comment') }}</textarea>@error('comment')<p id="comment-error" class="reviewer-error">{{ $message }}</p>@enderror<div class="reviewer-form-actions"><div><label for="status">Update status</label><select id="status" name="status"><option value="">Keep current status</option>@foreach (['Under Initial Review', 'Rebuttal Open', 'Accepted', 'Revisions Requested', 'Rejected'] as $status)<option value="{{ $status }}" @selected(old('status') === $status)>{{ $status }}</option>@endforeach</select></div><button type="submit" class="reviewer-button reviewer-button--maroon">Send comment</button></div></form></section>
+        @if ($previousSubmission || $nextSubmission)<nav class="reviewer-adjacent-nav" aria-label="Adjacent abstracts">@if ($previousSubmission)<a href="{{ route('reviewer.submission.show', $previousSubmission) }}">← Previous abstract</a>@else <span></span>@endif @if ($nextSubmission)<a href="{{ route('reviewer.submission.show', $nextSubmission) }}">Next abstract →</a>@endif</nav>@endif
+    </main>
 </x-layouts::app>
