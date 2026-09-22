@@ -240,19 +240,22 @@ class AuthorPortalController extends Controller
             return redirect()->route('dashboard')->with('error', 'Complete your registration payment to download attachments.');
         }
 
-        $submission = collect($this->submissions())->firstWhere('id', $id);
-        if (! $submission || empty($submission['attachment_path'])) {
+        $submission = Submission::query()
+            ->when(! auth()->user()->is_reviewer, fn ($query) => $query->where('user_id', auth()->id()))
+            ->find($id);
+
+        if (! $submission || empty($submission->attachment_path)) {
             abort(404);
         }
 
         $disk = Storage::disk('public');
-        if (! $disk->exists($submission['attachment_path'])) {
+        if (! $disk->exists($submission->attachment_path)) {
             abort(404);
         }
 
         return response()->download(
-            $disk->path($submission['attachment_path']),
-            $submission['attachment_name'] ?? basename($submission['attachment_path'])
+            $disk->path($submission->attachment_path),
+            $submission->attachment_name ?? basename($submission->attachment_path)
         );
     }
 

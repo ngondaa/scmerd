@@ -67,3 +67,28 @@ test('reviewer can download attachments zip', function () {
     $response->assertStatus(200);
     $this->assertTrue(in_array($response->headers->get('Content-Type'), ['application/zip', 'application/octet-stream']));
 });
+
+test('reviewer can download an attachment belonging to another author', function () {
+    $reviewer = User::factory()->create(['is_reviewer' => true]);
+    $author = User::factory()->create();
+
+    Storage::disk('public')->put('submissions/reviewer-download.pdf', 'contents');
+
+    $submission = Submission::create([
+        'user_id' => $author->id,
+        'title' => 'Reviewer download',
+        'author' => 'Author',
+        'track' => 'Abstract Submission',
+        'stage' => 'Abstract Submission',
+        'abstract' => 'Test abstract',
+        'status' => 'Under Initial Review',
+        'submitted_at' => now(),
+        'attachment_path' => 'submissions/reviewer-download.pdf',
+        'attachment_name' => 'reviewer-download.pdf',
+    ]);
+
+    $response = $this->actingAs($reviewer)->get(route('downloads.attachment', $submission));
+
+    $response->assertOk();
+    $response->assertDownload('reviewer-download.pdf');
+});

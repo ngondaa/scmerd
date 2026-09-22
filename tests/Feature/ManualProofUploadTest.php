@@ -44,7 +44,7 @@ it('accepts a proof upload without a bot-check challenge', function () {
         ->assertRedirect(route('dashboard'));
 
     expect($user->fresh()->registration_status)->toBe('pending')
-        ->and($user->fresh()->payment_invoice_number)->toMatch('/^SCMERD-\\d{4}-\\d{6}$/')
+        ->and($user->fresh()->payment_invoice_number)->toMatch('/^SAIMECHE-MECH-\\d{6}$/')
         ->and($user->fresh()->payment_proof_original_name)->toBe('proof.png');
     Storage::disk('public')->assertExists('payment_proofs/'.$proof->hashName());
     Mail::assertQueued(PaymentProofSubmitted::class, function (PaymentProofSubmitted $mail) use ($user): bool {

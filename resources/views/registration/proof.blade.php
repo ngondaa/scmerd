@@ -43,9 +43,14 @@
                     <p class="rp-hint">Use this payment reference exactly so finance can match your transfer.</p>
                     <dl class="rp-rows">
                         <div class="rp-row"><dt>Bank</dt><dd>{{ config('registration.payment.bank_name') }}</dd></div>
+                        <div class="rp-row"><dt>Legal entity</dt><dd>{{ config('registration.payment.legal_entity') }}</dd></div>
                         <div class="rp-row"><dt>Account name</dt><dd>{{ config('registration.payment.account_name') }}</dd></div>
                         <div class="rp-row"><dt>Account number</dt><dd>{{ config('registration.payment.account_number') }}</dd></div>
+                        <div class="rp-row"><dt>Account type</dt><dd>{{ config('registration.payment.account_type') }}</dd></div>
+                        <div class="rp-row"><dt>Branch</dt><dd>{{ config('registration.payment.branch_name') }}</dd></div>
                         <div class="rp-row"><dt>Branch code</dt><dd>{{ config('registration.payment.branch_code') }}</dd></div>
+                        <div class="rp-row"><dt>Electronic payments code</dt><dd>{{ config('registration.payment.electronic_branch_code') }}</dd></div>
+                        <div class="rp-row"><dt>SWIFT address</dt><dd>{{ config('registration.payment.swift_code') }}</dd></div>
                         <div class="rp-row rp-row-full"><dt>Payment reference</dt><dd>{{ $paymentReference }}</dd></div>
                     </dl>
                 </section>

@@ -87,7 +87,12 @@ class PaymentProofController extends Controller
             return $user->payment_invoice_number;
         }
 
-        $invoiceNumber = sprintf('SCMERD-%s-%06d', now()->format('Y'), $user->id);
+        $invoiceNumber = sprintf(
+            '%s-%s-%06d',
+            config('registration.payment.reference_prefix'),
+            config('registration.payment.reference_engineering_code'),
+            $user->id
+        );
         $user->forceFill(['payment_invoice_number' => $invoiceNumber])->save();
 
         return $invoiceNumber;

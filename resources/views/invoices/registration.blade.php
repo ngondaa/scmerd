@@ -60,8 +60,10 @@
 
         <section class="bank">
             <h2>Bank transfer details</h2>
-            <p><strong>{{ config('registration.payment.bank_name') }}</strong> · {{ config('registration.payment.account_name') }}</p>
-            <p>Account number: {{ config('registration.payment.account_number') }} · Branch code: {{ config('registration.payment.branch_code') }}</p>
+            <p><strong>{{ config('registration.payment.bank_name') }}</strong> · {{ config('registration.payment.legal_entity') }}</p>
+            <p>Account name: {{ config('registration.payment.account_name') }} · Account number: {{ config('registration.payment.account_number') }}</p>
+            <p>{{ config('registration.payment.account_type') }} · {{ config('registration.payment.branch_name') }} branch · Branch code: {{ config('registration.payment.branch_code') }}</p>
+            <p>Electronic payments code: {{ config('registration.payment.electronic_branch_code') }} · SWIFT address: {{ config('registration.payment.swift_code') }}</p>
             <p>Payment reference: {{ $user->payment_invoice_number }}</p>
         </section>
     </main>

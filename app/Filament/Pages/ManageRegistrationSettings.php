@@ -47,10 +47,14 @@ class ManageRegistrationSettings extends Page
         $this->form->fill([
             'registration_open' => (bool) AppSetting::get('registration_open', '1'),
             'bank_name' => $payment['bank_name'] ?? null,
+            'legal_entity' => $payment['legal_entity'] ?? null,
             'account_name' => $payment['account_name'] ?? null,
             'account_number' => $payment['account_number'] ?? null,
+            'account_type' => $payment['account_type'] ?? null,
             'branch_name' => $payment['branch_name'] ?? null,
             'branch_code' => $payment['branch_code'] ?? null,
+            'electronic_branch_code' => $payment['electronic_branch_code'] ?? null,
+            'swift_code' => $payment['swift_code'] ?? null,
             'reference_prefix' => $payment['reference_prefix'] ?? null,
         ]);
     }
@@ -95,10 +99,14 @@ class ManageRegistrationSettings extends Page
                         ->description('Shown to authors on the proof-of-payment page. Edit config/registration.php to change.')
                         ->schema([
                             TextEntry::make('bank_name')->label('Bank')->state(fn (): ?string => $this->data['bank_name'] ?? null),
+                            TextEntry::make('legal_entity')->label('Legal entity')->state(fn (): ?string => $this->data['legal_entity'] ?? null),
                             TextEntry::make('account_name')->label('Account name')->state(fn (): ?string => $this->data['account_name'] ?? null),
                             TextEntry::make('account_number')->label('Account number')->state(fn (): ?string => $this->data['account_number'] ?? null),
+                            TextEntry::make('account_type')->label('Account type')->state(fn (): ?string => $this->data['account_type'] ?? null),
                             TextEntry::make('branch_name')->label('Branch')->state(fn (): ?string => $this->data['branch_name'] ?? null),
                             TextEntry::make('branch_code')->label('Branch code')->state(fn (): ?string => $this->data['branch_code'] ?? null),
+                            TextEntry::make('electronic_branch_code')->label('Electronic payments code')->state(fn (): ?string => $this->data['electronic_branch_code'] ?? null),
+                            TextEntry::make('swift_code')->label('SWIFT address')->state(fn (): ?string => $this->data['swift_code'] ?? null),
                             TextEntry::make('reference_prefix')->label('Reference prefix')->state(fn (): ?string => $this->data['reference_prefix'] ?? null),
                         ])
                         ->columns(2),
