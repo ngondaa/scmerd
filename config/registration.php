@@ -42,7 +42,7 @@ return [
         )))),
         'bank_name' => 'Standard Bank',
         'account_name' => 'SAIMECHE',
-        'account_number' => '002089074',
+        'account_number' => '002080974',
         'branch_name' => 'Eastgate',
         'branch_code' => '018505',
         'electronic_branch_code' => '051001',
