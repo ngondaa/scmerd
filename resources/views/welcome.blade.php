@@ -142,6 +142,8 @@
   </div>
 </section>
 
+@include('partials.abstract-template')
+
 <section id="awards" class="section-light">
   <div class="wrap">
     <h2>Prize awards</h2>

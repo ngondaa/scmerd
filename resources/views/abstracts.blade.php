@@ -8,6 +8,8 @@
     <p class="cp-hello-sub">Track each abstract's review process and reviewer comments.</p>
 </div>
 
+@include('partials.abstract-template')
+
 @if (session('status'))
     <div class="cp-status-alert">{{ session('status') }}</div>
 @endif
