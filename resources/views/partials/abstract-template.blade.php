@@ -120,20 +120,20 @@
             <a class="abstract-template-link abstract-template-link--primary" href="{{ asset('downloads/sai-meche-conference-abstract-template.docx') }}" download>
                 Download Word template
             </a>
-            <a class="abstract-template-link" href="{{ asset('downloads/sai-meche-conference-abstract-template.pdf') }}" download>
-                Download PDF
+            <a class="abstract-template-link" href="{{ asset('downloads/sai-meche-conference-abstract-template-preview.html') }}" target="_blank" rel="noopener noreferrer">
+                Open full preview
             </a>
         </div>
 
         <div class="abstract-template-preview">
             <iframe
-                src="{{ asset('downloads/sai-meche-conference-abstract-template.pdf') }}#view=FitH"
+                src="{{ asset('downloads/sai-meche-conference-abstract-template-preview.html') }}"
                 title="Preview of the SAIMechE conference abstract instructions and template"
                 loading="lazy">
             </iframe>
             <p class="abstract-template-fallback">
                 If the preview does not appear in your browser,
-                <a href="{{ asset('downloads/sai-meche-conference-abstract-template.pdf') }}">open the PDF directly</a>.
+                <a href="{{ asset('downloads/sai-meche-conference-abstract-template-preview.html') }}" target="_blank" rel="noopener noreferrer">open the full preview in a new tab</a>.
             </p>
         </div>
     </div>
