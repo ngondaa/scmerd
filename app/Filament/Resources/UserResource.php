@@ -52,6 +52,24 @@ class UserResource extends Resource
         return 'warning';
     }
 
+    public static function packageLabel(?string $package): string
+    {
+        if (! filled($package)) {
+            return 'No package selected';
+        }
+
+        return config('registration.packages.'.$package.'.name', ucfirst(str_replace('_', ' ', $package)));
+    }
+
+    public static function registrationStatusLabel(?string $status): string
+    {
+        return match ($status) {
+            'pending' => 'Pending review',
+            'pending_review' => 'AI review',
+            default => ucfirst(str_replace('_', ' ', $status ?: 'unpaid')),
+        };
+    }
+
     public static function form(Schema $schema): Schema
     {
         $packages = collect(config('registration.packages', []))
@@ -170,6 +188,9 @@ class UserResource extends Resource
                     ->sortable(),
                 TextColumn::make('registration_package')
                     ->label('Package')
+                    ->badge()
+                    ->color(fn (?string $state): string => filled($state) ? 'primary' : 'gray')
+                    ->formatStateUsing(fn (?string $state): string => static::packageLabel($state))
                     ->sortable()
                     ->toggleable(),
                 IconColumn::make('is_reviewer')
@@ -193,10 +214,7 @@ class UserResource extends Resource
                         'rejected' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending_review' => 'AI review',
-                        default => ucfirst(str_replace('_', ' ', $state)),
-                    })
+                    ->formatStateUsing(fn (?string $state): string => static::registrationStatusLabel($state))
                     ->sortable(),
                 IconColumn::make('payment_proof_path')
                     ->label('Proof')

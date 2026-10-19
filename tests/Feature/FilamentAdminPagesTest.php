@@ -4,6 +4,7 @@ use App\Filament\Pages\ManageRegistrationSettings;
 use App\Filament\Resources\AppSettings\Pages\ListAppSettings;
 use App\Filament\Resources\Reviews\Pages\ListReviews;
 use App\Filament\Resources\SubmissionResource\Pages\ListSubmissions;
+use App\Filament\Resources\UserResource;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
 use Livewire\Livewire;
@@ -34,4 +35,11 @@ it('can approve a pending payment proof from the users table action', function (
 
     expect($user->fresh()->registration_status)->toBe('paid')
         ->and($user->fresh()->registration_paid_at)->not->toBeNull();
+});
+
+it('formats selected packages and registration statuses for the users export', function () {
+    expect(UserResource::packageLabel('student_member_conference'))->toBe('SAIMechE Student')
+        ->and(UserResource::packageLabel(null))->toBe('No package selected')
+        ->and(UserResource::registrationStatusLabel('pending_review'))->toBe('AI review')
+        ->and(UserResource::registrationStatusLabel('paid'))->toBe('Paid');
 });
