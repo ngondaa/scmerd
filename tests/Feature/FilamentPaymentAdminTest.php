@@ -30,6 +30,30 @@ it('approves and rejects payment via user model helpers', function () {
         ->and($user->fresh()->registration_paid_at)->toBeNull();
 });
 
+it('deletes a payment proof without deleting the registrant', function () {
+    Storage::fake('public');
+    Storage::disk('public')->put('payment_proofs/proof.png', 'proof contents');
+
+    $user = User::factory()->create([
+        'payment_proof_path' => 'payment_proofs/proof.png',
+        'payment_proof_original_name' => 'proof.png',
+        'payment_proof_analysis' => 'queued',
+        'registration_status' => 'paid',
+        'registration_paid_at' => now(),
+    ]);
+
+    $user->deletePaymentProof();
+
+    expect(User::find($user->id))->not->toBeNull()
+        ->and($user->fresh()->payment_proof_path)->toBeNull()
+        ->and($user->fresh()->payment_proof_original_name)->toBeNull()
+        ->and($user->fresh()->payment_proof_analysis)->toBeNull()
+        ->and($user->fresh()->registration_status)->toBe('unpaid')
+        ->and($user->fresh()->registration_paid_at)->toBeNull();
+
+    Storage::disk('public')->assertMissing('payment_proofs/proof.png');
+});
+
 it('scopes users that need payment review including pending_review', function () {
     User::factory()->create([
         'registration_status' => 'pending',

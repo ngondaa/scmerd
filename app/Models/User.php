@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -126,6 +127,24 @@ class User extends Authenticatable implements FilamentUser
     {
         $this->update([
             'registration_status' => 'rejected',
+            'registration_paid_at' => null,
+        ]);
+    }
+
+    /**
+     * Remove the uploaded payment proof while keeping the registrant record.
+     */
+    public function deletePaymentProof(): void
+    {
+        if (filled($this->payment_proof_path)) {
+            Storage::disk('public')->delete($this->payment_proof_path);
+        }
+
+        $this->update([
+            'payment_proof_path' => null,
+            'payment_proof_original_name' => null,
+            'payment_proof_analysis' => null,
+            'registration_status' => 'unpaid',
             'registration_paid_at' => null,
         ]);
     }

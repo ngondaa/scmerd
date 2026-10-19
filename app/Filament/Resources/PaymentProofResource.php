@@ -114,6 +114,19 @@ class PaymentProofResource extends Resource
 
                         Notification::make()->title('Payment proof denied')->danger()->send();
                     }),
+                Action::make('deleteProof')
+                    ->label('Delete proof')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete payment proof')
+                    ->modalDescription('This permanently removes the uploaded file and returns the registration to unpaid. The registrant account will not be deleted.')
+                    ->visible(fn (User $record): bool => (bool) auth()->user()?->is_admin && filled($record->payment_proof_path))
+                    ->action(function (User $record): void {
+                        $record->deletePaymentProof();
+
+                        Notification::make()->title('Payment proof deleted')->success()->send();
+                    }),
             ]);
     }
 
