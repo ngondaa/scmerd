@@ -9,8 +9,6 @@
         <p class="cp-hello-sub">Abstract-only author submission form with metadata and file upload.</p>
     </div>
 
-    @include('partials.abstract-template')
-
     <form method="POST" action="{{ route('submit.store') }}" enctype="multipart/form-data">
         @csrf
 
