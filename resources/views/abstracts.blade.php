@@ -54,9 +54,6 @@
                 <div class="cp-step {{ (str_contains($current, 'accept') || str_contains($current, 'reject')) ? 'cp-step--active' : '' }}">Decision</div>
             </div>
 
-            <h3 class="cp-section-title">Abstract</h3>
-            <p class="cp-text">{{ $submission['abstract'] }}</p>
-
             <h3 class="cp-section-title">Review process &amp; comments</h3>
             <ul class="cp-list">
                 @php
@@ -84,7 +81,11 @@
                     $id = is_array($submission) ? ($submission['id'] ?? null) : ($submission->id ?? null);
                     $attachment = is_array($submission) ? ($submission['attachment_path'] ?? null) : ($submission->attachment_path ?? null);
                 @endphp
-                @if (!empty($attachment) && $id)
+                @if (!empty($submission['attachments']) && $id)
+                    @foreach ($submission['attachments'] as $uploadedAttachment)
+                        <a href="{{ route('downloads.additional-attachment', ['submission' => $id, 'attachment' => $uploadedAttachment['id']]) }}" class="cp-btn-link">Download {{ $uploadedAttachment['name'] }}</a>
+                    @endforeach
+                @elseif (!empty($attachment) && $id)
                     <a href="{{ route('downloads.attachment', $id) }}" class="cp-btn-link">Download attachment</a>
                 @endif
                 <a href="{{ route('rebuttals') }}" class="cp-btn-link">Open rebuttal</a>

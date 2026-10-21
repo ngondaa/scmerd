@@ -43,10 +43,12 @@
         </div>
 
         <div class="cp-file-upload">
-            <label for="attachment" class="cp-label">Abstract document</label>
-            <input id="attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required class="cp-input-file" />
-            <p class="cp-help-text">Required: PDF, DOC, or DOCX. Maximum file size: 25 MB.</p>
-            @error('attachment')<p class="cp-error">{{ $message }}</p>@enderror
+            <label for="attachments" class="cp-label">Abstract documents</label>
+            <input id="attachments" name="attachments[]" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple required class="cp-input-file" aria-describedby="attachment-help attachment-status" />
+            <p id="attachment-help" class="cp-help-text">Required: one or more PDF, DOC, or DOCX files. Maximum file size: 25 MB per file.</p>
+            <div id="attachment-status" class="cp-upload-status" aria-live="polite" hidden></div>
+            @error('attachments')<p class="cp-error">{{ $message }}</p>@enderror
+            @error('attachments.*')<p class="cp-error">{{ $message }}</p>@enderror
         </div>
 
         <div class="cp-footer">
@@ -56,5 +58,35 @@
 </div>
 
 @include('partials.portal.close')
+
+<script>
+    document.getElementById('attachments')?.addEventListener('change', function () {
+        const status = document.getElementById('attachment-status');
+        const files = Array.from(this.files);
+
+        if (! status) {
+            return;
+        }
+
+        status.hidden = files.length === 0;
+        status.replaceChildren();
+
+        if (files.length === 0) {
+            return;
+        }
+
+        const message = document.createElement('strong');
+        message.textContent = `✓ ${files.length} ${files.length === 1 ? 'file' : 'files'} ready to upload`;
+
+        const list = document.createElement('ul');
+        files.forEach((file) => {
+            const item = document.createElement('li');
+            item.textContent = file.name;
+            list.append(item);
+        });
+
+        status.append(message, list);
+    });
+</script>
 
 </x-layouts::app>

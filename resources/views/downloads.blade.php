@@ -20,10 +20,16 @@
         <div class="cp-card cp-card--inset">
             <p class="cp-item-title">{{ $submission['title'] }}</p>
             <p class="cp-item-meta">{{ $submission['track'] }} · {{ $submission['stage'] }}</p>
-            @if (!empty($submission['attachment_path']))
-                <a href="{{ route('downloads.attachment', $submission['id']) }}" class="cp-btn-link">
-                    Download {{ $submission['attachment_name'] ?? 'attachment' }}
-                </a>
+            @if (!empty($submission['attachments']))
+                <div class="cp-download-list">
+                    @foreach ($submission['attachments'] as $attachment)
+                        <a href="{{ route('downloads.additional-attachment', ['submission' => $submission['id'], 'attachment' => $attachment['id']]) }}" class="cp-btn-link">
+                            Download {{ $attachment['name'] }}
+                        </a>
+                    @endforeach
+                </div>
+            @elseif (!empty($submission['attachment_path']))
+                <a href="{{ route('downloads.attachment', $submission['id']) }}" class="cp-btn-link">Download {{ $submission['attachment_name'] ?? 'attachment' }}</a>
             @else
                 <p class="cp-item-meta">No attachment uploaded.</p>
             @endif

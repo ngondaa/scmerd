@@ -1,7 +1,7 @@
 <header class="cp-header">
     <div class="cp-header-inner">
         <a href="{{ route('dashboard') }}" class="cp-brand" aria-label="Dashboard">
-            <img src="{{ asset('images/logo.png') }}" alt="SAIMechE" class="site-nav-logo-img">
+            <img src="{{ asset('static-site/images/logo.png') }}" alt="SAIMechE" class="site-nav-logo-img">
         </a>
 
         <div class="cp-nav-cluster">

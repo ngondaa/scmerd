@@ -2,7 +2,7 @@
   <div class="wrap">
     <nav class="site-nav">
       <a href="{{ route('home') }}" class="site-nav-logo" aria-label="Home">
-        <img class="site-nav-logo-img" src="{{ asset('images/logo.png') }}" alt="SAIMechE">
+        <img class="site-nav-logo-img" src="{{ asset('static-site/images/logo.png') }}" alt="SAIMechE">
       </a>
 
       <div class="site-nav-cluster">

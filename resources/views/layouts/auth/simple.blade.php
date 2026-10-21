@@ -7,7 +7,7 @@
         <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
             <div class="flex w-full max-w-sm flex-col gap-2">
                 <a href="{{ route('home') }}" class="flex flex-col items-center gap-3 font-medium no-underline" wire:navigate>
-                    <img src="{{ asset('images/logo.png') }}" alt="SAIMechE" class="h-16 w-auto max-w-[160px] object-contain">
+                    <img src="{{ asset('static-site/images/logo.png') }}" alt="SAIMechE" class="h-16 w-auto max-w-[160px] object-contain">
                     <span class="sr-only">SAIMechE Central Branch</span>
                 </a>
                 <div class="flex flex-col gap-6">

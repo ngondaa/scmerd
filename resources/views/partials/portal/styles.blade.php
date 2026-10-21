@@ -625,6 +625,31 @@
     background: #fafaf8;
 }
 
+.cp-upload-status {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border: 1px solid #91b69b;
+    background: #eff8f0;
+    color: #1e5b2b;
+    font-size: 13px;
+}
+
+.cp-upload-status ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+}
+
+.cp-upload-status li + li {
+    margin-top: 4px;
+}
+
+.cp-download-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
 .cp-input-file::file-selector-button {
     background: var(--cp-ink);
     color: var(--cp-paper);

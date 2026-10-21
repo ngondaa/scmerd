@@ -6,8 +6,8 @@ use App\Mail\AbstractSubmitted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Mail;
 
 class Submission extends Model
@@ -56,6 +56,11 @@ class Submission extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(SubmissionAttachment::class);
     }
 
     public function reviewers(): BelongsToMany

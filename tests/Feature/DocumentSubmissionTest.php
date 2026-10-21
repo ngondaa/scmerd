@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
-it('accepts a PDF document submission without abstract text', function () {
+it('accepts and stores multiple document submissions without abstract text', function () {
     Mail::fake();
     Storage::fake('public');
 
@@ -16,7 +16,10 @@ it('accepts a PDF document submission without abstract text', function () {
         'title' => 'Document-only abstract',
         'author' => 'Test Author',
         'track' => 'Abstract Submission',
-        'attachment' => UploadedFile::fake()->create('abstract.pdf', 1024, 'application/pdf'),
+        'attachments' => [
+            UploadedFile::fake()->create('abstract.pdf', 1024, 'application/pdf'),
+            UploadedFile::fake()->create('supporting-document.docx', 1024, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+        ],
     ]);
 
     $response->assertRedirect(route('abstracts', absolute: false));
@@ -24,9 +27,18 @@ it('accepts a PDF document submission without abstract text', function () {
     $submission = Submission::query()->sole();
 
     expect($submission->abstract)->toBeNull()
-        ->and($submission->attachment_name)->toBe('abstract.pdf');
+        ->and($submission->attachment_name)->toBe('abstract.pdf')
+        ->and($submission->attachments)->toHaveCount(2);
 
     Storage::disk('public')->assertExists($submission->attachment_path);
+    Storage::disk('public')->assertExists($submission->attachments[1]->path);
+
+    $this->actingAs($user)
+        ->get(route('downloads.additional-attachment', [
+            'submission' => $submission,
+            'attachment' => $submission->attachments[1],
+        ]))
+        ->assertDownload('supporting-document.docx');
 });
 
 it('requires a PDF or Word document for abstract submissions', function () {
@@ -39,5 +51,5 @@ it('requires a PDF or Word document for abstract submissions', function () {
     ]);
 
     $response->assertRedirect(route('submit'))
-        ->assertSessionHasErrors('attachment');
+        ->assertSessionHasErrors('attachments');
 });

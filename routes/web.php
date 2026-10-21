@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('notifications', [AuthorPortalController::class, 'notifications'])->name('notifications');
     Route::get('downloads', [AuthorPortalController::class, 'downloads'])->name('downloads');
     Route::get('downloads/{id}', [AuthorPortalController::class, 'downloadAttachment'])->name('downloads.attachment');
+    Route::get('downloads/{submission}/attachments/{attachment}', [AuthorPortalController::class, 'downloadAdditionalAttachment'])->name('downloads.additional-attachment');
     Route::get('exports/submissions', [AuthorPortalController::class, 'exportCsv'])->name('exports.submissions');
     Route::get('reviewer', [ReviewerController::class, 'dashboard'])->name('reviewer.dashboard');
     Route::redirect('reviewer/dashboard', 'reviewer');

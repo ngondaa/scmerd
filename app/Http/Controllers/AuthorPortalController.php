@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Submission;
+use App\Models\SubmissionAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
@@ -66,16 +67,17 @@ class AuthorPortalController extends Controller
             'author' => ['required', 'string', 'max:255'],
             'track' => ['required', 'string', 'max:100'],
             'keywords' => ['nullable', 'string', 'max:255'],
-            'attachment' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:25600'],
+            'attachments' => ['required', 'array', 'min:1'],
+            'attachments.*' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:25600'],
         ]);
 
-        $attachmentPath = null;
-        $attachmentName = null;
-        if ($request->hasFile('attachment')) {
-            $stored = $request->file('attachment')->store('submissions', 'public');
-            $attachmentPath = $stored;
-            $attachmentName = $request->file('attachment')->getClientOriginalName();
-        }
+        $attachments = collect($request->file('attachments'))
+            ->map(fn ($file) => [
+                'path' => $file->store('submissions', 'public'),
+                'original_name' => $file->getClientOriginalName(),
+            ]);
+
+        $primaryAttachment = $attachments->first();
 
         $submission = [
             'id' => (string) Str::uuid(),
@@ -87,8 +89,9 @@ class AuthorPortalController extends Controller
             'abstract' => null,
             'status' => 'Under Initial Review',
             'submitted_at' => now()->toDateTimeString(),
-            'attachment_path' => $attachmentPath,
-            'attachment_name' => $attachmentName,
+            'attachment_path' => $primaryAttachment['path'],
+            'attachment_name' => $primaryAttachment['original_name'],
+            'attachments' => $attachments->all(),
             'comments' => [
                 'Submission received. Editorial screening has started.',
                 'Track chairs will verify scope and formatting.',
@@ -100,7 +103,7 @@ class AuthorPortalController extends Controller
         array_unshift($submissions, $submission);
         session(['submissions' => $submissions]);
 
-        Submission::create([
+        $databaseSubmission = Submission::create([
             'user_id' => auth()->id(),
             'title' => $submission['title'],
             'author' => $submission['author'],
@@ -115,6 +118,8 @@ class AuthorPortalController extends Controller
             'comments' => $submission['comments'],
             'rebuttal' => $submission['rebuttal'],
         ]);
+
+        $databaseSubmission->attachments()->createMany($attachments->all());
 
         $this->notify("Submission '{$submission['title']}' was received.");
 
@@ -208,6 +213,23 @@ class AuthorPortalController extends Controller
         );
     }
 
+    public function downloadAdditionalAttachment(Submission $submission, SubmissionAttachment $attachment)
+    {
+        abort_unless(
+            $attachment->submission_id === $submission->id
+                && (auth()->user()->is_reviewer || $submission->user_id === auth()->id()),
+            404,
+        );
+
+        $disk = Storage::disk('public');
+
+        if (! $disk->exists($attachment->path)) {
+            abort(404);
+        }
+
+        return response()->download($disk->path($attachment->path), $attachment->original_name);
+    }
+
     public function exportCsv()
     {
         $submissions = $this->submissions();
@@ -247,6 +269,7 @@ class AuthorPortalController extends Controller
     {
         if (auth()->check()) {
             $userSubmissions = Submission::query()
+                ->with('attachments')
                 ->where('user_id', auth()->id())
                 ->orderByDesc('submitted_at')
                 ->get()
@@ -262,6 +285,12 @@ class AuthorPortalController extends Controller
                     'submitted_at' => $submission->submitted_at?->toDateTimeString(),
                     'attachment_path' => $submission->attachment_path,
                     'attachment_name' => $submission->attachment_name,
+                    'attachments' => $submission->attachments
+                        ->map(fn ($attachment) => [
+                            'id' => (string) $attachment->id,
+                            'name' => $attachment->original_name,
+                        ])
+                        ->all(),
                     'comments' => $submission->comments ?? [],
                     'rebuttal' => $submission->rebuttal,
                 ])

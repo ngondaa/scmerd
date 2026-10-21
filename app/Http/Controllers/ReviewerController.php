@@ -82,7 +82,7 @@ class ReviewerController extends Controller
             abort(403, 'Reviewer access required.');
         }
 
-        $submission->load(['user', 'reviews.user', 'reviewers']);
+        $submission->load(['user', 'reviews.user', 'reviewers', 'attachments']);
 
         $previousSubmission = Submission::query()
             ->where('submitted_at', '<', $submission->submitted_at)

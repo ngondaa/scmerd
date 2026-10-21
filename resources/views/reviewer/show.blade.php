@@ -5,7 +5,9 @@
         <header class="reviewer-detail-header">
             <div><div class="reviewer-detail-title-line"><h1 id="abstract-title">{{ $submission->title }}</h1><span class="reviewer-status reviewer-status--{{ Str::slug($submission->status ?? 'Under Initial Review') }}">{{ $submission->status ?? 'Under Initial Review' }}</span></div><p class="reviewer-detail-meta">{{ $submission->author }} <span aria-hidden="true">·</span> {{ $submission->user?->email ?? 'Email unavailable' }} <span aria-hidden="true">·</span> Submitted {{ $submission->submitted_at?->format('j M Y, H:i') ?? 'date unavailable' }}</p></div>
         </header>
-        @if ($submission->attachment_path)
+        @if ($submission->attachments->isNotEmpty())
+            <section class="reviewer-download-bar" aria-label="Downloads"><div><strong>Attachments</strong><span>{{ $submission->attachments->count() }} file{{ $submission->attachments->count() === 1 ? '' : 's' }} uploaded</span></div><div>@foreach ($submission->attachments as $attachment)<a href="{{ route('downloads.additional-attachment', ['submission' => $submission, 'attachment' => $attachment]) }}" class="reviewer-button reviewer-button--dark">Download {{ $attachment->original_name }}</a>@endforeach</div></section>
+        @elseif ($submission->attachment_path)
             <section class="reviewer-download-bar" aria-label="Downloads"><div><strong>Attachment</strong><span>{{ $submission->attachment_name ?? basename($submission->attachment_path) }}@if ($attachmentSize), {{ \Illuminate\Support\Number::fileSize($attachmentSize) }}@endif</span></div><a href="{{ route('downloads.attachment', $submission->id) }}" class="reviewer-button reviewer-button--dark">Download attachment</a></section>
         @endif
         <section class="reviewer-detail-section" aria-labelledby="abstract-heading"><h2 id="abstract-heading">Abstract</h2><div class="reviewer-abstract-panel">{{ $submission->abstract }}</div></section>
