@@ -557,6 +557,18 @@
     gap: 20px;
 }
 
+.cp-submission-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.cp-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
 .cp-form-group {
     margin-bottom: 0;
 }
@@ -567,6 +579,11 @@
     font-weight: 600;
     color: var(--cp-ink);
     margin-bottom: 8px;
+}
+
+.cp-label-optional {
+    color: var(--cp-ink-faint);
+    font-weight: 400;
 }
 
 .cp-input,
@@ -600,6 +617,12 @@
 .cp-input-file {
     font-size: 13px;
     color: var(--cp-ink-soft);
+}
+
+.cp-file-upload {
+    padding: 24px;
+    border: 1px dashed var(--cp-line-strong);
+    background: #fafaf8;
 }
 
 .cp-input-file::file-selector-button {
@@ -774,6 +797,11 @@
     .cp-grid,
     .cp-two-col {
         grid-template-columns: 1fr;
+    }
+
+    .cp-form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .cp-lifecycle {

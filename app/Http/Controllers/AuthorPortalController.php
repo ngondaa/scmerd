@@ -65,9 +65,8 @@ class AuthorPortalController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
             'track' => ['required', 'string', 'max:100'],
-            'abstract' => ['required', 'string', 'max:5000'],
             'keywords' => ['nullable', 'string', 'max:255'],
-            'attachment' => ['nullable', 'file', 'max:10240'],
+            'attachment' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:25600'],
         ]);
 
         $attachmentPath = null;
@@ -85,7 +84,7 @@ class AuthorPortalController extends Controller
             'track' => $validated['track'],
             'stage' => 'Abstract Submission',
             'keywords' => $validated['keywords'] ?? '',
-            'abstract' => $validated['abstract'],
+            'abstract' => null,
             'status' => 'Under Initial Review',
             'submitted_at' => now()->toDateTimeString(),
             'attachment_path' => $attachmentPath,
