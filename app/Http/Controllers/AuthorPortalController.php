@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -36,10 +36,10 @@ class AuthorPortalController extends Controller
         ]);
 
         $user = $request->user();
-        
+
         // Store package in session if user model doesn't have registration_package yet
         session(['registration_package' => $validated['package']]);
-        
+
         // Try to save to database if column exists
         try {
             if (Schema::hasColumn('users', 'registration_package')) {
@@ -56,21 +56,11 @@ class AuthorPortalController extends Controller
 
     public function showSubmit()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('submit', ['tracks' => $this->availableTracks()]);
     }
 
     public function storeSubmit(Request $request)
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
@@ -134,11 +124,6 @@ class AuthorPortalController extends Controller
 
     public function abstracts()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('abstracts', [
             'submissions' => $this->submissions(),
         ]);
@@ -146,11 +131,6 @@ class AuthorPortalController extends Controller
 
     public function tracks()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('tracks', [
             'tracks' => $this->availableTracks(),
             'submissions' => $this->submissions(),
@@ -159,21 +139,11 @@ class AuthorPortalController extends Controller
 
     public function instructions()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('instructions');
     }
 
     public function rebuttals()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('rebuttals', [
             'submissions' => $this->submissions(),
         ]);
@@ -181,11 +151,6 @@ class AuthorPortalController extends Controller
 
     public function storeRebuttal(Request $request, string $id)
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         $validated = $request->validate([
             'rebuttal' => ['required', 'string', 'max:3000'],
         ]);
@@ -211,11 +176,6 @@ class AuthorPortalController extends Controller
 
     public function notifications()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('notifications', [
             'notifications' => session('notifications', []),
         ]);
@@ -223,11 +183,6 @@ class AuthorPortalController extends Controller
 
     public function downloads()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         return view('downloads', [
             'submissions' => $this->submissions(),
         ]);
@@ -235,11 +190,6 @@ class AuthorPortalController extends Controller
 
     public function downloadAttachment(string $id)
     {
-        // Allow reviewers to download attachments even if they haven't completed registration.
-        if (! auth()->check() || (! auth()->user()->registration_paid_at && ! auth()->user()->is_reviewer)) {
-            return redirect()->route('dashboard')->with('error', 'Complete your registration payment to download attachments.');
-        }
-
         $submission = Submission::query()
             ->when(! auth()->user()->is_reviewer, fn ($query) => $query->where('user_id', auth()->id()))
             ->find($id);
@@ -261,11 +211,6 @@ class AuthorPortalController extends Controller
 
     public function exportCsv()
     {
-        $guard = $this->requirePaidRegistration();
-        if ($guard) {
-            return $guard;
-        }
-
         $submissions = $this->submissions();
 
         $headers = [
@@ -329,15 +274,6 @@ class AuthorPortalController extends Controller
         }
 
         return session('submissions', []);
-    }
-
-    private function requirePaidRegistration()
-    {
-        if (! auth()->check() || ! auth()->user()->registration_paid_at) {
-            return redirect()->route('dashboard')->with('error', 'Complete your registration payment to access abstract submission tools.');
-        }
-
-        return null;
     }
 
     private function notify(string $message): void

@@ -15,7 +15,7 @@ test('authenticated users can visit the dashboard', function () {
     $response->assertOk();
 });
 
-test('users must pay registration before accessing abstract features', function () {
+test('members can access abstract features before paying registration', function () {
     $user = User::factory()->create([
         'registration_paid_at' => null,
     ]);
@@ -23,6 +23,7 @@ test('users must pay registration before accessing abstract features', function 
 
     $response = $this->get(route('submit'));
 
-    $response->assertRedirect(route('dashboard'));
-    $response->assertSessionHas('error');
+    $response->assertOk();
+
+    $this->get(route('abstracts'))->assertOk();
 });

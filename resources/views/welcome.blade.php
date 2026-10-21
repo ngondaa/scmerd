@@ -60,7 +60,7 @@
         </div>
       </a>
     @endif
-    <a href="{{ auth()->check() && auth()->user()?->registration_paid_at ? route('submit') : (Route::has('login') ? route('login') : '#contact') }}" class="cta-banner cta-banner--abstract">
+    <a href="{{ auth()->check() ? route('submit') : (Route::has('login') ? route('login') : '#contact') }}" class="cta-banner cta-banner--abstract">
       <div class="cta-row">
         <div>
           <span class="label">Submit an abstract</span>
