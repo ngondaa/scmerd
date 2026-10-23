@@ -2,6 +2,7 @@
 
 use App\Jobs\ProofAnalysisJob;
 use App\Mail\PaymentApproved;
+use App\Mail\PaymentProofRejected;
 use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -28,6 +29,8 @@ it('approves and rejects payment via user model helpers', function () {
 
     expect($user->fresh()->registration_status)->toBe('rejected')
         ->and($user->fresh()->registration_paid_at)->toBeNull();
+
+    Mail::assertQueued(PaymentProofRejected::class, fn (PaymentProofRejected $mail): bool => $mail->hasTo($user->email));
 });
 
 it('deletes a payment proof without deleting the registrant', function () {

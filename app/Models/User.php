@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mail\PaymentApproved;
+use App\Mail\PaymentProofRejected;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -129,6 +130,10 @@ class User extends Authenticatable implements FilamentUser
             'registration_status' => 'rejected',
             'registration_paid_at' => null,
         ]);
+
+        Mail::to($this->email)
+            ->bcc(config('registration.payment.notification_recipients'))
+            ->queue(new PaymentProofRejected($this->fresh()));
     }
 
     /**
