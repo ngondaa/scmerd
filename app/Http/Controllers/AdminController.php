@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AttendanceConfirmation;
 use App\Models\AppSetting;
 use App\Models\Submission;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
@@ -72,5 +75,30 @@ class AdminController extends Controller
         ])
             ->setPaper('a4', 'portrait')
             ->download('accepted-abstracts-'.now()->format('Y-m-d').'.pdf');
+    }
+
+    public function attendanceCampaignPreview(): Response
+    {
+        return response()->view('admin.attendance-campaign-preview', [
+            'recipientCount' => User::query()->whereNotNull('email')->count(),
+        ]);
+    }
+
+    public function sendAttendanceCampaign(): RedirectResponse
+    {
+        $recipientCount = 0;
+
+        User::query()
+            ->whereNotNull('email')
+            ->orderBy('id')
+            ->cursor()
+            ->each(function (User $user) use (&$recipientCount): void {
+                Mail::to($user->email)->queue(new AttendanceConfirmation($user));
+                $recipientCount++;
+            });
+
+        return redirect()
+            ->route('admin.attendance-campaign.preview')
+            ->with('status', "Attendance confirmation campaign queued for {$recipientCount} recipients.");
     }
 }

@@ -15,6 +15,49 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('attendanceConfirmationCampaign')
+                ->label('Send attendance confirmation campaign')
+                ->icon('heroicon-o-paper-airplane')
+                ->url(route('admin.attendance-campaign.preview')),
+            Actions\Action::make('exportAttendanceResponses')
+                ->label('Export attendance responses')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->action(fn (): StreamedResponse => response()->streamDownload(function (): void {
+                    $output = fopen('php://output', 'w');
+
+                    fputcsv($output, [
+                        'Name',
+                        'Email',
+                        'Attending conference',
+                        'Attendance confirmed at',
+                        'Attending gala dinner',
+                        'Gala dinner confirmed at',
+                    ]);
+
+                    User::query()
+                        ->where(function ($query): void {
+                            $query->whereNotNull('attendance_confirmed_at')
+                                ->orWhereNotNull('gala_dinner_confirmed_at');
+                        })
+                        ->orderBy('name')
+                        ->cursor()
+                        ->each(function (User $user) use ($output): void {
+                            fputcsv($output, array_map(static function ($value): string {
+                                $value = (string) ($value ?? '');
+
+                                return preg_match('/^[=+\-@]/', $value) ? "'{$value}" : $value;
+                            }, [
+                                $user->name,
+                                $user->email,
+                                $user->attendance_confirmed_at ? 'Yes' : 'No',
+                                $user->attendance_confirmed_at?->format('Y-m-d H:i:s'),
+                                $user->gala_dinner_confirmed_at ? 'Yes' : 'No',
+                                $user->gala_dinner_confirmed_at?->format('Y-m-d H:i:s'),
+                            ]));
+                        });
+
+                    fclose($output);
+                }, 'attendance-confirmations-'.now()->format('Y-m-d').'.csv')),
             Actions\Action::make('exportUsers')
                 ->label('Export users')
                 ->icon('heroicon-o-arrow-down-tray')

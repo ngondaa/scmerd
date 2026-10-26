@@ -39,6 +39,7 @@ require __DIR__.'/settings.php';
 
 // Admin settings and payment proof routes
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttendanceConfirmationController;
 use App\Http\Controllers\PaymentProofController;
 use App\Http\Controllers\RegistrationInvoiceController;
 
@@ -47,7 +48,13 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::post('admin/settings/registration-toggle', [AdminController::class, 'toggleRegistration'])->name('admin.settings.toggle');
     Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
     Route::get('admin/exports/accepted-abstracts', [AdminController::class, 'exportAcceptedAbstracts'])->name('admin.exports.accepted-abstracts');
+    Route::get('admin/campaigns/attendance-confirmation', [AdminController::class, 'attendanceCampaignPreview'])->name('admin.attendance-campaign.preview');
+    Route::post('admin/campaigns/attendance-confirmation', [AdminController::class, 'sendAttendanceCampaign'])->name('admin.attendance-campaign.send');
 });
+
+Route::get('attendance-confirmations/{user}/{response}', [AttendanceConfirmationController::class, 'store'])
+    ->middleware('signed')
+    ->name('attendance-confirmations.store');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('payment-invoices/{user}', [RegistrationInvoiceController::class, 'show'])->name('payment-invoices.show');

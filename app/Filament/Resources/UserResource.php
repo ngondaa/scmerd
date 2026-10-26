@@ -224,6 +224,16 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
+                IconColumn::make('attendance_confirmed_at')
+                    ->label('Attending')
+                    ->boolean()
+                    ->getStateUsing(fn (User $record): bool => $record->attendance_confirmed_at !== null)
+                    ->toggleable(),
+                IconColumn::make('gala_dinner_confirmed_at')
+                    ->label('Gala dinner')
+                    ->boolean()
+                    ->getStateUsing(fn (User $record): bool => $record->gala_dinner_confirmed_at !== null)
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -43,3 +43,8 @@ it('formats selected packages and registration statuses for the users export', f
         ->and(UserResource::registrationStatusLabel('pending_review'))->toBe('AI review')
         ->and(UserResource::registrationStatusLabel('paid'))->toBe('Paid');
 });
+
+it('shows the attendance response export in the users list', function () {
+    Livewire::test(ListUsers::class)
+        ->assertActionVisible('exportAttendanceResponses');
+});
