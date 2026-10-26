@@ -1,14 +1,14 @@
 <?php
 
-use App\Mail\AttendanceConfirmation;
+use App\Jobs\SendAttendanceConfirmationCampaign;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
 
 it('lets an administrator preview and send the attendance confirmation campaign', function () {
-    Mail::fake();
+    Queue::fake();
     $admin = User::factory()->create(['is_admin' => true]);
-    $recipient = User::factory()->create();
+    User::factory()->create();
 
     $this->actingAs($admin)
         ->get(route('admin.attendance-campaign.preview'))
@@ -21,8 +21,7 @@ it('lets an administrator preview and send the attendance confirmation campaign'
         ->post(route('admin.attendance-campaign.send'))
         ->assertRedirect(route('admin.attendance-campaign.preview'));
 
-    Mail::assertQueued(AttendanceConfirmation::class, 2);
-    Mail::assertQueued(AttendanceConfirmation::class, fn (AttendanceConfirmation $mail): bool => $mail->hasTo($recipient->email));
+    Queue::assertPushed(SendAttendanceConfirmationCampaign::class, 1);
 });
 
 it('records a gala dinner response and confirms conference attendance', function () {

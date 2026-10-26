@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\AttendanceConfirmation;
+use App\Jobs\SendAttendanceConfirmationCampaign;
 use App\Models\AppSetting;
 use App\Models\Submission;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
@@ -86,16 +85,9 @@ class AdminController extends Controller
 
     public function sendAttendanceCampaign(): RedirectResponse
     {
-        $recipientCount = 0;
+        $recipientCount = User::query()->whereNotNull('email')->count();
 
-        User::query()
-            ->whereNotNull('email')
-            ->orderBy('id')
-            ->cursor()
-            ->each(function (User $user) use (&$recipientCount): void {
-                Mail::to($user->email)->queue(new AttendanceConfirmation($user));
-                $recipientCount++;
-            });
+        SendAttendanceConfirmationCampaign::dispatch();
 
         return redirect()
             ->route('admin.attendance-campaign.preview')
