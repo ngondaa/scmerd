@@ -13,6 +13,10 @@ class ListSubmissions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('exportAcceptedAbstracts')
+                ->label('Export accepted abstracts PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->url(route('admin.exports.accepted-abstracts')),
             Actions\CreateAction::make(),
         ];
     }

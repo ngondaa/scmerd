@@ -11,7 +11,7 @@ beforeEach(function () {
 test('reviewer can download abstracts CSV', function () {
     $reviewer = User::factory()->create(['is_reviewer' => true]);
 
-    \App\Models\Submission::create([
+    Submission::create([
         'user_id' => null,
         'title' => 'CSV Test',
         'author' => 'Author',
@@ -36,7 +36,7 @@ test('reviewer can download attachments zip', function () {
     Storage::disk('public')->put('submissions/file1.pdf', 'contents1');
     Storage::disk('public')->put('submissions/file2.pdf', 'contents2');
 
-    \App\Models\Submission::create([
+    Submission::create([
         'user_id' => null,
         'title' => 'File1',
         'author' => 'Author1',
@@ -49,7 +49,7 @@ test('reviewer can download attachments zip', function () {
         'attachment_path' => 'submissions/file1.pdf',
     ]);
 
-    \App\Models\Submission::create([
+    Submission::create([
         'user_id' => null,
         'title' => 'File2',
         'author' => 'Author2',
@@ -91,4 +91,36 @@ test('reviewer can download an attachment belonging to another author', function
 
     $response->assertOk();
     $response->assertDownload('reviewer-download.pdf');
+});
+
+test('admin can export only accepted abstracts as a PDF', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+
+    Submission::withoutEvents(function (): void {
+        Submission::create([
+            'title' => 'Accepted abstract',
+            'author' => 'Accepted Author',
+            'track' => 'Thermal Engineering',
+            'abstract' => 'Accepted abstract content.',
+            'status' => 'Accepted',
+            'submitted_at' => now(),
+        ]);
+        Submission::create([
+            'title' => 'Rejected abstract',
+            'author' => 'Rejected Author',
+            'track' => 'Manufacturing',
+            'abstract' => 'Rejected abstract content.',
+            'status' => 'Rejected',
+            'submitted_at' => now(),
+        ]);
+    });
+
+    $response = $this->actingAs($admin)->get(route('admin.exports.accepted-abstracts'));
+
+    $response->assertOk()
+        ->assertDownload('accepted-abstracts-'.now()->format('Y-m-d').'.pdf');
+    expect($response->headers->get('Content-Type'))->toContain('application/pdf')
+        ->and($response->getContent())->toStartWith('%PDF-')
+        ->and(Submission::query()->where('status', 'Accepted')->pluck('title')->all())
+        ->toBe(['Accepted abstract']);
 });

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
+use App\Models\Submission;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -54,5 +56,21 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('error', 'Unknown action');
+    }
+
+    public function exportAcceptedAbstracts(): Response
+    {
+        $submissions = Submission::query()
+            ->where('status', 'Accepted')
+            ->orderBy('track')
+            ->orderBy('author')
+            ->get(['title', 'author', 'track']);
+
+        return Pdf::loadView('exports.accepted-abstracts-pdf', [
+            'submissions' => $submissions,
+            'generatedAt' => now(),
+        ])
+            ->setPaper('a4', 'portrait')
+            ->download('accepted-abstracts-'.now()->format('Y-m-d').'.pdf');
     }
 }

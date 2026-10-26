@@ -46,6 +46,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
     Route::post('admin/settings/registration-toggle', [AdminController::class, 'toggleRegistration'])->name('admin.settings.toggle');
     Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
+    Route::get('admin/exports/accepted-abstracts', [AdminController::class, 'exportAcceptedAbstracts'])->name('admin.exports.accepted-abstracts');
 });
 
 Route::middleware(['auth'])->group(function () {
