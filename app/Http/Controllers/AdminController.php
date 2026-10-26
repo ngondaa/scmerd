@@ -7,6 +7,7 @@ use App\Models\AppSetting;
 use App\Models\Submission;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,9 +79,7 @@ class AdminController extends Controller
 
     public function attendanceCampaignPreview(): Response
     {
-        return response()->view('admin.attendance-campaign-preview', [
-            'recipientCount' => User::query()->whereNotNull('email')->count(),
-        ]);
+        return $this->campaignPreview(false);
     }
 
     public function sendAttendanceCampaign(): RedirectResponse
@@ -92,5 +91,40 @@ class AdminController extends Controller
         return redirect()
             ->route('admin.attendance-campaign.preview')
             ->with('status', "Attendance confirmation campaign queued for {$recipientCount} recipients.");
+    }
+
+    public function acceptedAuthorsCampaignPreview(): Response
+    {
+        return $this->campaignPreview(true);
+    }
+
+    public function sendAcceptedAuthorsCampaign(): RedirectResponse
+    {
+        $recipientCount = $this->campaignRecipients(true)->count();
+
+        SendAttendanceConfirmationCampaign::dispatch(acceptedAuthorsOnly: true);
+
+        return redirect()
+            ->route('admin.accepted-authors-campaign.preview')
+            ->with('status', "Accepted-abstract author campaign queued for {$recipientCount} recipients.");
+    }
+
+    private function campaignPreview(bool $acceptedAuthorsOnly): Response
+    {
+        return response()->view('admin.attendance-campaign-preview', [
+            'recipientCount' => $this->campaignRecipients($acceptedAuthorsOnly)->count(),
+            'acceptedAuthorsOnly' => $acceptedAuthorsOnly,
+        ]);
+    }
+
+    private function campaignRecipients(bool $acceptedAuthorsOnly): Builder
+    {
+        $users = User::query()->whereNotNull('email');
+
+        if ($acceptedAuthorsOnly) {
+            $users->whereHas('submissions', fn ($query) => $query->where('status', 'Accepted'));
+        }
+
+        return $users;
     }
 }

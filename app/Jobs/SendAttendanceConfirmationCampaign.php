@@ -15,14 +15,22 @@ class SendAttendanceConfirmationCampaign implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public function __construct(public bool $acceptedAuthorsOnly = false) {}
+
     public function handle(): void
     {
-        User::query()
+        $users = User::query()
             ->whereNotNull('email')
-            ->orderBy('id')
+            ->orderBy('id');
+
+        if ($this->acceptedAuthorsOnly) {
+            $users->whereHas('submissions', fn ($query) => $query->where('status', 'Accepted'));
+        }
+
+        $users
             ->cursor()
             ->each(function (User $user): void {
-                Mail::to($user->email)->send(new AttendanceConfirmation($user));
+                Mail::to($user->email)->send(new AttendanceConfirmation($user, $this->acceptedAuthorsOnly));
             });
     }
 }

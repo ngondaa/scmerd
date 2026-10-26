@@ -50,6 +50,8 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('admin/exports/accepted-abstracts', [AdminController::class, 'exportAcceptedAbstracts'])->name('admin.exports.accepted-abstracts');
     Route::get('admin/campaigns/attendance-confirmation', [AdminController::class, 'attendanceCampaignPreview'])->name('admin.attendance-campaign.preview');
     Route::post('admin/campaigns/attendance-confirmation', [AdminController::class, 'sendAttendanceCampaign'])->name('admin.attendance-campaign.send');
+    Route::get('admin/campaigns/accepted-abstract-authors', [AdminController::class, 'acceptedAuthorsCampaignPreview'])->name('admin.accepted-authors-campaign.preview');
+    Route::post('admin/campaigns/accepted-abstract-authors', [AdminController::class, 'sendAcceptedAuthorsCampaign'])->name('admin.accepted-authors-campaign.send');
 });
 
 Route::get('attendance-confirmations/{user}/{response}', [AttendanceConfirmationController::class, 'store'])

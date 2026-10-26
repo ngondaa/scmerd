@@ -15,10 +15,14 @@
                 </td></tr>
                 <tr><td style="padding:32px 34px;">
                     <p style="margin:0 0 16px; font-size:16px; line-height:1.6;">Hello {{ $user->name }},</p>
-                    <p style="margin:0 0 22px; font-size:16px; line-height:1.6;">Please confirm whether you will attend the conference, with or without the gala dinner.</p>
-                    <p style="margin:0 0 14px;"><a href="{{ $attendanceUrl }}" style="display:block; padding:13px 18px; background:#203a20; color:#ffffff; font-weight:700; text-align:center; text-decoration:none;">I am attending the conference</a></p>
-                    <p style="margin:0;"><a href="{{ $galaDinnerUrl }}" style="display:block; padding:13px 18px; background:#7a5717; color:#ffffff; font-weight:700; text-align:center; text-decoration:none;">I am attending the conference and gala dinner</a></p>
-                    <p style="margin:22px 0 0; font-size:13px; line-height:1.6; color:#526052;">Selecting the gala dinner option also confirms your conference attendance.</p>
+                    @if ($acceptedAbstractAuthor)
+                        <p style="margin:0 0 22px; font-size:16px; line-height:1.6;"><strong>Your abstract has been accepted.</strong> We will share presentation and programme details with you shortly.</p>
+                    @else
+                        <p style="margin:0 0 22px; font-size:16px; line-height:1.6;">Please confirm whether you will attend the conference, with or without the gala dinner.</p>
+                        <p style="margin:0 0 14px;"><a href="{{ $attendanceUrl }}" style="display:block; padding:13px 18px; background:#203a20; color:#ffffff; font-weight:700; text-align:center; text-decoration:none;">I am attending the conference</a></p>
+                        <p style="margin:0;"><a href="{{ $galaDinnerUrl }}" style="display:block; padding:13px 18px; background:#7a5717; color:#ffffff; font-weight:700; text-align:center; text-decoration:none;">I am attending the conference and gala dinner</a></p>
+                        <p style="margin:22px 0 0; font-size:13px; line-height:1.6; color:#526052;">Selecting the gala dinner option also confirms your conference attendance.</p>
+                    @endif
                 </td></tr>
             </table>
         </td></tr>

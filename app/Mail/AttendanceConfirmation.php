@@ -13,23 +13,33 @@ class AttendanceConfirmation extends Mailable
 {
     use SerializesModels;
 
-    public function __construct(public User $user) {}
+    public function __construct(public User $user, public bool $acceptedAbstractAuthor = false) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please confirm your Central Branch Conference attendance',
+            subject: $this->acceptedAbstractAuthor
+                ? 'Your accepted abstract - please confirm attendance'
+                : 'Please confirm your Central Branch Conference attendance',
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            view: 'emails.attendance-confirmation',
-            with: [
+        $data = [
+            'acceptedAbstractAuthor' => $this->acceptedAbstractAuthor,
+        ];
+
+        if (! $this->acceptedAbstractAuthor) {
+            $data += [
                 'attendanceUrl' => $this->confirmationUrl('attending'),
                 'galaDinnerUrl' => $this->confirmationUrl('gala-dinner'),
-            ],
+            ];
+        }
+
+        return new Content(
+            view: 'emails.attendance-confirmation',
+            with: $data,
         );
     }
 
