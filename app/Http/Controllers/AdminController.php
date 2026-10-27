@@ -79,7 +79,7 @@ class AdminController extends Controller
 
     public function attendanceCampaignPreview(): Response
     {
-        return $this->campaignPreview(false);
+        return $this->campaignPreview();
     }
 
     public function sendAttendanceCampaign(): RedirectResponse
@@ -95,12 +95,12 @@ class AdminController extends Controller
 
     public function acceptedAuthorsCampaignPreview(): Response
     {
-        return $this->campaignPreview(true);
+        return $this->campaignPreview(acceptedAuthorsOnly: true);
     }
 
     public function sendAcceptedAuthorsCampaign(): RedirectResponse
     {
-        $recipientCount = $this->campaignRecipients(true)->count();
+        $recipientCount = $this->campaignRecipients(acceptedAuthorsOnly: true)->count();
 
         SendAttendanceConfirmationCampaign::dispatch(acceptedAuthorsOnly: true);
 
@@ -109,20 +109,41 @@ class AdminController extends Controller
             ->with('status', "Accepted-abstract author campaign queued for {$recipientCount} recipients.");
     }
 
-    private function campaignPreview(bool $acceptedAuthorsOnly): Response
+    public function unconfirmedAttendanceCampaignPreview(): Response
+    {
+        return $this->campaignPreview(onlyUnconfirmed: true);
+    }
+
+    public function sendUnconfirmedAttendanceCampaign(): RedirectResponse
+    {
+        $recipientCount = $this->campaignRecipients(onlyUnconfirmed: true)->count();
+
+        SendAttendanceConfirmationCampaign::dispatch(onlyUnconfirmed: true);
+
+        return redirect()
+            ->route('admin.unconfirmed-attendance-campaign.preview')
+            ->with('status', "Attendance reminder campaign queued for {$recipientCount} recipients.");
+    }
+
+    private function campaignPreview(bool $acceptedAuthorsOnly = false, bool $onlyUnconfirmed = false): Response
     {
         return response()->view('admin.attendance-campaign-preview', [
-            'recipientCount' => $this->campaignRecipients($acceptedAuthorsOnly)->count(),
+            'recipientCount' => $this->campaignRecipients($acceptedAuthorsOnly, $onlyUnconfirmed)->count(),
             'acceptedAuthorsOnly' => $acceptedAuthorsOnly,
+            'onlyUnconfirmed' => $onlyUnconfirmed,
         ]);
     }
 
-    private function campaignRecipients(bool $acceptedAuthorsOnly): Builder
+    private function campaignRecipients(bool $acceptedAuthorsOnly = false, bool $onlyUnconfirmed = false): Builder
     {
         $users = User::query()->whereNotNull('email');
 
         if ($acceptedAuthorsOnly) {
             $users->whereHas('submissions', fn ($query) => $query->where('status', 'Accepted'));
+        }
+
+        if ($onlyUnconfirmed) {
+            $users->whereNull('attendance_confirmed_at');
         }
 
         return $users;

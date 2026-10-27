@@ -15,7 +15,10 @@ class SendAttendanceConfirmationCampaign implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public bool $acceptedAuthorsOnly = false) {}
+    public function __construct(
+        public bool $acceptedAuthorsOnly = false,
+        public bool $onlyUnconfirmed = false,
+    ) {}
 
     public function handle(): void
     {
@@ -25,6 +28,10 @@ class SendAttendanceConfirmationCampaign implements ShouldQueue
 
         if ($this->acceptedAuthorsOnly) {
             $users->whereHas('submissions', fn ($query) => $query->where('status', 'Accepted'));
+        }
+
+        if ($this->onlyUnconfirmed) {
+            $users->whereNull('attendance_confirmed_at');
         }
 
         $users

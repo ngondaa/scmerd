@@ -19,6 +19,10 @@ class ListUsers extends ListRecords
                 ->label('Send attendance confirmation campaign')
                 ->icon('heroicon-o-paper-airplane')
                 ->url(route('admin.attendance-campaign.preview')),
+            Actions\Action::make('unconfirmedAttendanceCampaign')
+                ->label('Remind unconfirmed attendees')
+                ->icon('heroicon-o-bell-alert')
+                ->url(route('admin.unconfirmed-attendance-campaign.preview')),
             Actions\Action::make('exportAttendanceResponses')
                 ->label('Export attendance responses')
                 ->icon('heroicon-o-arrow-down-tray')

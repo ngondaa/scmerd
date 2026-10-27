@@ -57,6 +57,25 @@ it('sends the accepted-author campaign only to authors with accepted abstracts',
     expect($otherAuthor->submissions)->toBeEmpty();
 });
 
+it('sends attendance reminders only to users who have not confirmed', function () {
+    Queue::fake();
+    $admin = User::factory()->create(['is_admin' => true]);
+    User::factory()->create(['attendance_confirmed_at' => now()]);
+    User::factory()->create(['attendance_confirmed_at' => null]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.unconfirmed-attendance-campaign.preview'))
+        ->assertOk()
+        ->assertSee('2')
+        ->assertSee('not confirmed conference attendance');
+
+    $this->actingAs($admin)
+        ->post(route('admin.unconfirmed-attendance-campaign.send'))
+        ->assertRedirect(route('admin.unconfirmed-attendance-campaign.preview'));
+
+    Queue::assertPushed(SendAttendanceConfirmationCampaign::class, fn (SendAttendanceConfirmationCampaign $job): bool => $job->onlyUnconfirmed);
+});
+
 it('does not include attendance options in accepted-abstract emails', function () {
     $user = User::factory()->create();
 
