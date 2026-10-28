@@ -1,6 +1,8 @@
 <?php
 
+use App\Jobs\SendAcceptedAbstractProgrammeCampaign;
 use App\Jobs\SendAttendanceConfirmationCampaign;
+use App\Mail\AcceptedAbstractProgramme;
 use App\Mail\AttendanceConfirmation;
 use App\Models\Submission;
 use App\Models\User;
@@ -84,6 +86,36 @@ it('does not include attendance options in accepted-abstract emails', function (
     expect($mail->render())
         ->toContain('Your abstract has been accepted')
         ->not->toContain('I am attending the conference');
+});
+
+it('lets an administrator preview and send the accepted-abstract programme campaign', function () {
+    Queue::fake();
+    $admin = User::factory()->create(['is_admin' => true]);
+    $acceptedAuthor = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    Submission::withoutEvents(fn () => Submission::create([
+        'user_id' => $acceptedAuthor->id,
+        'title' => 'Programme campaign abstract',
+        'author' => $acceptedAuthor->name,
+        'track' => 'Abstract Submission',
+        'abstract' => 'Test abstract.',
+        'status' => 'Accepted',
+        'submitted_at' => now(),
+    ]));
+
+    $this->actingAs($admin)
+        ->get(route('admin.accepted-abstract-programme-campaign.preview'))
+        ->assertOk()
+        ->assertSee('1')
+        ->assertSee('official 2026 conference programme');
+
+    $this->actingAs($admin)
+        ->post(route('admin.accepted-abstract-programme-campaign.send'))
+        ->assertRedirect(route('admin.accepted-abstract-programme-campaign.preview'));
+
+    Queue::assertPushed(SendAcceptedAbstractProgrammeCampaign::class);
+    expect((new AcceptedAbstractProgramme($otherUser))->attachments())->toHaveCount(1);
 });
 
 it('records a gala dinner response and confirms conference attendance', function () {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendAcceptedAbstractProgrammeCampaign;
 use App\Jobs\SendAttendanceConfirmationCampaign;
 use App\Models\AppSetting;
 use App\Models\Submission;
@@ -127,6 +128,27 @@ class AdminController extends Controller
             ->with('status', "Accepted-abstract author campaign queued for {$recipientCount} recipients.");
     }
 
+    public function acceptedAbstractProgrammeCampaignPreview(): Response
+    {
+        return response()->view('admin.attendance-campaign-preview', [
+            'recipientCount' => $this->campaignRecipients(acceptedAuthorsOnly: true)->count(),
+            'acceptedAuthorsOnly' => false,
+            'onlyUnconfirmed' => false,
+            'programmeCampaign' => true,
+        ]);
+    }
+
+    public function sendAcceptedAbstractProgrammeCampaign(): RedirectResponse
+    {
+        $recipientCount = $this->campaignRecipients(acceptedAuthorsOnly: true)->count();
+
+        SendAcceptedAbstractProgrammeCampaign::dispatch();
+
+        return redirect()
+            ->route('admin.accepted-abstract-programme-campaign.preview')
+            ->with('status', "Programme campaign queued for {$recipientCount} accepted-abstract authors.");
+    }
+
     public function unconfirmedAttendanceCampaignPreview(): Response
     {
         return $this->campaignPreview(onlyUnconfirmed: true);
@@ -149,6 +171,7 @@ class AdminController extends Controller
             'recipientCount' => $this->campaignRecipients($acceptedAuthorsOnly, $onlyUnconfirmed)->count(),
             'acceptedAuthorsOnly' => $acceptedAuthorsOnly,
             'onlyUnconfirmed' => $onlyUnconfirmed,
+            'programmeCampaign' => false,
         ]);
     }
 

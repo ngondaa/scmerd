@@ -25,6 +25,10 @@ class ListSubmissions extends ListRecords
                 ->label('Email accepted abstract authors')
                 ->icon('heroicon-o-paper-airplane')
                 ->url(route('admin.accepted-authors-campaign.preview')),
+            Actions\Action::make('acceptedAbstractProgrammeCampaign')
+                ->label('Send programme to accepted authors')
+                ->icon('heroicon-o-paper-airplane')
+                ->url(route('admin.accepted-abstract-programme-campaign.preview')),
             Actions\CreateAction::make(),
         ];
     }

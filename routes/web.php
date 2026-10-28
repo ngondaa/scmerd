@@ -55,6 +55,8 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::post('admin/campaigns/attendance-reminder', [AdminController::class, 'sendUnconfirmedAttendanceCampaign'])->name('admin.unconfirmed-attendance-campaign.send');
     Route::get('admin/campaigns/accepted-abstract-authors', [AdminController::class, 'acceptedAuthorsCampaignPreview'])->name('admin.accepted-authors-campaign.preview');
     Route::post('admin/campaigns/accepted-abstract-authors', [AdminController::class, 'sendAcceptedAuthorsCampaign'])->name('admin.accepted-authors-campaign.send');
+    Route::get('admin/campaigns/accepted-abstract-programme', [AdminController::class, 'acceptedAbstractProgrammeCampaignPreview'])->name('admin.accepted-abstract-programme-campaign.preview');
+    Route::post('admin/campaigns/accepted-abstract-programme', [AdminController::class, 'sendAcceptedAbstractProgrammeCampaign'])->name('admin.accepted-abstract-programme-campaign.send');
 });
 
 Route::get('attendance-confirmations/{user}/{response}', [AttendanceConfirmationController::class, 'store'])
