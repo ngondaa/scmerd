@@ -17,6 +17,10 @@ class ListSubmissions extends ListRecords
                 ->label('Export accepted abstracts PDF')
                 ->icon('heroicon-o-document-arrow-down')
                 ->url(route('admin.exports.accepted-abstracts')),
+            Actions\Action::make('exportAcceptedAbstractAuthors')
+                ->label('Export accepted author names PDF')
+                ->icon('heroicon-o-identification')
+                ->url(route('admin.exports.accepted-abstract-authors')),
             Actions\Action::make('acceptedAuthorsCampaign')
                 ->label('Email accepted abstract authors')
                 ->icon('heroicon-o-paper-airplane')

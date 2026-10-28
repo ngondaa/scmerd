@@ -124,3 +124,30 @@ test('admin can export only accepted abstracts as a PDF', function () {
         ->and(Submission::query()->where('status', 'Accepted')->pluck('title')->all())
         ->toBe(['Accepted abstract']);
 });
+
+test('admin can export a unique list of accepted abstract author names as a PDF', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $zanele = User::factory()->create(['name' => 'Zanele Khumalo']);
+    $amina = User::factory()->create(['name' => 'Amina Jacobs']);
+
+    Submission::withoutEvents(function () use ($zanele, $amina): void {
+        foreach ([$zanele, $amina, $zanele] as $user) {
+            Submission::create([
+                'user_id' => $user->id,
+                'title' => "Abstract by {$user->name}",
+                'author' => 'This text is not used for the export',
+                'track' => 'Thermal Engineering',
+                'abstract' => 'Accepted abstract content.',
+                'status' => 'Accepted',
+                'submitted_at' => now(),
+            ]);
+        }
+    });
+
+    $response = $this->actingAs($admin)->get(route('admin.exports.accepted-abstract-authors'));
+
+    $response->assertOk()
+        ->assertDownload('accepted-abstract-authors-'.now()->format('Y-m-d').'.pdf');
+    expect($response->headers->get('Content-Type'))->toContain('application/pdf')
+        ->and($response->getContent())->toStartWith('%PDF-');
+});

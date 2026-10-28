@@ -77,6 +77,24 @@ class AdminController extends Controller
             ->download('accepted-abstracts-'.now()->format('Y-m-d').'.pdf');
     }
 
+    public function exportAcceptedAbstractAuthors(): Response
+    {
+        $authors = User::query()
+            ->whereHas('submissions', fn (Builder $query) => $query->where('status', 'Accepted'))
+            ->whereNotNull('name')
+            ->where('name', '!=', '')
+            ->distinct()
+            ->orderBy('name')
+            ->pluck('name');
+
+        return Pdf::loadView('exports.accepted-abstract-authors-pdf', [
+            'authors' => $authors,
+            'generatedAt' => now(),
+        ])
+            ->setPaper('a4', 'portrait')
+            ->download('accepted-abstract-authors-'.now()->format('Y-m-d').'.pdf');
+    }
+
     public function attendanceCampaignPreview(): Response
     {
         return $this->campaignPreview();

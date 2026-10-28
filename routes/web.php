@@ -48,6 +48,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::post('admin/settings/registration-toggle', [AdminController::class, 'toggleRegistration'])->name('admin.settings.toggle');
     Route::post('admin/users/{user}/verify-payment', [AdminController::class, 'verifyPayment'])->name('admin.users.verify-payment');
     Route::get('admin/exports/accepted-abstracts', [AdminController::class, 'exportAcceptedAbstracts'])->name('admin.exports.accepted-abstracts');
+    Route::get('admin/exports/accepted-abstract-authors', [AdminController::class, 'exportAcceptedAbstractAuthors'])->name('admin.exports.accepted-abstract-authors');
     Route::get('admin/campaigns/attendance-confirmation', [AdminController::class, 'attendanceCampaignPreview'])->name('admin.attendance-campaign.preview');
     Route::post('admin/campaigns/attendance-confirmation', [AdminController::class, 'sendAttendanceCampaign'])->name('admin.attendance-campaign.send');
     Route::get('admin/campaigns/attendance-reminder', [AdminController::class, 'unconfirmedAttendanceCampaignPreview'])->name('admin.unconfirmed-attendance-campaign.preview');
