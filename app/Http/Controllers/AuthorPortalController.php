@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppSetting;
 use App\Models\Submission;
 use App\Models\SubmissionAttachment;
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class AuthorPortalController extends Controller
 
     public function updatePackage(Request $request)
     {
+        if (! $this->registrationIsOpen()) {
+            return redirect()->route('dashboard')->with('error', 'Registration is currently closed.');
+        }
+
         $validated = $request->validate([
             'package' => ['required', 'string', Rule::in(array_keys(config('registration.packages')))],
         ]);
@@ -57,11 +62,19 @@ class AuthorPortalController extends Controller
 
     public function showSubmit()
     {
+        if (! $this->abstractSubmissionsAreOpen()) {
+            return redirect()->route('abstracts')->with('error', 'Abstract submissions are currently closed.');
+        }
+
         return view('submit', ['tracks' => $this->availableTracks()]);
     }
 
     public function storeSubmit(Request $request)
     {
+        if (! $this->abstractSubmissionsAreOpen()) {
+            return redirect()->route('abstracts')->with('error', 'Abstract submissions are currently closed.');
+        }
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
@@ -263,6 +276,16 @@ class AuthorPortalController extends Controller
         return [
             'Abstract Submission',
         ];
+    }
+
+    private function registrationIsOpen(): bool
+    {
+        return (bool) AppSetting::get('registration_open', '1');
+    }
+
+    private function abstractSubmissionsAreOpen(): bool
+    {
+        return (bool) AppSetting::get('abstract_submissions_open', '1');
     }
 
     private function submissions(): array

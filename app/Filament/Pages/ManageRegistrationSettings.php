@@ -46,6 +46,7 @@ class ManageRegistrationSettings extends Page
 
         $this->form->fill([
             'registration_open' => (bool) AppSetting::get('registration_open', '1'),
+            'abstract_submissions_open' => (bool) AppSetting::get('abstract_submissions_open', '1'),
             'bank_name' => $payment['bank_name'] ?? null,
             'legal_entity' => $payment['legal_entity'] ?? null,
             'account_name' => $payment['account_name'] ?? null,
@@ -75,11 +76,14 @@ class ManageRegistrationSettings extends Page
             ->components([
                 Form::make([
                     Section::make('Registration availability')
-                        ->description('Controls whether authors can upload proof of payment.')
+                        ->description('Control registration and new abstract submissions independently.')
                         ->schema([
                             Toggle::make('registration_open')
                                 ->label('Registration open')
                                 ->helperText('When closed, authors cannot submit payment proofs.'),
+                            Toggle::make('abstract_submissions_open')
+                                ->label('Abstract submissions open')
+                                ->helperText('When closed, authors cannot open or submit a new abstract.'),
                             TextEntry::make('pending_proofs')
                                 ->label('Pending payment proofs')
                                 ->state($pendingCount.' awaiting review — use Users → filter “Pending payment proofs”.'),
@@ -129,6 +133,7 @@ class ManageRegistrationSettings extends Page
         $state = $this->form->getState();
 
         AppSetting::set('registration_open', ! empty($state['registration_open']) ? '1' : '0');
+        AppSetting::set('abstract_submissions_open', ! empty($state['abstract_submissions_open']) ? '1' : '0');
 
         Notification::make()
             ->title('Registration settings saved')

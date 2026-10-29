@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AppSetting;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -52,4 +53,24 @@ it('requires a PDF or Word document for abstract submissions', function () {
 
     $response->assertRedirect(route('submit'))
         ->assertSessionHasErrors('attachments');
+});
+
+it('blocks new abstract submissions when abstract submissions are closed', function () {
+    $user = User::factory()->create();
+    AppSetting::set('abstract_submissions_open', '0');
+
+    $this->actingAs($user)
+        ->get(route('submit'))
+        ->assertRedirect(route('abstracts'))
+        ->assertSessionHas('error', 'Abstract submissions are currently closed.');
+
+    $this->actingAs($user)
+        ->post(route('submit.store'), [
+            'title' => 'Blocked abstract',
+            'author' => 'Test Author',
+            'track' => 'Abstract Submission',
+        ])
+        ->assertRedirect(route('abstracts'));
+
+    expect(Submission::query()->count())->toBe(0);
 });
